@@ -778,5 +778,268 @@ $('downloadDict').addEventListener('click',()=>{
  });
 })();
 </script>
+<script/*
+ * Criminology Lab — Visual Analytics Add-on v1.4
+ * Additive-only enhancement for the existing public portal.
+ * Does not change data sources, database settings, or existing analysis formulas.
+ * Install by adding this script immediately before </body> in index.html.
+ */
+(() => {
+  'use strict';
+  if (window.__criminologyVisualEnhancementInstalled) return;
+  window.__criminologyVisualEnhancementInstalled = true;
 
+  const COLORS = {
+    navy: '#18334c', blue: '#28799a', teal: '#087f78', red: '#c65b5b',
+    muted: '#64748b', line: '#e5ebf1', pale: '#f4f8fb'
+  };
+  const $ = (id) => document.getElementById(id);
+
+  const css = `
+    .clv-card{margin-top:14px;padding:14px;border:1px solid var(--line,#d9e3ec);border-radius:13px;background:#fbfdff}
+    .clv-card h3{margin:0 0 7px;color:var(--navy,#10253d)}
+    .clv-card canvas{display:block;width:100%;height:260px;max-width:100%;border:1px solid var(--line,#d9e3ec);border-radius:10px;background:#fff}
+    .clv-caption{font-size:12px;color:var(--muted,#64748b);line-height:1.55;margin:8px 0 0}
+    .clv-legend{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--muted,#64748b);margin:8px 0}
+    .clv-key{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:middle}
+    #corrResult .clv-heat-table td{text-align:center;min-width:68px;font-weight:650;font-variant-numeric:tabular-nums}
+    #corrResult .clv-heat-table th{font-size:12px}
+    @media(max-width:600px){.clv-card{padding:10px}.clv-card canvas{height:245px}}
+  `;
+  const style = document.createElement('style');
+  style.id = 'clv-visual-style';
+  style.textContent = css;
+  document.head.appendChild(style);
+
+  function makeCard(title, canvasId, caption, afterId) {
+    if ($(canvasId)) return $(canvasId).closest('.clv-card');
+    const after = $(afterId);
+    if (!after || !after.parentNode) return null;
+    const card = document.createElement('div');
+    card.className = 'clv-card';
+    const h = document.createElement('h3');
+    h.textContent = title;
+    const canvas = document.createElement('canvas');
+    canvas.id = canvasId;
+    canvas.setAttribute('role', 'img');
+    canvas.setAttribute('aria-label', title);
+    canvas.width = 900;
+    canvas.height = 260;
+    const p = document.createElement('p');
+    p.className = 'clv-caption';
+    p.id = canvasId + 'Caption';
+    p.textContent = caption;
+    card.append(h, canvas, p);
+    after.insertAdjacentElement('afterend', card);
+    return card;
+  }
+
+  function canvasContext(id, height = 260) {
+    const canvas = $(id);
+    if (!canvas) return null;
+    const width = Math.max(280, Math.floor(canvas.getBoundingClientRect().width || 320));
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.style.height = height + 'px';
+    canvas.width = Math.round(width * dpr);
+    canvas.height = Math.round(height * dpr);
+    const ctx = canvas.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, width, height);
+    return { ctx, width, height };
+  }
+
+  function drawObservatoryComparison() {
+    const f = canvasContext('clvObservatoryReports');
+    if (!f) return;
+    const { ctx: c, width: w, height: h } = f;
+    const left = 62, right = 18, top = 22, bottom = 46;
+    const plotW = w - left - right, plotH = h - top - bottom;
+    const values = [351906, 376948];
+    const labels = ['Jan–Okt 2025', 'Jan–28 Okt 2026'];
+    const max = 420000;
+    c.font = '12px system-ui'; c.textAlign = 'right'; c.fillStyle = COLORS.muted; c.strokeStyle = COLORS.line;
+    for (let i = 0; i <= 4; i++) {
+      const v = max * i / 4, y = top + plotH - (v / max) * plotH;
+      c.beginPath(); c.moveTo(left, y); c.lineTo(w - right, y); c.stroke();
+      c.fillText(Math.round(v / 1000) + ' rb', left - 8, y + 4);
+    }
+    const bw = Math.min(108, plotW / 4);
+    values.forEach((v, i) => {
+      const x = left + plotW * (i + 0.5) / 2 - bw / 2;
+      const bh = v / max * plotH, y = top + plotH - bh;
+      c.fillStyle = i === 0 ? '#6c9fbd' : COLORS.teal;
+      c.beginPath(); c.roundRect(x, y, bw, bh, 7); c.fill();
+      c.textAlign = 'center'; c.fillStyle = COLORS.navy; c.font = 'bold 12px system-ui';
+      c.fillText(v.toLocaleString('id-ID'), x + bw / 2, y - 8);
+      c.font = '12px system-ui'; c.fillStyle = COLORS.muted;
+      c.fillText(labels[i], x + bw / 2, h - 15);
+    });
+  }
+
+  function drawHistogram(values, label) {
+    values = values.filter((v) => Number.isFinite(v));
+    if (!values.length) return;
+    const f = canvasContext('clvHistogram');
+    if (!f) return;
+    const { ctx: c, width: w, height: h } = f;
+    const left = 48, right = 14, top = 20, bottom = 40;
+    const plotW = w - left - right, plotH = h - top - bottom;
+    const min = Math.min(...values), max = Math.max(...values), range = max - min || 1;
+    const bins = Math.max(5, Math.min(12, Math.ceil(Math.sqrt(values.length))));
+    const counts = Array(bins).fill(0);
+    values.forEach((v) => { const i = Math.min(bins - 1, Math.floor((v - min) / range * bins)); counts[i]++; });
+    const peak = Math.max(...counts, 1), gap = 4, bw = (plotW - gap * (bins - 1)) / bins;
+    c.font = '11px system-ui'; c.textAlign = 'right'; c.fillStyle = COLORS.muted; c.strokeStyle = COLORS.line;
+    for (let i = 0; i <= 4; i++) {
+      const v = peak * i / 4, y = top + plotH - v / peak * plotH;
+      c.beginPath(); c.moveTo(left, y); c.lineTo(w - right, y); c.stroke();
+      c.fillText(String(Math.round(v)), left - 7, y + 4);
+    }
+    counts.forEach((n, i) => {
+      const bh = n / peak * plotH, x = left + i * (bw + gap), y = top + plotH - bh;
+      c.fillStyle = COLORS.blue; c.beginPath(); c.roundRect(x, y, bw, bh, 4); c.fill();
+      if (bins <= 8 || i % 2 === 0) {
+        c.textAlign = 'center'; c.fillStyle = COLORS.muted;
+        c.fillText((min + range * i / bins).toFixed(1), x + bw / 2, h - 16);
+      }
+    });
+    const cap = $('clvHistogramCaption');
+    if (cap) cap.textContent = `Histogram ${label}: ${values.length} observasi valid dalam ${bins} interval kelas. Batas kelas dibentuk otomatis untuk eksplorasi awal.`;
+  }
+
+  function tintCorrelationTable() {
+    const table = document.querySelector('#corrResult table');
+    if (!table) return;
+    table.classList.add('clv-heat-table');
+    table.querySelectorAll('tbody tr').forEach((row) => {
+      Array.from(row.cells).slice(1).forEach((cell) => {
+        const val = Number(String(cell.textContent).replace(',', '.'));
+        if (!Number.isFinite(val)) { cell.style.background = '#edf1f5'; return; }
+        const strength = 0.10 + Math.min(1, Math.abs(val)) * 0.55;
+        cell.style.background = val >= 0
+          ? `rgba(8,127,120,${strength})`
+          : `rgba(198,91,91,${strength})`;
+        cell.title = 'Pearson r = ' + val.toFixed(4);
+      });
+    });
+  }
+
+  function drawCoefficientChart() {
+    const table = $('modelResult')?.querySelector('table');
+    if (!table) return;
+    const values = Array.from(table.querySelectorAll('tbody tr')).map((row) => {
+      const cells = row.querySelectorAll('td');
+      if (cells.length < 2) return null;
+      const value = Number(String(cells[1].textContent).replace(',', '.'));
+      return Number.isFinite(value) ? { name: cells[0].textContent.trim(), value } : null;
+    }).filter(Boolean);
+    if (!values.length) return;
+
+    let box = $('clvCoefficientCard');
+    if (!box) {
+      box = document.createElement('div'); box.id = 'clvCoefficientCard'; box.className = 'clv-card';
+      const heading = document.createElement('h3'); heading.textContent = 'Grafik koefisien model';
+      const canvas = document.createElement('canvas'); canvas.id = 'clvCoefficientChart'; canvas.width = 900; canvas.height = 320;
+      canvas.setAttribute('role', 'img'); canvas.setAttribute('aria-label', 'Grafik batang koefisien hasil regresi');
+      const cap = document.createElement('p'); cap.className = 'clv-caption';
+      cap.textContent = 'Batang ke kanan menunjukkan koefisien positif dan ke kiri negatif. Grafik ini menampilkan skala koefisien, bukan interval kepercayaan atau signifikansi statistik.';
+      box.append(heading, canvas, cap);
+      table.insertAdjacentElement('afterend', box);
+    }
+    const height = Math.max(260, Math.min(460, values.length * 38 + 65));
+    const f = canvasContext('clvCoefficientChart', height);
+    if (!f) return;
+    const { ctx: c, width: w, height: h } = f;
+    const left = Math.min(175, Math.max(105, w * 0.34)), right = 52, top = 25, bottom = 24;
+    const plotW = w - left - right, mid = left + plotW / 2;
+    const max = Math.max(...values.map((d) => Math.abs(d.value)), 0.01), half = plotW / 2 - 6;
+    c.strokeStyle = COLORS.line; c.beginPath(); c.moveTo(mid, top); c.lineTo(mid, h - bottom); c.stroke();
+    values.forEach((d, i) => {
+      const y = top + i * 34 + 8, bar = Math.abs(d.value) / max * half;
+      c.textAlign = 'right'; c.font = '12px system-ui'; c.fillStyle = COLORS.navy;
+      c.fillText(d.name.length > 22 ? d.name.slice(0, 20) + '…' : d.name, left - 8, y + 4);
+      c.fillStyle = d.value >= 0 ? COLORS.teal : COLORS.red;
+      const x = d.value >= 0 ? mid : mid - bar;
+      c.beginPath(); c.roundRect(x, y - 9, Math.max(2, bar), 18, 4); c.fill();
+      c.textAlign = d.value >= 0 ? 'left' : 'right'; c.fillStyle = COLORS.navy;
+      c.fillText(d.value.toFixed(4), d.value >= 0 ? mid + bar + 5 : mid - bar - 5, y + 4);
+    });
+  }
+
+  function addVisualElements() {
+    const obsSection = $('observatory');
+    if (obsSection && !$('clvObservatoryReports')) {
+      const cards = obsSection.querySelectorAll('.card');
+      const target = Array.from(cards).find((card) => card.textContent.includes('Perkembangan laporan tindak pidana nasional'));
+      if (target) {
+        const box = document.createElement('div'); box.className = 'clv-card';
+        box.innerHTML = '<h3>Perbandingan laporan tindak pidana tercatat</h3><canvas id="clvObservatoryReports" width="900" height="260" role="img" aria-label="Perbandingan laporan Pusiknas 2025 dan 2026"></canvas><p class="clv-caption">Snapshot Pusiknas yang ditampilkan pada portal: 351.906 laporan pada 2025 dan 376.948 pada 2026. Perbandingan ini menggunakan periode yang sama sebagaimana dinyatakan pada halaman, bukan estimasi seluruh kejadian kriminalitas.</p>';
+        target.appendChild(box);
+        drawObservatoryComparison();
+      }
+    }
+    const descResult = $('descResult');
+    if (descResult) makeCard('Distribusi frekuensi variabel terpilih', 'clvHistogram', 'Histogram akan muncul setelah dataset dimuat.', 'descResult');
+    const corrResult = $('corrResult');
+    if (corrResult && !corrResult.previousElementSibling?.classList.contains('clv-legend')) {
+      const legend = document.createElement('div'); legend.className = 'clv-legend';
+      legend.innerHTML = '<span><i class="clv-key" style="background:#f3caca"></i>Negatif</span><span><i class="clv-key" style="background:#c7e8e3"></i>Positif</span><span><i class="clv-key" style="background:#edf1f5"></i>Tidak tersedia</span>';
+      corrResult.insertAdjacentElement('beforebegin', legend);
+    }
+  }
+
+  function wrapGlobal(name, after) {
+    const original = window[name];
+    if (typeof original !== 'function' || original.__clvWrapped) return;
+    const wrapped = function (...args) {
+      const result = original.apply(this, args);
+      requestAnimationFrame(() => { try { after(); } catch (e) { console.warn('Criminology Lab visual:', e); } });
+      return result;
+    };
+    wrapped.__clvWrapped = true;
+    window[name] = wrapped;
+  }
+
+  function install() {
+    addVisualElements();
+    wrapGlobal('desc', () => {
+      const field = $('descVar');
+      if (!field) return;
+      const vals = Array.from(document.querySelectorAll('#preview table tbody tr')).length;
+      // Use the active dataset through the existing global rows/header declarations.
+      try {
+        const data = window.rows || rows;
+        const variable = field.value;
+        if (Array.isArray(data) && variable) {
+          const parsed = data.map((r) => Number(String(r[variable] ?? '').trim().replace(',', '.'))).filter(Number.isFinite);
+          drawHistogram(parsed, variable);
+        }
+      } catch (_) { /* The existing renderer remains authoritative. */ }
+    });
+    wrapGlobal('corr', tintCorrelationTable);
+    wrapGlobal('estimate', drawCoefficientChart);
+    document.querySelectorAll('.subtab[data-view]').forEach((button) => {
+      button.addEventListener('click', () => requestAnimationFrame(() => {
+        if (button.dataset.view === 'correlation') tintCorrelationTable();
+        if (button.dataset.view === 'descriptive' && typeof window.desc === 'function') window.desc();
+      }));
+    });
+    document.querySelectorAll('.tab[data-tab="observatory"]').forEach((button) => {
+      button.addEventListener('click', () => requestAnimationFrame(drawObservatoryComparison));
+    });
+    window.addEventListener('resize', () => {
+      if ($('observatory')?.classList.contains('active')) drawObservatoryComparison();
+      if ($('clvCoefficientChart')) drawCoefficientChart();
+      if ($('descHistogram') && typeof window.desc === 'function') window.desc();
+    });
+    // The source portal creates analytical controls on initial page load.
+    if (typeof window.desc === 'function') window.desc();
+    if (typeof window.corr === 'function') window.corr();
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', install, { once: true });
+  else install();
+})();
+
+</script>
 </body></html>
