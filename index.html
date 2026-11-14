@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="id">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Criminology Lab — Indonesia Crime Observatory & Analytics Portal</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Criminology Lab: portal publik untuk memahami kriminalitas Indonesia melalui data resmi, analisis kuantitatif, simulasi kebijakan, dan pengetahuan kriminologi."><meta name="theme-color" content="#10253d">
+<title>Criminology Lab — Public Crime Observatory & Analytics Portal v1.3</title>
 <style>
 :root{--navy:#14243a;--blue:#245b83;--teal:#16877c;--bg:#f3f6f9;--card:#fff;--ink:#1e293b;--muted:#64748b;--line:#dce4ec;--gold:#d79b32}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
@@ -117,8 +117,34 @@ footer{border-top:1px solid var(--line);margin-top:20px;padding-top:14px;line-he
 @media(max-width:800px){.portal-hero{grid-template-columns:1fr}.pillar-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.crime-types{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:560px){.pillar-grid,.source-grid,.crime-types{grid-template-columns:1fr}.portal-hero-main{padding:21px}.portal-actions .tab{flex:1}.tab{padding:8px 10px}}
 </style>
+
+<style>
+.method-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.method-card{padding:13px;border:1px solid var(--line);background:#fbfdff;border-radius:12px}
+.method-card h3{margin:0 0 5px}.method-card p{margin:0;font-size:13px;color:var(--muted)}
+#quant .analytics-subnav{display:flex;gap:7px;flex-wrap:wrap;margin-top:14px}
+#quant .subtab{border:1px solid var(--line);background:#f5f8fb;color:var(--navy);padding:8px 11px;border-radius:9px;font-weight:700;cursor:pointer}
+#quant .subtab.active{background:var(--navy);color:white}
+#quant .analytics-screen{display:none}#quant .analytics-screen.active{display:block}
+@media(max-width:600px){.method-grid{grid-template-columns:1fr}}
+</style>
+
+
+<style>
+.inputer-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.inputer-card{border:1px solid var(--line);border-radius:13px;padding:16px;background:#fff}
+.inputer-card h3{margin:0 0 7px}
+.inputer-card label{display:block;font-size:12px;font-weight:750;margin:10px 0 5px}
+.inputer-card input{width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:9px}
+.field-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.field-chip{padding:9px 11px;border:1px solid var(--line);border-radius:9px;background:#f8fafc;font-size:12px}
+.field-chip b{display:block;color:var(--navy);margin-bottom:2px}
+.inputer-note{border-left:4px solid #c58a22;background:#fff8e9;color:#674d19;padding:12px 14px;border-radius:8px;font-size:13px}
+@media(max-width:650px){.inputer-grid,.field-list{grid-template-columns:1fr}}
+</style>
+
 </head><body>
-<header><div class="wrap"><div class="brandline"><div class="brandmark">CL</div><div class="pill">PUBLIC CRIMINOLOGY KNOWLEDGE PORTAL · DEVELOPMENT PROTOTYPE</div></div><h1>Criminology Lab</h1><p>Indonesia Crime Observatory · Quantitative Analytics · Game & Policy Simulation · Public Crime Knowledge</p></div></header>
+<header><div class="wrap"><div class="brandline"><div class="brandmark">CL</div><div class="pill">PUBLIC CRIMINOLOGY KNOWLEDGE PORTAL · CONTENT EDITION 1.2</div></div><h1>Criminology Lab</h1><p>Indonesia Crime Observatory · Quantitative Analytics · Game & Policy Simulation · Public Crime Knowledge</p></div></header>
 <div class="wrap">
 <nav>
 <button class="tab active" data-tab="home">Beranda</button>
@@ -127,6 +153,7 @@ footer{border-top:1px solid var(--line);margin-top:20px;padding-top:14px;line-he
 <button class="tab" data-tab="gameLab">Game & Simulasi</button>
 <button class="tab" data-tab="ask">Tanya Kriminologi</button>
 <button class="tab" data-tab="references">Pusat Rujukan</button>
+<button class="tab" data-tab="dataInput">Input Data & Tim Kurator</button>
 </nav>
 <main>
 <section class="panel active" id="home">
@@ -142,7 +169,7 @@ footer{border-top:1px solid var(--line);margin-top:20px;padding-top:14px;line-he
    </div>
   </div>
   <div class="portal-hero-side">
-   <div class="portal-status">Data publik terkurasi · bukan feed real-time</div>
+   <div class="portal-status">Snapshot publik terakhir dikurasi: 14 November 2026 · bukan feed real-time</div>
    <h3 style="margin-top:14px">Bukan sekadar angka kejahatan</h3>
    <p class="small">Criminology Lab menggabungkan statistik resmi, analisis kuantitatif, simulasi kebijakan, dan penjelasan konseptual agar publik memahami konteks di balik angka kriminalitas.</p>
    <div style="border-top:1px solid var(--line);margin-top:14px;padding-top:12px">
@@ -176,6 +203,15 @@ footer{border-top:1px solid var(--line);margin-top:20px;padding-top:14px;line-he
    <div class="crime-type"><b>Sistem peradilan pidana</b><span>Penyidikan, penuntutan, peradilan, pemasyarakatan, dan reintegrasi.</span></div>
   </div>
  </div>
+ <div class="card">
+  <h2>Siapa yang dapat menggunakan Criminology Lab?</h2>
+  <div class="source-grid">
+   <div class="source-card"><h3>Masyarakat dan komunitas</h3><p>Memahami pola kejahatan, mengenali perbedaan jenis perkara, membaca indikator, dan menemukan kanal layanan resmi.</p></div>
+   <div class="source-card"><h3>Jurnalis dan media</h3><p>Memeriksa konteks statistik, membandingkan periode, menghindari salah tafsir angka, dan menelusuri sumber primer.</p></div>
+   <div class="source-card"><h3>Peneliti dan analis</h3><p>Menguji dataset publik/agregat, menjalankan statistik dasar, merumuskan hipotesis, dan menyusun analisis lanjutan.</p></div>
+   <div class="source-card"><h3>Pembuat kebijakan dan lembaga</h3><p>Mengeksplorasi trade-off kebijakan melalui simulasi, membaca tren, serta mengidentifikasi kebutuhan data untuk evaluasi.</p></div>
+  </div>
+ </div>
  <div class="public-notice"><b>Status kelembagaan:</b> ini merupakan prototipe portal publik yang disiapkan sebagai konsep pengembangan dan untuk dibahas bersama Program Studi Kriminologi UI. Penggunaan identitas dan penetapan sebagai kanal resmi Universitas Indonesia memerlukan persetujuan institusi.</div>
 </section>
 <section class="panel" id="observatory">
@@ -184,6 +220,34 @@ footer{border-top:1px solid var(--line);margin-top:20px;padding-top:14px;line-he
   <h2>Dashboard informasi kriminalitas Indonesia</h2>
   <p class="section-intro">Menampilkan snapshot data dari sumber resmi yang dipublikasikan, disertai periode dan batas interpretasi. Angka berikut bukan feed real-time dan tidak mewakili seluruh kejadian yang tidak dilaporkan atau tidak tercatat.</p>
   <div class="portal-status">Sumber publik · snapshot bertanggal · pembaruan otomatis belum terhubung</div>
+ </div>
+ <div class="card">
+  <div class="pill">SNAPSHOT PUSIKNAS · DATA EMP BARESKRIM</div>
+  <h2>Perkembangan laporan tindak pidana nasional — 2026</h2>
+  <p class="small">Data Pusiknas untuk periode 1 Januari–28 Oktober 2026, dipublikasikan 4 November 2026. Ini merupakan snapshot data kepolisian pada tanggal akses, bukan jumlah seluruh tindak pidana yang benar-benar terjadi di masyarakat.</p>
+  <div class="stat-grid">
+   <div class="stat-box"><strong>376.948</strong><span>Laporan tindak pidana</span><small>1 Jan–28 Okt 2026</small></div>
+   <div class="stat-box"><strong>+7,12%</strong><span>Dibanding periode sama 2025</span><small>351.906 laporan pada 2025</small></div>
+   <div class="stat-box"><strong>335.480</strong><span>Korban tercatat</span><small>Periode yang sama</small></div>
+   <div class="stat-box"><strong>31.033</strong><span>Korban berusia di bawah 20 tahun</span><small>Kategori usia; bukan khusus korban siber</small></div>
+  </div>
+  <p class="small" style="margin-top:12px">Pusiknas juga mencatat 71.059 korban berstatus pelajar/mahasiswa. Kategori usia dan status pendidikan dapat beririsan sehingga tidak boleh dijumlahkan sebagai kelompok yang terpisah.</p>
+  <div class="public-notice">Kenaikan laporan tercatat tidak otomatis membuktikan seluruh kejadian kriminal meningkat. Perubahan dapat dipengaruhi kejadian, pelaporan, pencatatan, operasi penegakan hukum, dan klasifikasi perkara.</div>
+  <p><a class="textlink" href="https://pusiknas.polri.go.id/detail_artikel/jalan_umum%2C_perkantoran%2C_dan_perkebunan%3A_membaca_pola_di_tiga_lokasi_rawan_kejahatan" target="_blank" rel="noopener">Baca analisis Pusiknas: pola lokasi dan laporan kriminalitas →</a></p>
+  <p><a class="textlink" href="https://pusiknas.polri.go.id/detail_artikel/ketika_kejahatan_masuk_ke_kamar_anak_lewat_layar_ponsel" target="_blank" rel="noopener">Baca analisis Pusiknas: korban usia muda →</a></p>
+ </div>
+ <div class="card">
+  <div class="pill">SNAPSHOT KATEGORI · NARKOTIKA</div>
+  <h2>Perkara narkotika dalam catatan Pusiknas 2026</h2>
+  <p class="small">Publikasi Pusiknas menyebut 46.216 kasus narkotika pada Januari–Oktober 2026, setara sekitar 11,9% dari total tindak pidana yang dicatat pada cakupan publikasi. Data diakses pada 2 November 2026.</p>
+  <div class="stat-grid">
+   <div class="stat-box"><strong>46.216</strong><span>Kasus narkotika</span><small>Jan–Okt 2026</small></div>
+   <div class="stat-box"><strong>11,9%</strong><span>Proporsi dari total pada publikasi</span><small>Hitungan Pusiknas</small></div>
+   <div class="stat-box"><strong>60.416</strong><span>Orang berstatus terlapor</span><small>Bukan jumlah putusan bersalah</small></div>
+   <div class="stat-box"><strong>5.478</strong><span>Kasus pada Oktober</span><small>Bulan tertinggi dalam seri yang dilaporkan</small></div>
+  </div>
+  <p class="small" style="margin-top:12px">Lima wilayah dengan jumlah kasus tertinggi dalam publikasi tersebut: Sumatera Utara, Polda Metro Jaya, Jawa Timur, Riau, dan Sulawesi Selatan. Jumlah orang terlapor dapat lebih besar daripada jumlah perkara karena satu perkara dapat melibatkan beberapa orang.</p>
+  <p><a class="textlink" href="https://pusiknas.polri.go.id/detail_artikel/vape_dilarang_digunakan_di_lingkungan_polri" target="_blank" rel="noopener">Baca sumber Pusiknas mengenai catatan narkotika 2026 →</a></p>
  </div>
  <div class="card">
   <h2>Statistik Kriminal BPS 2024/2025</h2>
@@ -199,7 +263,7 @@ footer{border-top:1px solid var(--line);margin-top:20px;padding-top:14px;line-he
  </div>
  <div class="card">
   <h2>Catatan capaian PPATK tahun 2025</h2>
-  <p class="small">Siaran pers PPATK tanggal 29 Januari 2026. Data ini adalah statistik aktivitas pelaporan dan produk intelijen keuangan, bukan jumlah tindak pidana, tersangka, atau perkara pidana.</p>
+  <p class="small">Siaran publik PPATK bertanggal 28 Januari 2026. Data ini adalah statistik aktivitas pelaporan dan produk intelijen keuangan, bukan jumlah tindak pidana, tersangka, atau perkara pidana.</p>
   <div class="stat-grid">
    <div class="stat-box"><strong>43.723.386</strong><span>Laporan diterima sepanjang 2025</span><small>Seluruh kategori laporan PPATK</small></div>
    <div class="stat-box"><strong>994</strong><span>Hasil Analisis</span><small>Produk intelijen keuangan</small></div>
@@ -207,6 +271,13 @@ footer{border-top:1px solid var(--line);margin-top:20px;padding-top:14px;line-he
    <div class="stat-box"><strong>Rp2.085,48 T</strong><span>Perputaran dana yang dianalisis</span><small>Nilai transaksi dalam produk analisis</small></div>
   </div>
   <p class="small" style="margin-top:12px">PPATK juga menyampaikan 529 Informasi. Jika digabungkan dengan 994 Hasil Analisis dan 17 Hasil Pemeriksaan, jumlahnya 1.540 produk intelijen keuangan. Laporan yang diterima tidak boleh disamakan dengan jumlah kasus.</p>
+  <div class="source-grid" style="margin-top:12px">
+   <div class="source-card"><h3>Indikasi terkait korupsi</h3><p>373 produk intelijen keuangan terkait dugaan tindak pidana asal korupsi, dengan nominal transaksi yang dianalisis Rp180,87 triliun.</p></div>
+   <div class="source-card"><h3>Indikasi terkait penipuan</h3><p>156 produk intelijen keuangan terkait dugaan tindak pidana asal penipuan, dengan nilai transaksi yang dianalisis Rp22,53 triliun.</p></div>
+   <div class="source-card"><h3>Perdagangan orang</h3><p>PPATK melaporkan analisis transaksi yang terindikasi aktivitas perdagangan orang sebesar Rp10,2 miliar.</p></div>
+   <div class="source-card"><h3>Penyelundupan migran</h3><p>PPATK melaporkan analisis transaksi terkait penyelundupan migran sebesar Rp1,4 miliar.</p></div>
+  </div>
+  <p class="small">Angka nominal di atas adalah transaksi yang dianalisis dalam produk intelijen keuangan PPATK, bukan nilai keseluruhan tindak pidana, bukan kerugian negara yang telah diputus, dan bukan bukti bersalah terhadap individu tertentu.</p>
   <p><a class="textlink" href="https://www.ppatk.go.id/siaran_pers/read/1594/catatan-capaian-strategis-ppatk-tahun-2025-" target="_blank" rel="noopener">Buka siaran pers PPATK →</a></p>
  </div>
  <div class="card">
@@ -230,6 +301,17 @@ footer{border-top:1px solid var(--line);margin-top:20px;padding-top:14px;line-he
    <div class="source-card"><h3>Satu Data Polri</h3><p>Open Data ditujukan untuk masyarakat; Satu Data Kepolisian adalah layanan internal Polri.</p><a href="https://data.polri.go.id/" target="_blank" rel="noopener">Kunjungi Satu Data →</a></div>
   </div>
  </div>
+ <div class="card">
+  <h2>Kamus indikator kriminalitas</h2>
+  <div class="source-grid">
+   <div class="source-card"><h3>Crime total</h3><p>Jumlah kejadian/perkara yang tercatat menurut definisi, cakupan, dan periode sumber. Bukan ukuran otomatis seluruh kejadian yang dialami masyarakat.</p></div>
+   <div class="source-card"><h3>Crime rate</h3><p>Jumlah kejadian tercatat relatif terhadap jumlah penduduk, lazimnya per 100.000 penduduk. Berguna untuk perbandingan skala populasi, tetapi tetap dipengaruhi tingkat pelaporan dan pencatatan.</p></div>
+   <div class="source-card"><h3>Crime clock</h3><p>Konversi frekuensi kejadian tercatat ke interval waktu rata-rata. Bukan ramalan bahwa kejahatan pasti terjadi setiap interval tersebut.</p></div>
+   <div class="source-card"><h3>Victimisation rate</h3><p>Proporsi penduduk yang melaporkan pengalaman menjadi korban dalam periode survei. Hasil survei dapat berbeda dari registrasi polisi karena tidak semua kejadian dilaporkan.</p></div>
+   <div class="source-card"><h3>Clearance / penyelesaian perkara</h3><p>Ukuran penyelesaian mengikuti definisi lembaga sumber. Perlu diperiksa apakah numerator dan denominator merujuk perkara dilaporkan, diselesaikan, atau tahap proses tertentu.</p></div>
+   <div class="source-card"><h3>Dark figure of crime</h3><p>Kejadian yang tidak masuk ke catatan resmi. Survei korban dan studi viktimisasi membantu memahami bagian kriminalitas yang tidak tercatat.</p></div>
+  </div>
+ </div>
 </section>
 <section class="panel" id="quant">
 <div class="card"><div class="pill">QUANTITATIVE ANALYTICS LAB</div><h2>Laboratorium Analisis Kuantitatif Kriminalitas</h2><p class="section-intro">Unggah dataset publik, agregat, atau yang telah dianonimkan. Analisis berlangsung di browser dan tidak dikirim otomatis ke server.</p><div class="public-notice">Jangan unggah identitas korban, saksi, tersangka, data penyidikan, atau informasi perkara yang dibatasi.</div><div class="analytics-subnav"><button class="subtab active" data-view="data">Dataset</button><button class="subtab" data-view="diagnostic">Diagnostik</button><button class="subtab" data-view="descriptive">Deskriptif</button><button class="subtab" data-view="correlation">Korelasi</button><button class="subtab" data-view="regression">Regresi</button><button class="subtab" data-view="export">Ekspor</button></div></div>
@@ -240,17 +322,27 @@ footer{border-top:1px solid var(--line);margin-top:20px;padding-top:14px;line-he
 <div class="field"><label>Nama dataset</label><input id="datasetName" type="text" value="Dataset penelitian"></div></div>
 <p class="small">Format yang didukung: CSV dengan baris pertama sebagai nama variabel. Pemisah koma atau titik koma dideteksi otomatis. Untuk menjaga privasi, pemrosesan dilakukan di perangkat/browser ini.</p>
 <div class="good" id="dataStatus">Belum ada dataset. Muat data contoh atau unggah CSV.</div></div>
+<div class="card">
+ <h2>Dataset latihan siap pakai</h2>
+ <p class="small">Pilih dataset sintetis untuk mencoba seluruh menu. Dataset ini dibuat khusus untuk demonstrasi metode, bukan data resmi, bukan hasil survei, dan bukan data perkara nyata.</p>
+ <div class="controls">
+  <div class="field"><label>Panel kriminalitas wilayah (2021–2025)</label><button class="action" id="loadPanelPreset" type="button">Muat panel regional sintetis</button></div>
+  <div class="field"><label>Data kasus untuk latihan logit</label><button class="action" id="loadCasePreset" type="button">Muat data kasus sintetis</button></div>
+  <div class="field"><label>Kamus variabel dan satuan</label><button class="action secondary" id="downloadDict" type="button">Unduh kamus variabel CSV</button></div>
+ </div>
+ <div class="good" id="presetNote" style="margin-top:12px">Mulai dengan panel regional untuk latihan deskriptif, korelasi, dan OLS. Gunakan data kasus untuk latihan regresi logit.</div>
+</div>
 <div class="card"><h2>Pratinjau data</h2><div class="grid" id="dataKpis"><div class="kpi"><b>—</b><span class="small">Observasi</span></div><div class="kpi"><b>—</b><span class="small">Variabel</span></div><div class="kpi"><b>—</b><span class="small">Numerik</span></div><div class="kpi"><b>—</b><span class="small">Kategori/teks</span></div></div><h3>10 baris pertama</h3><div class="tablewrap" id="preview"><p class="small" style="padding:10px">Data belum tersedia.</p></div></div>
 </section>
-<section class="analytics-screen" id="diagnostic"><div class="card"><h2>Diagnostik kualitas data</h2><p class="small">Pemeriksaan nilai kosong, duplikasi baris, dan tipe variabel.</p><div id="diagnostics"><p class="small">Muat dataset terlebih dahulu.</p></div><button class="action" id="clean" disabled>Unduh CSV tanpa baris duplikat</button></div></section>
-<section class="analytics-screen" id="descriptive"><div class="card"><h2>Statistik deskriptif</h2><div class="field"><label>Pilih variabel numerik</label><select id="descVar"></select></div><div id="descResult"><p class="small">Muat dataset terlebih dahulu.</p></div></div></section>
-<section class="analytics-screen" id="correlation"><div class="card"><h2>Matriks korelasi Pearson</h2><p class="small">Korelasi dihitung untuk pasangan observasi lengkap pada masing-masing pasangan variabel.</p><div id="corrResult"><p class="small">Muat dataset terlebih dahulu.</p></div></div></section>
-<section class="analytics-screen" id="regression"><div class="card"><h2>Model regresi</h2><div class="notice">Gunakan hanya variabel numerik. OLS mengestimasi hubungan linear. Logit biner memerlukan variabel dependen bernilai 0/1. Hasil bersifat eksploratif; periksa asumsi, desain identifikasi, dan standard error dengan perangkat statistik yang sesuai sebelum publikasi.</div><div class="controls" style="margin-top:14px">
+<section class="analytics-screen" id="diagnostic"><div class="card"><h2>Diagnostik kualitas data</h2><p class="small">Pemeriksaan nilai kosong, duplikasi baris, dan tipe variabel. Periksa hasil sebelum menjalankan model.</p><div class="source-grid"><div class="source-card"><h3>Nilai kosong</h3><p>Periksa apakah missing terkonsentrasi pada variabel, wilayah, atau periode tertentu. Jangan menghapus atau mengimputasi otomatis tanpa alasan metodologis.</p></div><div class="source-card"><h3>Duplikasi</h3><p>Baris identik dapat berasal dari duplikasi impor atau memang memiliki makna. Periksa ID, unit observasi, dan definisi satu baris sebelum menghapusnya.</p></div></div><div id="diagnostics"><p class="small">Muat dataset terlebih dahulu.</p></div><button class="action" id="clean" disabled>Unduh CSV tanpa baris duplikat</button></div></section>
+<section class="analytics-screen" id="descriptive"><div class="card"><h2>Statistik deskriptif</h2><p class="small">Gunakan statistik deskriptif untuk memahami skala, pusat distribusi, dan penyebaran variabel sebelum membuat kesimpulan.</p><p class="small"><b>N</b> = jumlah observasi valid; <b>Mean</b> = rata-rata; <b>SD</b> = simpangan baku; <b>Median</b> = nilai tengah; <b>P25/P75</b> = kuartil; <b>Min/Max</b> = nilai terendah/tertinggi.</p><div class="field"><label>Pilih variabel numerik</label><select id="descVar"></select></div><div id="descResult"><p class="small">Muat dataset terlebih dahulu.</p></div></div></section>
+<section class="analytics-screen" id="correlation"><div class="card"><h2>Matriks korelasi Pearson</h2><p class="small">Korelasi dihitung untuk pasangan observasi lengkap pada masing-masing pasangan variabel. Nilai r berada pada rentang −1 sampai +1.</p><div class="public-notice"><b>Panduan membaca:</b> tanda positif menunjukkan hubungan searah, tanda negatif berlawanan arah, dan nilai mendekati nol menunjukkan hubungan linear yang lemah. Korelasi tidak membuktikan sebab-akibat; periksa pencilan, bentuk hubungan, dan variabel perancu.</div><div id="corrResult"><p class="small">Muat dataset terlebih dahulu.</p></div></div></section>
+<section class="analytics-screen" id="regression"><div class="card"><h2>Model regresi</h2><p class="small">Pilih OLS untuk variabel dependen numerik kontinu. Pilih Logit biner untuk Y yang hanya bernilai 0 atau 1.</p><div class="source-grid"><div class="source-card"><h3>Contoh OLS</h3><p>Y: <code>crime_rate_per_100k</code>. X: <code>unemployment_rate_pct</code>, <code>poverty_rate_pct</code>, atau <code>police_per_100k</code>. Ini latihan hubungan linear pada data sintetis.</p></div><div class="source-card"><h3>Contoh Logit</h3><p>Y: <code>recidivism_12m</code> (0/1). X: <code>prior_record</code>, <code>age</code>, <code>employed</code>, dan <code>diversion</code>. Interpretasi koefisien logit berada pada skala log-odds.</p></div></div><div class="notice">Gunakan hanya variabel numerik. OLS mengestimasi hubungan linear. Logit biner memerlukan variabel dependen bernilai 0/1. Hasil bersifat eksploratif; periksa asumsi, desain identifikasi, dan standard error dengan perangkat statistik yang sesuai sebelum publikasi.</div><div class="controls" style="margin-top:14px">
 <div class="field"><label>Jenis model</label><select id="model"><option value="ols">OLS (linear)</option><option value="logit">Logit biner</option></select></div>
 <div class="field"><label>Variabel dependen (Y)</label><select id="yvar"></select></div>
-<div class="field"><label>Variabel independen (X)</label><select id="xvars" multiple size="5"></select><span class="small">Pilih satu atau beberapa variabel (Ctrl/ketuk).</span></div></div>
+<div class="field"><label>Variabel independen (X)</label><select id="xvars" multiple size="5"></select><span class="small">Pilih satu atau beberapa variabel. Di komputer tahan Ctrl saat memilih lebih dari satu X; di ponsel gunakan pilihan multi-select.</span></div></div>
 <button class="action" id="estimate" disabled>Estimasi model</button><div id="modelResult" style="margin-top:14px"><p class="small">Muat dataset terlebih dahulu.</p></div></div></section>
-<section class="analytics-screen" id="export"><div class="card"><h2>Ekspor hasil kerja</h2><p>Unduh dataset yang sedang digunakan dan ringkasan hasil analisis.</p><div class="grid"><button class="action" id="downloadCsv" disabled>Unduh dataset CSV</button><button class="action secondary" id="downloadReport" disabled>Unduh laporan analisis TXT</button></div><div id="exportSummary" class="small" style="margin-top:12px">Belum ada hasil analisis.</div></div><div class="card"><h2>Catatan metodologis</h2><ul class="small"><li>Missing value tidak diimputasi otomatis.</li><li>Regresi menggunakan complete-case untuk variabel yang dipilih.</li><li>Standard error pada versi ini adalah standard error konvensional; belum robust/clustered.</li><li>Belum tersedia fixed effects, random effects, survival analysis, spatial econometrics, atau causal inference.</li></ul></div></section>
+<section class="analytics-screen" id="export"><div class="card"><h2>Ekspor hasil kerja</h2><p>Unduh dataset yang sedang digunakan dan ringkasan hasil analisis.</p><div class="grid"><button class="action" id="downloadCsv" disabled>Unduh dataset CSV</button><button class="action secondary" id="downloadReport" disabled>Unduh laporan analisis TXT</button></div><div id="exportSummary" class="small" style="margin-top:12px">Belum ada hasil analisis.</div></div><div class="card"><h2>Catatan metodologis dan batas kemampuan</h2><p class="small">Modul ini merupakan alat eksplorasi awal. Untuk penelitian yang akan dipublikasikan, ulangi estimasi pada perangkat statistik dan dokumentasikan syntax, definisi variabel, serta aturan pembersihan data.</p><ul class="small"><li>Missing value tidak diimputasi otomatis.</li><li>Regresi menggunakan complete-case untuk variabel yang dipilih.</li><li>Standard error pada versi ini adalah standard error konvensional; belum robust/clustered.</li><li>Belum tersedia fixed effects, random effects, survival analysis, spatial econometrics, atau causal inference.</li></ul></div></section>
 </section>
 <section class="panel" id="gameLab">
  <div class="card game-hero">
@@ -305,6 +397,15 @@ footer{border-top:1px solid var(--line);margin-top:20px;padding-top:14px;line-he
   <div class="game-result" style="margin-top:12px"><h3>Pertanyaan refleksi</h3><ol><li>Apakah peningkatan peluang tertangkap selalu menurunkan kriminalitas?</li><li>Bagaimana kepadatan penjara mengubah penilaian terhadap kebijakan pemenjaraan?</li><li>Variabel sosial, ekonomi, korban, dan kualitas penegakan hukum apa yang belum masuk model?</li></ol><textarea id="gameReflection" rows="4" placeholder="Tuliskan refleksi atau argumen tim..." style="width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:9px;font:inherit"></textarea></div>
   <p style="margin-top:12px"><button class="action" type="button" id="gameExport">Unduh hasil permainan (JSON)</button></p>
  </div>
+ <div class="card">
+  <h2>Panduan misi dan bahan diskusi</h2>
+  <div class="source-grid">
+   <div class="source-card"><h3>Skenario Rendah</h3><p>Fokus diskusi: apakah intervensi pencegahan dan layanan komunitas dapat menjaga beban sistem tetap terkendali? Bandingkan pendekatan preventif dengan penindakan.</p></div>
+   <div class="source-card"><h3>Skenario Menengah</h3><p>Fokus diskusi: bagaimana membagi sumber daya antara pengungkapan perkara, kualitas penuntutan, proses peradilan, dan kapasitas pemasyarakatan?</p></div>
+   <div class="source-card"><h3>Skenario Tinggi</h3><p>Fokus diskusi: apa risiko ketika beban perkara meningkat dan kapasitas institusi terbatas? Pertimbangkan hak, proporsionalitas, pencegahan, dan reintegrasi.</p></div>
+   <div class="source-card"><h3>Debrief kebijakan</h3><p>Jelaskan alasan pilihan, pihak yang memperoleh manfaat, kelompok yang mungkin dirugikan, biaya peluang, asumsi model, dan data empiris yang dibutuhkan untuk menguji hasil.</p></div>
+  </div>
+ </div>
  <div class="card"><h2>Cara bermain dan batasan akademik</h2>
   <details><summary>Aturan main</summary><p>Permainan memuat empat aktor secara berurutan: Polisi, Jaksa, Hakim, dan Sipir. Pilih satu kebijakan untuk setiap aktor. Setiap keputusan mengurangi anggaran dan memperbarui simulasi.</p></details>
   <details><summary>Ruang perhitungan</summary><p>Prototipe web menghitung probabilitas gabungan dengan mengalikan probabilitas pada empat tahap berurutan. Indeks hasil adalah indikator pembelajaran sederhana yang ditampilkan terpisah dari probabilitas gabungan.</p></details>
@@ -316,7 +417,7 @@ footer{border-top:1px solid var(--line);margin-top:20px;padding-top:14px;line-he
  <div class="card">
   <div class="pill">PUBLIC CRIMINOLOGY KNOWLEDGE</div>
   <h2>Tanya Kriminologi</h2>
-  <p class="section-intro">Cari penjelasan awal berdasarkan topik. Fitur ini adalah indeks pengetahuan statis untuk demonstrasi, bukan chatbot AI atau konsultasi resmi individual.</p>
+  <p class="section-intro">Cari penjelasan awal berdasarkan topik, konsep, dan jenis kejahatan. Setiap ringkasan mengarahkan pembaca ke sumber resmi; fitur ini belum merupakan chatbot AI atau konsultasi resmi individual.</p>
   <div class="ask-search"><input type="text" id="askQuery" placeholder="Contoh: pencurian, penipuan online, korupsi, TPPU, perdagangan orang"><button class="action" id="askSearch">Cari topik</button></div>
   <div id="askResults" style="margin-top:14px" aria-live="polite"></div>
  </div>
@@ -348,6 +449,16 @@ footer{border-top:1px solid var(--line);margin-top:20px;padding-top:14px;line-he
   </div>
  </div>
  <div class="card">
+  <h2>Bagaimana menggunakan sumber rujukan?</h2>
+  <ol>
+   <li>Mulai dari publikasi atau dataset pemilik data, bukan hanya pemberitaan sekunder.</li>
+   <li>Catat tanggal rilis, periode pengamatan, tanggal data diakses, dan definisi indikator.</li>
+   <li>Periksa apakah satuan yang dilaporkan adalah laporan, perkara, korban, orang terlapor, tersangka, putusan, transaksi, atau produk analisis.</li>
+   <li>Simpan salinan sumber dan dokumentasikan perubahan seri jika definisi atau cakupan berubah.</li>
+   <li>Untuk pertanyaan hukum atau laporan kejadian individual, rujuk kanal resmi; portal ini hanya menyediakan informasi dan analisis umum.</li>
+  </ol>
+ </div>
+ <div class="card">
   <h2>Prinsip membaca statistik kriminalitas</h2>
   <ul>
    <li>Data kejadian yang tercatat tidak sama dengan seluruh kejadian yang benar-benar terjadi.</li>
@@ -358,7 +469,91 @@ footer{border-top:1px solid var(--line);margin-top:20px;padding-top:14px;line-he
   </ul>
  </div>
 </section>
-</main><footer><b>Criminology Lab</b> · Indonesia Crime Observatory, Quantitative Analytics & Simulation. Prototipe pengembangan publik; belum merupakan kanal resmi Universitas Indonesia dan belum terhubung secara real-time ke sistem internal Polri. Statistik mengikuti periode dan definisi sumber masing-masing.</footer></div>
+
+<section class="panel" id="dataInput">
+ <div class="card">
+  <div class="pill">DATA GOVERNANCE · DATA CURATION</div>
+  <h2>Tim Input Data Kriminalitas</h2>
+  <p class="section-intro">Dua inputer bertugas mengumpulkan, mencatat, memeriksa, dan memperbarui data agregat dari sumber resmi. Setiap angka wajib memiliki sumber, periode, satuan, dan tanggal akses agar dapat ditelusuri.</p>
+  <div class="inputer-note"><b>Catatan privasi:</b> alamat email staf tidak akan ditampilkan sebagai kontak publik atau dikirim ke server melalui formulir ini. Formulir hanya membuat draft daftar penugasan yang dapat diunduh oleh pengelola. Email baru digunakan setelah staf menyatakan bersedia dan penanggung jawab program studi menyetujuinya.</div>
+ </div>
+ <div class="card">
+  <h2>Kolom penetapan dua inputer</h2>
+  <p class="small">Mohon isi setelah memperoleh persetujuan masing-masing staf. Pembagian tugas dapat disesuaikan oleh Ketua Program Studi.</p>
+  <div class="inputer-grid">
+   <div class="inputer-card">
+    <div class="pill">INPUTER 1 · DATA UMUM & WILAYAH</div>
+    <h3>Kriminalitas umum</h3>
+    <p class="small">Mengelola statistik kejadian kriminalitas, variasi wilayah, dan indikator sosial-kewilayahan.</p>
+    <label for="inputer1Name">Nama staf</label><input id="inputer1Name" type="text" placeholder="Nama staf yang bersedia">
+    <label for="inputer1Email">Email institusi/staf</label><input id="inputer1Email" type="email" placeholder="nama@ui.ac.id atau email yang disetujui">
+    <label for="inputer1Contact">Unit/Departemen (opsional)</label><input id="inputer1Contact" type="text" placeholder="Departemen Kriminologi">
+    <p class="small"><b>Fokus:</b> kejahatan jalanan, kekerasan, pencurian, kejahatan siber, narkotika, data korban/survei, dan statistik kriminal daerah.</p>
+   </div>
+   <div class="inputer-card">
+    <div class="pill">INPUTER 2 · KEJAHATAN KHUSUS</div>
+    <h3>Ekonomi & transnasional</h3>
+    <p class="small">Mengelola publikasi statistik kejahatan ekonomi, keuangan, terorganisasi, dan lintas negara.</p>
+    <label for="inputer2Name">Nama staf</label><input id="inputer2Name" type="text" placeholder="Nama staf yang bersedia">
+    <label for="inputer2Email">Email institusi/staf</label><input id="inputer2Email" type="email" placeholder="nama@ui.ac.id atau email yang disetujui">
+    <label for="inputer2Contact">Unit/Departemen (opsional)</label><input id="inputer2Contact" type="text" placeholder="Departemen Kriminologi">
+    <p class="small"><b>Fokus:</b> korupsi, TPPU, penipuan keuangan, perdagangan orang, penyelundupan migran/barang, dan kejahatan lingkungan.</p>
+   </div>
+  </div>
+  <p style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
+   <button class="action" id="downloadInputerRoster" type="button">Unduh draft daftar inputer (CSV)</button>
+   <button class="action secondary" id="clearInputerRoster" type="button">Kosongkan kolom</button>
+  </p>
+  <div id="inputerRosterStatus" class="small" aria-live="polite">Belum ada email inputer yang ditetapkan.</div>
+ </div>
+ <div class="card">
+  <h2>Data apa saja yang harus diinput?</h2>
+  <p class="section-intro">Inputer tidak diminta memasukkan data perkara individual. Prioritasnya adalah data statistik agregat, dataset terbuka, dan publikasi resmi yang diizinkan untuk disebarluaskan.</p>
+  <div class="tablewrap">
+   <table>
+    <thead><tr><th>Kelompok data</th><th>Indikator yang dicatat</th><th>Sumber prioritas</th><th>Penanggung jawab</th></tr></thead>
+    <tbody>
+     <tr><td><b>Kejahatan jalanan & umum</b></td><td>Jumlah kejadian/laporan, jenis kejahatan, wilayah, periode, tren, crime rate bila denominator tersedia</td><td>Pusiknas/Polri, BPS, publikasi pemerintah daerah</td><td>Inputer 1</td></tr>
+     <tr><td><b>Kekerasan & viktimisasi</b></td><td>Jumlah korban atau prevalensi survei, jenis kekerasan, kelompok umur/gender hanya dalam agregat, periode, cakupan survei</td><td>BPS, KemenPPPA, lembaga resmi terkait</td><td>Inputer 1</td></tr>
+     <tr><td><b>Narkotika & kejahatan siber</b></td><td>Jumlah penindakan/perkara yang dipublikasikan, modus agregat, jenis barang/ancaman, periode, wilayah</td><td>Polri/Pusiknas, BNN, BPS, publikasi resmi</td><td>Inputer 1</td></tr>
+     <tr><td><b>Korupsi</b></td><td>Penyelidikan/penyidikan/penuntutan/putusan/eksekusi jika dipublikasikan, jenis perkara, nilai kerugian/asset recovery sesuai definisi sumber</td><td>KPK, Kejaksaan, Polri, BPS</td><td>Inputer 2</td></tr>
+     <tr><td><b>TPPU & kejahatan keuangan</b></td><td>Jumlah laporan diterima, hasil analisis/pemeriksaan, tipologi, sektor risiko, nilai agregat yang dianalisis</td><td>PPATK dan publikasi lembaga resmi</td><td>Inputer 2</td></tr>
+     <tr><td><b>Perdagangan orang & penyelundupan migran</b></td><td>Jumlah kasus/korban yang dipublikasikan, bentuk eksploitasi, wilayah agregat, periode, status penanganan bila tersedia</td><td>Polri, kementerian/lembaga terkait, publikasi internasional resmi</td><td>Inputer 2</td></tr>
+     <tr><td><b>Penyelundupan barang & lintas negara</b></td><td>Jumlah penindakan, jenis komoditas, nilai barang, wilayah penindakan agregat, periode</td><td>Bea Cukai, Polri, lembaga perbatasan</td><td>Inputer 2</td></tr>
+     <tr><td><b>Kejahatan lingkungan</b></td><td>Jumlah penindakan, jenis pelanggaran, komoditas/sumber daya, lokasi agregat, luas/volume atau nilai bila dipublikasikan</td><td>Kementerian Kehutanan/LH, Polri, Bea Cukai, BPS</td><td>Inputer 2</td></tr>
+    </tbody>
+   </table>
+  </div>
+ </div>
+ <div class="card">
+  <h2>Kolom wajib pada setiap catatan data</h2>
+  <p class="small">Gunakan template yang sama agar data lintas lembaga dapat dibandingkan secara tertib.</p>
+  <div class="field-list">
+   <div class="field-chip"><b>1. Identitas sumber</b>Nama lembaga, judul dataset/laporan, URL dokumen.</div>
+   <div class="field-chip"><b>2. Waktu</b>Periode awal/akhir data, tanggal publikasi, tanggal akses.</div>
+   <div class="field-chip"><b>3. Wilayah</b>Tingkat nasional/provinsi/kabupaten-kota; kode wilayah bila ada.</div>
+   <div class="field-chip"><b>4. Klasifikasi kejahatan</b>Kelompok, jenis tindak pidana, definisi operasional dari sumber.</div>
+   <div class="field-chip"><b>5. Indikator dan nilai</b>Nama indikator, angka, satuan, denominator/populasi bila relevan.</div>
+   <div class="field-chip"><b>6. Status dan tahapan</b>Laporan, kasus, korban, penindakan, perkara, putusan, atau produk analisis—jangan dicampur.</div>
+   <div class="field-chip"><b>7. Metodologi</b>Registrasi administratif, survei, estimasi, atau hasil analisis.</div>
+   <div class="field-chip"><b>8. Mutu dan verifikasi</b>Catatan keterbatasan, nama pemeriksa, status validasi, tanggal pemeriksaan.</div>
+  </div>
+  <p style="margin-top:14px"><a class="textlink" href="CriminologyLab_Data_Input_Template.csv" download>Unduh template input data kriminalitas (CSV) →</a> &nbsp; <a class="textlink" href="CriminologyLab_Data_Dictionary.csv" download>Unduh kamus variabel latihan →</a></p>
+ </div>
+ <div class="card">
+  <h2>Alur kerja inputer dan verifikator</h2>
+  <ol>
+   <li>Inputer menemukan publikasi atau dataset dari sumber resmi.</li>
+   <li>Inputer mencatat metadata, periode, satuan, angka, URL, dan tanggal akses.</li>
+   <li>Inputer memeriksa apakah indikator merupakan laporan, perkara, korban, tersangka, putusan, atau nilai transaksi.</li>
+   <li>Inputer kedua atau koordinator melakukan pemeriksaan silang sebelum data dipublikasikan.</li>
+   <li>Admin portal memperbarui snapshot dan mencantumkan riwayat revisi.</li>
+  </ol>
+  <div class="inputer-note">Untuk integrasi data internal Polri, data penyidikan, identitas personal, alamat, nomor laporan, saksi, korban, dan terduga pelaku tidak boleh dimasukkan ke template publik. Data nonpublik hanya dapat dikelola setelah ada dasar kewenangan, perjanjian, dan sistem keamanan terpisah.</div>
+ </div>
+</section>
+
+</main><footer><b>Criminology Lab</b> · Indonesia Crime Observatory, Quantitative Analytics & Simulation. Edisi konten 1.3 · prototipe portal publik untuk pengembangan dan validasi institusi; belum merupakan kanal resmi Universitas Indonesia dan belum terhubung secara real-time ke sistem internal Polri. Statistik mengikuti periode dan definisi sumber masing-masing.</footer></div>
 
 <script>
 const $=id=>document.getElementById(id);let rows=[],headers=[],analysisLog=[];
@@ -391,7 +586,53 @@ $('clean').addEventListener('click',()=>{let seen=new Set(),clean=rows.filter(r=
 $('downloadCsv').addEventListener('click',()=>download('criminology_lab_dataset.csv',toCSV(rows),'text/csv'));
 $('downloadReport').addEventListener('click',()=>download('criminology_lab_laporan_analisis.txt',`CRIMINOLOGY LAB — STATISTICAL RESEARCH WORKBENCH 0.4\nDataset: ${$('datasetName').value}\nObservasi: ${rows.length}\nVariabel: ${headers.join(', ')}\n\nHASIL ESTIMASI\n${analysisLog.join('\n\n')||'Belum ada estimasi model.'}\n\nCatatan: hasil eksploratif; validasi lebih lanjut dengan perangkat statistik dan pemeriksaan asumsi diperlukan.`));
 $('file').addEventListener('change',e=>{let f=e.target.files[0];if(f){let reader=new FileReader();reader.onload=()=>load(reader.result,f.name);reader.readAsText(f);}});
-$('sample').addEventListener('click',()=>{let csv='region,year,incident_index,clearance_rate,unemployment_rate,prevention_budget,police_density\n';let regions=['Wilayah A','Wilayah B','Wilayah C','Wilayah D','Wilayah E'];regions.forEach((r,i)=>{for(let y=2021;y<=2025;y++){let t=y-2021;let incident=68+i*5-t*(1.1+i*.12)+(i*7+t*3)%6;let clearance=48+i*4+t*1.6+(i+t)%4;let unemp=7.8-i*.45-t*.22+((i*2+t)%3)*.15;let prevention=20+i*3+t*2+(i+t)%4;let police=12+i*1.8+(t%2)*.7;csv+=`${r},${y},${incident.toFixed(1)},${clearance.toFixed(1)},${unemp.toFixed(2)},${prevention.toFixed(1)},${police.toFixed(1)}\n`;}});load(csv,'Synthetic_Crime_Justice_Panel.csv');});
+$('sample').addEventListener('click',()=>{let csv='region,year,incident_index,clearance_rate,unemployment_rate,prevention_budget,police_density\n';let regions=['Wilayah A','Wilayah B','Wilayah C','Wilayah D','Wilayah E'];regions.forEach((r,i)=>{for(let y=2021;y<=2025;y++){let t=y-2021;let incident=68+i*5-t*(1.1+i*.12)+(i*7+t*3)%6;let clearance=48+i*4+t*1.6+(i+t)%4;let unemp=7.8-i*.45-t*.22+((i*2+t)%3)*.15;let prevention=20+i*3+t*2+(i+t)%4;let police=12+i*1.8+(t%2)*.7;csv+=`${r},${y},${incident.toFixed(1)},${clearance.toFixed(1)},${unemp.toFixed(2)},${prevention.toFixed(1)},${police.toFixed(1)}\n`;}});load(csv,'Synthetic_Crime_Justice_Panel_Short.csv');});
+function buildRegionalPanel(){
+ let csv='region,year,crime_reports,population_1000,crime_rate_per_100k,clearance_rate_pct,poverty_rate_pct,unemployment_rate_pct,urbanization_pct,prevention_budget_index,police_per_100k\n';
+ const regions=['Region A','Region B','Region C','Region D','Region E','Region F'];
+ regions.forEach((name,i)=>{for(let year=2021;year<=2025;year++){
+  const t=year-2021;
+  const pop=850+i*95+t*(9+i*1.4);
+  const poverty=7.2+i*0.82-t*(0.12+(i%2)*0.02)+((i+t)%3)*0.11;
+  const unemployment=4.1+i*0.47-t*0.08+((i*2+t)%4)*0.13;
+  const urban=34+i*8.4+t*1.15;
+  const reports=Math.round(1850+i*305+t*(55+i*13)+(i*t*37)%121);
+  const rate=reports/(pop*1000)*100000;
+  const clearance=46+i*3.5+t*1.25+((i+t)%3)*0.8;
+  const budget=42+i*5.8+t*4.2+((i+2*t)%3)*1.4;
+  const police=105+i*17+t*2.2+((i+t)%2)*3.1;
+  csv+=`${name},${year},${reports},${pop.toFixed(1)},${rate.toFixed(2)},${clearance.toFixed(1)},${poverty.toFixed(2)},${unemployment.toFixed(2)},${urban.toFixed(1)},${budget.toFixed(1)},${police.toFixed(1)}\n`;
+ }});
+ load(csv,'SYNTHETIC_Regional_Crime_Panel_2021_2025.csv');
+ $('presetNote').innerHTML='<b>Panel regional sintetis dimuat.</b> 30 observasi (6 wilayah fiktif × 5 tahun), 11 variabel. Cocok untuk deskriptif, korelasi, dan OLS eksploratif. Tidak memuat fixed effects atau standar error panel.';
+}
+function buildCaseDataset(){
+ let csv='case_id,age,prior_record,employed,diversion,offense_severity,recidivism_12m,sentence_months\n';
+ let seed=20261114; const rand=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;};
+ for(let i=1;i<=180;i++){
+  const age=18+Math.floor(rand()*43);
+  const prior=rand()<0.34?1:0;
+  const employed=rand()<0.51?1:0;
+  const diversion=rand()<0.43?1:0;
+  const severity=1+Math.floor(rand()*10);
+  const z=-1.25+0.045*(30-age)+0.92*prior-0.62*employed-0.74*diversion+0.105*(severity-5);
+  const p=1/(1+Math.exp(-z));
+  const recid=rand()<p?1:0;
+  const sentence=Math.max(1,Math.round((3.2+severity*1.85+prior*4.1-diversion*1.6+rand()*4.5)*10)/10);
+  csv+=`SYN-${String(i).padStart(3,'0')},${age},${prior},${employed},${diversion},${severity},${recid},${sentence}\n`;
+ }
+ load(csv,'SYNTHETIC_CaseLevel_Justice_Data.csv');
+ $('presetNote').innerHTML='<b>Dataset kasus sintetis dimuat.</b> 180 observasi fiktif. Untuk Logit: pilih Y = recidivism_12m (0/1), kemudian X = prior_record, age, employed, diversion. Untuk OLS: pilih Y = sentence_months. Semua data dan hasil hanya latihan.';
+}
+$('loadPanelPreset').addEventListener('click',buildRegionalPanel);
+$('loadCasePreset').addEventListener('click',buildCaseDataset);
+$('downloadDict').addEventListener('click',()=>{
+ const dict=[
+ ['region','Nama wilayah fiktif','Kategori','Panel sintetis'],['year','Tahun observasi','Tahun','Panel sintetis'],['crime_reports','Jumlah laporan kejahatan hipotetis','Laporan','Panel sintetis'],['population_1000','Populasi dalam ribuan jiwa','Ribu jiwa','Panel sintetis'],['crime_rate_per_100k','Laporan per 100.000 penduduk','Rasio','Panel sintetis'],['clearance_rate_pct','Persentase penyelesaian menurut definisi latihan','Persen','Panel sintetis'],['poverty_rate_pct','Persentase kemiskinan hipotetis','Persen','Panel sintetis'],['unemployment_rate_pct','Persentase pengangguran hipotetis','Persen','Panel sintetis'],['urbanization_pct','Indeks/persentase urbanisasi hipotetis','Persen','Panel sintetis'],['prevention_budget_index','Indeks anggaran pencegahan tanpa mata uang nyata','Indeks','Panel sintetis'],['police_per_100k','Personel hipotetis per 100.000 penduduk','Rasio','Panel sintetis'],['case_id','ID kasus fiktif','Kategori','Dataset kasus sintetis'],['age','Usia saat baseline','Tahun','Dataset kasus sintetis'],['prior_record','Riwayat sebelumnya: 1 ya, 0 tidak','Biner','Dataset kasus sintetis'],['employed','Status bekerja: 1 ya, 0 tidak','Biner','Dataset kasus sintetis'],['diversion','Mengikuti diversi/program: 1 ya, 0 tidak','Biner','Dataset kasus sintetis'],['offense_severity','Skor tingkat keseriusan hipotetis 1–10','Skor','Dataset kasus sintetis'],['recidivism_12m','Pengulangan dalam 12 bulan simulatif: 1 ya, 0 tidak','Biner','Dataset kasus sintetis'],['sentence_months','Lama pidana simulatif','Bulan','Dataset kasus sintetis']
+ ];
+ const csv=['variable,definition,unit,dataset_type',...dict.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(','))].join('\n');
+ download('CriminologyLab_Data_Dictionary_Synthetic.csv',csv,'text/csv');
+});
 </script>
 <script>
 (()=>{
@@ -497,6 +738,15 @@ $('sample').addEventListener('click',()=>{let csv='region,year,incident_index,cl
   {t:"Perdagangan orang dan penyelundupan migran",k:"perdagangan orang trafficking penyelundupan migran people smuggling",d:"Perdagangan orang berpusat pada tindakan eksploitasi melalui cara-cara yang dilarang hukum. Penyelundupan migran umumnya berkaitan dengan fasilitasi masuk secara tidak sah ke suatu negara demi keuntungan. Keduanya dapat beririsan, tetapi tidak identik. Identitas korban dan rute operasional sensitif tidak boleh dibuka.",q:"Apa perbedaan perdagangan orang dan penyelundupan migran?",u:"https://pusiknas.polri.go.id/"},
   {t:"Penyelundupan barang dan kejahatan lintas negara",k:"penyelundupan barang bea cukai perdagangan ilegal transnasional",d:"Penyelundupan barang dapat dikaji melalui komoditas, pola penindakan, nilai barang, jalur perdagangan, dan jejaring lintas wilayah. Statistik penindakan Bea Cukai tidak otomatis menggambarkan total aktivitas ilegal.",q:"Bagaimana membaca data penindakan penyelundupan?",u:"https://www.beacukai.go.id/statistik-data-penindakan"},
   {t:"Membaca angka dan statistik kriminalitas",k:"data angka crime rate crime clock viktimisasi pelaporan",d:"Statistik kriminalitas memiliki beberapa pendekatan: kejadian yang tercatat aparat, pengalaman korban melalui survei, dan kondisi kewilayahan. Angka tersebut menjawab pertanyaan berbeda. Bandingkan definisi, periode, denominator penduduk, serta tingkat pelaporan.",q:"Mengapa data kepolisian dan survei korban dapat menunjukkan pola berbeda?",u:"https://www.bps.go.id/id/publication/2025/12/12/2edc8ea4c35b19ba912fc7e4/statistik-kriminal-2024-2025.html"},
+  {t:"Perdagangan orang (TPPO)",k:"tppo perdagangan orang eksploitasi kerja seksual anak perekrutan transportasi penampungan",d:"Perdagangan orang melibatkan tindakan perekrutan, pengangkutan, penampungan, pengiriman, pemindahan, atau penerimaan seseorang dengan cara-cara yang ditentukan hukum untuk tujuan eksploitasi. Dalam kajian kriminologi, perhatian diberikan pada kerentanan, relasi kuasa, keuntungan jaringan, perlindungan korban, dan pemulihan. Korban tidak boleh disalahkan atas eksploitasi yang dialaminya.",q:"Apa indikator struktural yang membuat seseorang rentan menjadi korban perdagangan orang?",u:"https://www.unodc.org/unodc/en/human-trafficking/what-is-human-trafficking.html"},
+  {t:"Perbedaan TPPO dan penyelundupan migran",k:"human trafficking people smuggling migran penyelundupan perbatasan",d:"TPPO berorientasi pada eksploitasi orang. Penyelundupan migran berfokus pada fasilitasi masuk secara tidak sah ke negara lain demi keuntungan finansial atau material. Dalam praktiknya, penyelundupan migran dapat berkembang menjadi eksploitasi atau perdagangan orang; karena itu status dan kebutuhan perlindungan korban perlu dinilai secara cermat.",q:"Mengapa TPPO dan penyelundupan migran tidak boleh disamakan?",u:"https://www.unodc.org/unodc/en/human-trafficking/migrant-smuggling.html"},
+  {t:"Perjudian daring dan aliran dana",k:"judi online judi daring deposit transaksi rekening tppu",d:"Kajian perjudian daring perlu membedakan jumlah aktivitas, rekening, orang yang melakukan deposit, laporan transaksi, dan perkara pidana. Data PPATK mengenai perputaran dana adalah ukuran aktivitas transaksi yang dianalisis, bukan jumlah orang yang telah terbukti melakukan tindak pidana.",q:"Bagaimana mengikuti aliran dana perjudian daring tanpa menyamakan transaksi dengan pelaku?",u:"https://www.ppatk.go.id/"},
+  {t:"Kekerasan dalam rumah tangga dan viktimisasi",k:"kdrt kekerasan keluarga korban viktimisasi perempuan anak",d:"Analisis kekerasan dalam rumah tangga membutuhkan perspektif korban, relasi kuasa, pola kekerasan berulang, hambatan pelaporan, layanan perlindungan, dan pemulihan. Statistik laporan polisi tidak selalu menunjukkan prevalensi sebenarnya karena korban dapat menghadapi tekanan atau hambatan untuk melapor.",q:"Mengapa angka laporan KDRT tidak selalu menggambarkan seluruh pengalaman korban?",u:"https://www.bps.go.id/"},
+  {t:"Kekerasan terhadap anak dan eksploitasi digital",k:"anak kekerasan eksploitasi online grooming perundungan siber",d:"Kejahatan terhadap anak di ruang digital dapat melibatkan manipulasi, ancaman, eksploitasi, atau penyebaran konten tanpa persetujuan. Pembahasan publik harus mengutamakan perlindungan anak, tidak menampilkan identitas korban, dan tidak menyebarkan materi eksploitasi.",q:"Bagaimana membangun perlindungan anak berbasis keluarga, sekolah, platform, dan penegakan hukum?",u:"https://pusiknas.polri.go.id/"},
+  {t:"Kejahatan korporasi dan pencemaran lingkungan",k:"kejahatan korporasi corporate crime lingkungan perusahaan pertambangan",d:"Kejahatan korporasi dapat dikaji melalui struktur organisasi, keputusan manajerial, insentif ekonomi, kepatuhan, dampak terhadap pekerja dan lingkungan, serta pertanggungjawaban badan usaha. Penilaian tidak boleh menyimpulkan kesalahan korporasi hanya dari dugaan atau data transaksi.",q:"Bagaimana membedakan pelanggaran administratif, kelalaian, dan tindak pidana korporasi?",u:"https://www.ppatk.go.id/"},
+  {t:"Korban kejahatan dan layanan pemulihan",k:"korban hak restitusi kompensasi rehabilitasi pemulihan",d:"Pendekatan viktimologi mengkaji dampak fisik, psikologis, sosial, dan ekonomi kejahatan terhadap korban. Sistem penanganan perlu memperhatikan keamanan, kerahasiaan identitas, akses bantuan, restitusi, kompensasi, dan pemulihan jangka panjang.",q:"Apa perbedaan restitusi, kompensasi, dan pemulihan korban?",u:"https://www.lpsk.go.id/"},
+  {t:"Membaca data perkara dan status hukum",k:"laporan perkara terlapor tersangka terdakwa terpidana putusan",d:"Laporan atau orang berstatus terlapor tidak sama dengan tersangka, terdakwa, atau terpidana. Status hukum berubah mengikuti proses dan keputusan pejabat/lembaga yang berwenang. Statistik harus memakai istilah yang sama dengan sumber aslinya dan tidak boleh menganggap dugaan sebagai kesalahan yang telah terbukti.",q:"Mengapa jumlah laporan, terlapor, tersangka, terdakwa, dan terpidana berbeda?",u:"https://pusiknas.polri.go.id/"},
+  {t:"Pengukuran risiko dan pencegahan kejahatan",k:"crime prevention risiko kerawanan patroli lingkungan situational prevention",d:"Pencegahan kejahatan dapat mencakup perubahan lingkungan, penguatan perlindungan sasaran, dukungan sosial, pengurangan kesempatan, peningkatan kapasitas komunitas, dan intervensi terarah. Pemetaan risiko sebaiknya menggunakan data agregat serta diuji agar tidak menstigma kelompok atau wilayah.",q:"Bagaimana merancang pencegahan yang berbasis bukti dan tidak menstigma warga?",u:"https://www.unodc.org/"},
   {t:"Kejahatan lingkungan",k:"illegal logging tambang ilegal lingkungan satwa liar",d:"Kejahatan lingkungan dapat melibatkan ekstraksi sumber daya, perdagangan ilegal, kerusakan ekosistem, serta kerugian sosial dan ekonomi. Analisis membutuhkan data lokasi agregat, status penindakan, dampak, dan konteks tata kelola.",q:"Bagaimana dampak sosial-ekonomi kejahatan lingkungan dianalisis?",u:"https://www.bps.go.id/"}
  ];
  const input=document.getElementById("askQuery"),result=document.getElementById("askResults"),button=document.getElementById("askSearch");
@@ -505,4 +755,28 @@ $('sample').addEventListener('click',()=>{let csv='region,year,incident_index,cl
  button.addEventListener("click",render);input.addEventListener("input",render);input.addEventListener("keydown",e=>{if(e.key==="Enter")render();});render();
 })();
 </script>
+
+<script>
+(function(){
+ const $=id=>document.getElementById(id);
+ const fields=['inputer1Name','inputer1Email','inputer1Contact','inputer2Name','inputer2Email','inputer2Contact'];
+ const status=$('inputerRosterStatus');
+ $('downloadInputerRoster')?.addEventListener('click',()=>{
+   const a=[$('inputer1Name').value.trim(),$('inputer1Email').value.trim(),$('inputer1Contact').value.trim(),'Data kriminalitas umum dan wilayah'];
+   const b=[$('inputer2Name').value.trim(),$('inputer2Email').value.trim(),$('inputer2Contact').value.trim(),'Kejahatan khusus, ekonomi, dan transnasional'];
+   if(!a[1]||!b[1]){status.textContent='Lengkapi kedua alamat email setelah staf menyatakan bersedia.';return;}
+   const csv=[['slot','nama','email','unit','tanggung_jawab'],['Inputer 1',...a],['Inputer 2',...b]]
+     .map(row=>row.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\r\n');
+   const blob=new Blob(['\\ufeff'+csv],{type:'text/csv;charset=utf-8;'});
+   const url=URL.createObjectURL(blob),link=document.createElement('a');
+   link.href=url;link.download='CriminologyLab_Tim_Input_Data.csv';link.click();URL.revokeObjectURL(url);
+   status.textContent='Draft daftar dua inputer berhasil diunduh ke perangkat ini. Data tidak dikirim ke server.';
+ });
+ $('clearInputerRoster')?.addEventListener('click',()=>{
+   fields.forEach(id=>{if($(id))$(id).value='';});
+   status.textContent='Kolom penetapan inputer dikosongkan.';
+ });
+})();
+</script>
+
 </body></html>
