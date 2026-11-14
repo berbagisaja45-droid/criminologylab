@@ -1,0 +1,769 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Criminology Lab — Integrated Academic & Research Platform v0.9.1</title>
+<style>
+:root{--navy:#14243a;--blue:#245b83;--teal:#16877c;--bg:#f3f6f9;--card:#fff;--ink:#1e293b;--muted:#64748b;--line:#dce4ec;--gold:#d79b32}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{background:linear-gradient(120deg,#14243a,#245b83);color:white;padding:24px 18px 22px}
+.wrap{max-width:1120px;margin:auto;padding:0 16px}header h1{font-size:clamp(23px,4vw,34px);margin:0 0 5px}header p{margin:0;color:#dbe8f3}
+nav{display:flex;gap:8px;overflow:auto;padding:12px 0}.tab{border:1px solid var(--line);background:white;color:var(--navy);padding:9px 13px;border-radius:10px;white-space:nowrap;font-weight:650;cursor:pointer}.tab.active{background:var(--navy);color:white}
+main{padding:8px 0 36px}.panel{display:none}.panel.active{display:block}.card{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:17px;margin:10px 0;box-shadow:0 3px 12px #10243a08}
+h2{font-size:20px;margin:0 0 12px;color:var(--navy)}h3{font-size:16px;margin:12px 0 7px;color:var(--navy)}
+.small{font-size:13px;color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.kpi{padding:14px;border-radius:12px;background:#f4f8fb;border:1px solid var(--line)}.kpi b{display:block;font-size:25px;color:var(--blue)}
+input,select,button{font:inherit}input[type=file],input[type=text],select{width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:9px;background:white}
+button.action{background:var(--blue);color:white;border:0;border-radius:9px;padding:10px 14px;font-weight:650;cursor:pointer}button.secondary{background:#e8eef4;color:var(--navy)}button:disabled{opacity:.5;cursor:not-allowed}
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;align-items:end}.field label{display:block;font-size:13px;font-weight:700;margin-bottom:5px}
+table{border-collapse:collapse;width:100%;font-size:13px}th,td{border-bottom:1px solid var(--line);padding:8px;text-align:left;white-space:nowrap}th{background:#f4f7fa;color:var(--navy);position:sticky;top:0}
+.tablewrap{overflow:auto;max-height:360px;border:1px solid var(--line);border-radius:10px}
+.notice{background:#fff7e8;border-left:4px solid var(--gold);padding:11px 13px;border-radius:7px;font-size:13px}
+.good{background:#edf8f5;border-left:4px solid var(--teal);padding:11px 13px;border-radius:7px;font-size:13px}
+.pill{display:inline-block;padding:3px 8px;border-radius:99px;background:#e8eef4;color:#34536c;font-size:12px;font-weight:700}
+canvas{width:100%;height:250px;border:1px solid var(--line);border-radius:10px;background:white}
+footer{padding:18px 0;color:var(--muted);font-size:12px}
+@media(max-width:600px){header{padding:20px 14px}.wrap{padding:0 12px}.card{padding:13px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+<style>
+details{border:1px solid var(--line);border-radius:10px;padding:12px;margin:8px 0;background:#fbfdff}
+details summary{cursor:pointer;color:var(--navy);font-weight:650}
+details p{margin:10px 0}
+textarea{width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:9px;font:inherit;resize:vertical}
+#lecture .small{color:#d6e4ef}
+@media print{header,nav,footer,.tab,.action,#lecturerNotes{display:none!important}.panel{display:none!important}#lecture{display:block!important}.card{box-shadow:none;border:0}}
+</style>
+
+<style>
+#classroom .field,#lecturer .field{margin:9px 0}
+#classroom textarea,#lecturer textarea{width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:9px;font:inherit}
+#classroom input,#lecturer input,#classroom select,#lecturer select{width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:9px;background:white}
+</style>
+</head>
+<body>
+<header><div class="wrap"><div class="pill">CRIMINOLOGY LAB · VERSION 0.8</div><h1>Criminology Lab — Learning & Research Platform</h1><p>Ruang kerja analisis data penelitian kriminologi — langsung dari browser, tanpa mengunggah data ke server.</p></div></header>
+<div class="wrap">
+<nav>
+<button class="tab active" data-tab="data">1. Data</button><button class="tab" data-tab="diagnostic">2. Diagnostik</button><button class="tab" data-tab="descriptive">3. Deskriptif</button><button class="tab" data-tab="correlation">4. Korelasi</button><button class="tab" data-tab="regression">5. Regresi</button><button class="tab" data-tab="export">6. Ekspor</button><button class="tab" data-tab="philosophy">7. Filsafat Kriminologi</button>
+<button class="tab" data-tab="lecture">8. Kelas & Presentasi</button>
+<button class="tab" data-tab="student">9. Student Learning</button>
+<button class="tab" data-tab="caselab">10. Case Lab</button>
+<button class="tab" data-tab="classroom">11. Classroom</button>
+<button class="tab" data-tab="lecturer">12. Dosen</button>
+<button class="tab" data-tab="progress">13. Progress</button>
+<button class="tab" data-tab="backend">14. Backend & Backup</button>
+<button class="tab" data-tab="supabase">15. Supabase & Login</button>
+</nav>
+<main>
+<section class="panel active" id="data">
+<div class="card"><h2>Impor dataset</h2><div class="controls">
+<div class="field"><label>Unggah file CSV</label><input id="file" type="file" accept=".csv,text/csv"></div>
+<div class="field"><label>Atau gunakan data contoh</label><button class="action secondary" id="sample">Muat data panel sintetis</button></div>
+<div class="field"><label>Nama dataset</label><input id="datasetName" type="text" value="Dataset penelitian"></div></div>
+<p class="small">Format yang didukung: CSV dengan baris pertama sebagai nama variabel. Pemisah koma atau titik koma dideteksi otomatis. Untuk menjaga privasi, pemrosesan dilakukan di perangkat/browser ini.</p>
+<div class="good" id="dataStatus">Belum ada dataset. Muat data contoh atau unggah CSV.</div></div>
+<div class="card"><h2>Pratinjau data</h2><div class="grid" id="dataKpis"><div class="kpi"><b>—</b><span class="small">Observasi</span></div><div class="kpi"><b>—</b><span class="small">Variabel</span></div><div class="kpi"><b>—</b><span class="small">Numerik</span></div><div class="kpi"><b>—</b><span class="small">Kategori/teks</span></div></div><h3>10 baris pertama</h3><div class="tablewrap" id="preview"><p class="small" style="padding:10px">Data belum tersedia.</p></div></div>
+</section>
+<section class="panel" id="diagnostic"><div class="card"><h2>Diagnostik kualitas data</h2><p class="small">Pemeriksaan nilai kosong, duplikasi baris, dan tipe variabel.</p><div id="diagnostics"><p class="small">Muat dataset terlebih dahulu.</p></div><button class="action" id="clean" disabled>Unduh CSV tanpa baris duplikat</button></div></section>
+<section class="panel" id="descriptive"><div class="card"><h2>Statistik deskriptif</h2><div class="field"><label>Pilih variabel numerik</label><select id="descVar"></select></div><div id="descResult"><p class="small">Muat dataset terlebih dahulu.</p></div></div></section>
+<section class="panel" id="correlation"><div class="card"><h2>Matriks korelasi Pearson</h2><p class="small">Korelasi dihitung untuk pasangan observasi lengkap pada masing-masing pasangan variabel.</p><div id="corrResult"><p class="small">Muat dataset terlebih dahulu.</p></div></div></section>
+<section class="panel" id="regression"><div class="card"><h2>Model regresi</h2><div class="notice">Gunakan hanya variabel numerik. OLS mengestimasi hubungan linear. Logit biner memerlukan variabel dependen bernilai 0/1. Hasil bersifat eksploratif; periksa asumsi, desain identifikasi, dan standard error dengan perangkat statistik yang sesuai sebelum publikasi.</div><div class="controls" style="margin-top:14px">
+<div class="field"><label>Jenis model</label><select id="model"><option value="ols">OLS (linear)</option><option value="logit">Logit biner</option></select></div>
+<div class="field"><label>Variabel dependen (Y)</label><select id="yvar"></select></div>
+<div class="field"><label>Variabel independen (X)</label><select id="xvars" multiple size="5"></select><span class="small">Pilih satu atau beberapa variabel (Ctrl/ketuk).</span></div></div>
+<button class="action" id="estimate" disabled>Estimasi model</button><div id="modelResult" style="margin-top:14px"><p class="small">Muat dataset terlebih dahulu.</p></div></div></section>
+<section class="panel" id="export"><div class="card"><h2>Ekspor hasil kerja</h2><p>Unduh dataset yang sedang digunakan dan ringkasan hasil analisis.</p><div class="grid"><button class="action" id="downloadCsv" disabled>Unduh dataset CSV</button><button class="action secondary" id="downloadReport" disabled>Unduh laporan analisis TXT</button></div><div id="exportSummary" class="small" style="margin-top:12px">Belum ada hasil analisis.</div></div><div class="card"><h2>Catatan metodologis</h2><ul class="small"><li>Missing value tidak diimputasi otomatis.</li><li>Regresi menggunakan complete-case untuk variabel yang dipilih.</li><li>Standard error pada versi ini adalah standard error konvensional; belum robust/clustered.</li><li>Belum tersedia fixed effects, random effects, survival analysis, spatial econometrics, atau causal inference.</li></ul></div></section>
+
+<section class="panel" id="philosophy">
+<div class="card">
+ <div class="pill">MAGISTER KRIMINOLOGI · FISIP UI</div>
+ <h2>Filsafat Kriminologi</h2>
+ <p>Mata kuliah ini mengajak mahasiswa menguji asumsi tentang hakikat kejahatan, produksi pengetahuan kriminologis, legitimasi penghukuman, keadilan, dan relasi kekuasaan.</p>
+ <div class="grid">
+  <div class="kpi"><b>16</b><span class="small">Pertemuan</span></div>
+  <div class="kpi"><b>4</b><span class="small">Dimensi: ontologi, epistemologi, aksiologi, etika</span></div>
+  <div class="kpi"><b>S2</b><span class="small">Tingkat pembelajaran</span></div>
+  <div class="kpi"><b>Indonesia</b><span class="small">Konteks analisis kebijakan</span></div>
+ </div>
+</div>
+<div class="card">
+ <h2>Tujuan pembelajaran</h2>
+ <ul>
+  <li>Membedakan fondasi ontologis, epistemologis, aksiologis, dan etis dalam kriminologi.</li>
+  <li>Mengkritisi teori klasik dan kontemporer tentang kejahatan, hukum, kekuasaan, dan kontrol sosial.</li>
+  <li>Menghubungkan teori, metode penelitian, bukti empiris, dan batas pengetahuan.</li>
+  <li>Menyusun argumentasi normatif tentang kriminalisasi, pemidanaan, pencegahan, dan pemulihan.</li>
+ </ul>
+ <div class="notice">Cara menggunakan: buka setiap pertemuan, baca pokok gagasan, lalu jawab pertanyaan diskusi. Materi ini merupakan bahan ajar awal dan perlu diselaraskan dengan RPS resmi program studi.</div>
+</div>
+<div class="card">
+ <h2>Modul 16 pertemuan</h2>
+ <details open><summary><b>01 · Mengapa Filsafat Kriminologi?</b></summary><p>Filsafat memeriksa asumsi dasar dan batas pengetahuan. Ontologi bertanya apa yang nyata; epistemologi bertanya bagaimana klaim pengetahuan dibenarkan; aksiologi bertanya nilai dan tujuan. Kriminologi memuat deskripsi empiris sekaligus pilihan normatif dalam menentukan masalah, kategori, indikator, dan kebijakan.</p><p><b>Pertanyaan:</b> Apakah kriminologi dapat sepenuhnya bebas nilai?</p><p><b>Latihan:</b> Pisahkan fakta, interpretasi sebab, kategori hukum, dan penilaian moral dari satu berita kriminal.</p></details>
+ <details><summary><b>02 · Apa Itu Kejahatan? Ontologi dan Konstruksi Sosial</b></summary><p>Kejahatan dapat dipahami sebagai kategori legal, pelanggaran norma, tindakan yang menimbulkan kerugian, atau hasil proses pelabelan. Definisi legal berubah menurut ruang dan waktu. Perspektif social harm membantu menelaah kerugian yang belum tentu dikriminalisasi.</p><p><b>Pertanyaan:</b> Apakah semua tindakan yang merugikan masyarakat harus menjadi tindak pidana?</p></details>
+ <details><summary><b>03 · Pencerahan dan Mazhab Klasik</b></summary><p>Beccaria menekankan legalitas, kepastian, proporsionalitas, dan pembatasan kesewenang-wenangan. Bentham menilai kebijakan melalui konsekuensi dan utilitas. Deterrence mengkaji kepastian, kecepatan, dan berat sanksi.</p><p><b>Pertanyaan:</b> Apakah hukuman yang lebih berat selalu menghasilkan pencegahan yang lebih baik?</p></details>
+ <details><summary><b>04 · Positivisme dan Determinisme</b></summary><p>Positivisme mencari keteraturan dan penjelasan kausal melalui observasi sistematis. Sejarah positivisme biologis perlu dibaca kritis karena klaim deterministik pernah digunakan untuk menstigma kelompok. Asosiasi statistik tidak otomatis membuktikan sebab.</p><p><b>Pertanyaan:</b> Kapan penjelasan kausal berubah menjadi determinisme dan stigma?</p></details>
+ <details><summary><b>05 · Filsafat Ilmu dan Pengetahuan Kriminologis</b></summary><p>Teori memengaruhi apa yang diamati dan bagaimana variabel dioperasionalkan. Falsifikasi menuntut klaim yang dapat diuji; interpretivisme menekankan makna dan konteks; realisme kritis membedakan pengalaman, peristiwa, dan mekanisme. Prediksi akurat tidak otomatis menjelaskan mekanisme atau membenarkan intervensi.</p><p><b>Pertanyaan:</b> Apa perbedaan pertanyaan deskriptif, prediktif, kausal, dan normatif?</p></details>
+ <details><summary><b>06 · Pilihan Rasional dan Ekonomi Kejahatan</b></summary><p>Rational choice melihat keputusan sebagai dipengaruhi manfaat, biaya, peluang, dan persepsi risiko. Becker mengembangkan pendekatan ekonomi terhadap perilaku ilegal. Kritiknya meliputi bounded rationality, emosi, norma, paksaan, dan ketimpangan.</p><p><b>Pertanyaan:</b> Apakah pelaku selalu menghitung untung-rugi sebelum bertindak?</p></details>
+ <details><summary><b>07 · Struktur Sosial, Konflik, dan Ekonomi Politik</b></summary><p>Durkheim mengkaji kejahatan sebagai fenomena sosial; Merton mengembangkan teori strain; perspektif konflik dan Marxian menelaah distribusi kekuasaan dalam pembentukan hukum dan kontrol sosial.</p><p><b>Pertanyaan:</b> Apakah hukum dan penegakannya memperlakukan semua kelompok secara setara?</p></details>
+ <details><summary><b>08 · Ujian Tengah Semester</b></summary><p>Esai individual: analisis satu kasus atau kebijakan kriminal Indonesia melalui dua perspektif filosofis. Jelaskan asumsi, nilai yang diprioritaskan, konsekuensi, dan keberatan terhadap argumen sendiri.</p></details>
+ <details><summary><b>09 · Labeling dan Interaksionisme</b></summary><p>Becker menyoroti proses pembuatan aturan dan moral entrepreneurs. Lemert membedakan penyimpangan primer dan sekunder. Stigma dapat membatasi akses pendidikan, kerja, relasi sosial, dan reintegrasi.</p><p><b>Pertanyaan:</b> Bagaimana label sosial dapat membentuk identitas dan karier menyimpang?</p></details>
+ <details><summary><b>10 · Kekuasaan, Disiplin, dan Negara Pengawas</b></summary><p>Foucault mengkaji relasi pengetahuan dan kekuasaan. Panoptisisme menjelaskan efek pengawasan yang dapat berlangsung meski pengawas tidak selalu terlihat. Governmentality menelaah pengaturan populasi melalui statistik, risiko, dan normalisasi.</p><p><b>Pertanyaan:</b> Bagaimana teknologi pengawasan mengubah batas kebebasan dan keamanan?</p></details>
+ <details><summary><b>11 · Feminist, Critical, dan Postcolonial Criminology</b></summary><p>Perspektif ini mengkritik teori yang mengabaikan gender, rasialisasi, kelas, disabilitas, interseksionalitas, dan warisan kolonial dalam kategori serta institusi penghukuman.</p><p><b>Pertanyaan:</b> Siapa yang absen dari data dan teori kriminologi arus utama?</p></details>
+ <details><summary><b>12 · Filsafat Hukuman dan Keadilan</b></summary><p>Retributivisme mendasarkan hukuman pada kesalahan dan proporsionalitas. Konsekuensialisme menilai manfaat seperti pencegahan. Rehabilitasi menekankan perubahan; abolitionist perspectives mempertanyakan ketergantungan pada penjara.</p><p><b>Pertanyaan:</b> Apa dasar moral negara untuk menghukum seseorang?</p></details>
+ <details><summary><b>13 · Korban, Penderitaan, dan Keadilan Restoratif</b></summary><p>Korban perlu dipahami sebagai subjek dengan kebutuhan, keselamatan, dan martabat. Keadilan restoratif menekankan kerugian, tanggung jawab, partisipasi, dan pemulihan. Prosesnya harus sukarela, aman, dan tidak memaksakan perdamaian.</p><p><b>Pertanyaan:</b> Kapan proses restoratif berisiko menjadi pemaksaan terhadap korban?</p></details>
+ <details><summary><b>14 · Etika Penelitian, Data, AI, dan Prediksi Kejahatan</b></summary><p>Data kriminalitas dipengaruhi pelaporan, patroli, prioritas aparat, dan definisi operasional. Predictive policing dapat mengulang bias historis. Audit perlu memeriksa validitas, keadilan, privasi, transparansi, dan mekanisme keberatan.</p><p><b>Pertanyaan:</b> Bolehkah risiko statistik menjadi dasar pembatasan kebebasan seseorang?</p></details>
+ <details><summary><b>15 · Filsafat Kriminologi dalam Konteks Indonesia</b></summary><p>Pancasila, UUD 1945, pluralisme hukum, hukum adat, dan pengalaman lokal menjadi horizon untuk menguji legitimasi, keadilan, kebebasan, serta kewenangan negara. Teori global perlu diuji secara kontekstual tanpa mengabaikan hak asasi.</p><p><b>Pertanyaan:</b> Bagaimana menguji teori universal dengan pengalaman sosial Indonesia?</p></details>
+ <details><summary><b>16 · Seminar Proyek Akhir dan Sintesis</b></summary><p>Mahasiswa menyusun tesis argumentatif yang menghubungkan konsep filosofis, bukti, dan implikasi kebijakan. Argumen kuat mengakui keberatan, keterbatasan bukti, konsekuensi yang tidak diinginkan, dan prinsip pembatas.</p></details>
+</div>
+<div class="card">
+ <h2>Tokoh dan bacaan inti</h2>
+ <div class="grid">
+  <div class="kpi"><b>Beccaria</b><span class="small">Legalitas, proporsionalitas, pembatasan hukuman</span></div>
+  <div class="kpi"><b>Bentham</b><span class="small">Utilitarianisme dan konsekuensi</span></div>
+  <div class="kpi"><b>Becker</b><span class="small">Ekonomi kejahatan dan pilihan rasional</span></div>
+  <div class="kpi"><b>Durkheim</b><span class="small">Fakta sosial dan fungsi kejahatan</span></div>
+  <div class="kpi"><b>Becker / Lemert</b><span class="small">Labeling dan penyimpangan</span></div>
+  <div class="kpi"><b>Foucault</b><span class="small">Disiplin, pengawasan, kekuasaan</span></div>
+  <div class="kpi"><b>Garland</b><span class="small">Budaya kontrol dan hukuman modern</span></div>
+  <div class="kpi"><b>Harcourt</b><span class="small">Prediksi, profiling, dan kebijakan</span></div>
+ </div>
+ <p class="small">Bacaan awal: Beccaria, <i>On Crimes and Punishments</i>; Becker (1968), “Crime and Punishment: An Economic Approach”; Becker, <i>Outsiders</i>; Foucault, <i>Discipline and Punish</i>; Garland, <i>The Culture of Control</i>; Harcourt, <i>Against Prediction</i>; Nagin (2013), “Deterrence in the Twenty-First Century”.</p>
+</div>
+<div class="card">
+ <h2>Tugas dan asesmen yang disarankan</h2>
+ <ul><li>Reading memo: 4 memo kritis, bukan ringkasan bacaan.</li><li>Debat filosofis: posisi pro-kontra atas kebijakan kriminal.</li><li>UTS: esai individual berbasis dua perspektif.</li><li>UAS: paper filosofis 4.000–5.000 kata dan presentasi.</li></ul>
+ <p class="small">Contoh mosi debat: “Peningkatan berat hukuman adalah instrumen utama pencegahan”; “Negara boleh memakai prediksi algoritmik untuk menentukan intensitas pengawasan”; “Keadilan restoratif lebih adil daripada pemidanaan formal”.</p>
+</div>
+</section>
+
+
+<section class="panel" id="lecture">
+<div class="card">
+ <div class="pill">LECTURE MODE · DOSEN</div>
+ <h2>Ruang Presentasi Perkuliahan</h2>
+ <p>Pilih pertemuan untuk membuka materi dalam format slide. Gunakan tombol sebelumnya/berikutnya saat mengajar. Tampilan dirancang ringkas agar dapat dibaca melalui ponsel maupun laptop.</p>
+ <div class="controls">
+  <div class="field"><label>Pilih pertemuan</label><select id="lectureSelect"></select></div>
+  <div class="field"><label>Navigasi materi</label><div style="display:flex;gap:7px"><button class="action secondary" id="prevSlide">← Sebelumnya</button><button class="action" id="nextSlide">Berikutnya →</button></div></div>
+ </div>
+ <div id="slideStage" style="margin-top:14px;background:linear-gradient(135deg,#14243a,#245b83);color:white;border-radius:16px;padding:24px;min-height:270px;display:flex;flex-direction:column;justify-content:center">
+  <div class="small" style="color:#c7d8e7" id="slideCounter">SLIDE 1</div><h2 id="slideTitle" style="color:white;font-size:26px">Pilih pertemuan</h2><div id="slideBody" style="font-size:17px;line-height:1.7"></div>
+ </div>
+ <p class="small" id="slideHint">Materi presentasi bersifat ringkasan pengajaran; dosen dapat mengembangkan uraian dan contoh di kelas.</p>
+</div>
+<div class="card">
+ <h2>Catatan pengajar</h2>
+ <textarea id="lecturerNotes" rows="4" placeholder="Tuliskan contoh kasus, pertanyaan spontan, atau catatan pengajaran untuk pertemuan ini..."></textarea>
+ <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap"><button class="action" id="exportNotes">Ekspor catatan pertemuan</button><button class="action secondary" id="printSlides">Cetak / simpan PDF dari browser</button></div>
+</div>
+</section>
+
+<section class="panel" id="student">
+<div class="card">
+ <div class="pill">STUDENT LEARNING · MAHASISWA</div>
+ <h2>Ruang Belajar Mahasiswa</h2>
+ <p>Area latihan mandiri untuk menguji pemahaman konsep dan menyiapkan diskusi seminar.</p>
+ <div class="grid">
+  <div class="kpi"><b>10</b><span class="small">Soal kuis konseptual</span></div>
+  <div class="kpi"><b>1</b><span class="small">Reading memo builder</span></div>
+  <div class="kpi"><b>4</b><span class="small">Komponen refleksi kritis</span></div>
+  <div class="kpi"><b>Lokal</b><span class="small">Tidak dikirim ke server</span></div>
+ </div>
+</div>
+<div class="card">
+ <h2>Kuis Filsafat Kriminologi</h2>
+ <div id="quizArea"></div>
+ <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button class="action" id="submitQuiz">Periksa jawaban</button><button class="action secondary" id="resetQuiz">Ulangi kuis</button></div>
+ <div id="quizScore" style="margin-top:12px"></div>
+</div>
+<div class="card">
+ <h2>Reading Memo Builder</h2>
+ <p class="small">Gunakan untuk menyusun catatan kritis bacaan, bukan sekadar ringkasan. Isi seluruh bagian lalu ekspor sebagai dokumen teks untuk dikembangkan lebih lanjut.</p>
+ <div class="field"><label>Nama mahasiswa (opsional)</label><input id="studentName" type="text" placeholder="Nama"></div>
+ <div class="field"><label>Penulis dan judul bacaan</label><input id="readingTitle" type="text" placeholder="Contoh: Becker (1968), Crime and Punishment"></div>
+ <div class="field"><label>1. Tesis utama penulis</label><textarea id="memoThesis" rows="3" placeholder="Apa klaim utama yang ingin dibuktikan penulis?"></textarea></div>
+ <div class="field"><label>2. Struktur argumen dan asumsi filosofis</label><textarea id="memoArgument" rows="3" placeholder="Apa asumsi ontologis, epistemologis, atau nilai yang mendasarinya?"></textarea></div>
+ <div class="field"><label>3. Kritik atau keberatan terkuat</label><textarea id="memoCritique" rows="3" placeholder="Apa kelemahan, batas, atau keberatan yang dapat diajukan?"></textarea></div>
+ <div class="field"><label>4. Relevansi untuk kriminologi Indonesia</label><textarea id="memoRelevance" rows="3" placeholder="Bagaimana gagasan ini membantu membaca kasus atau kebijakan di Indonesia?"></textarea></div>
+ <button class="action" id="exportMemo">Ekspor Reading Memo</button>
+</div>
+</section>
+
+<section class="panel" id="caselab">
+<div class="card">
+ <div class="pill">CASE LAB · ANALISIS FILOSOFIS</div>
+ <h2>Laboratorium Analisis Kasus</h2>
+ <p>Pilih skenario hipotetis, kemudian bedah menggunakan empat lensa filosofis. Skenario ini bukan deskripsi kasus aktual.</p>
+ <div class="field"><label>Skenario</label><select id="caseSelect">
+  <option value="predictive">Prediksi risiko kriminalitas</option>
+  <option value="corporate">Kerugian korporasi dan penegakan hukum</option>
+  <option value="restorative">Keadilan restoratif dan posisi korban</option>
+  <option value="sentencing">Peningkatan ancaman pidana</option>
+ </select></div>
+ <div id="casePrompt" class="notice" style="margin-top:10px"></div>
+ <div class="grid" style="margin-top:12px">
+  <div class="field"><label>Ontologi: apa masalah yang dianggap nyata?</label><textarea id="caseOntology" rows="4" placeholder="Apa yang disebut kejahatan/kerugian dalam kasus ini?"></textarea></div>
+  <div class="field"><label>Epistemologi: bukti apa yang diperlukan?</label><textarea id="caseEpistemology" rows="4" placeholder="Bagaimana kita mengetahui klaim tentang kasus ini?"></textarea></div>
+  <div class="field"><label>Aksiologi: nilai apa yang diprioritaskan?</label><textarea id="caseAxiology" rows="4" placeholder="Keamanan, kebebasan, keadilan, pemulihan, kesetaraan?"></textarea></div>
+  <div class="field"><label>Etika: apa batas intervensi yang sah?</label><textarea id="caseEthics" rows="4" placeholder="Apa yang boleh dan tidak boleh dilakukan negara/institusi?"></textarea></div>
+ </div>
+ <div class="field"><label>Tesis sementara / rekomendasi</label><textarea id="caseThesis" rows="3" placeholder="Tuliskan posisi argumentatif beserta alasan utamanya."></textarea></div>
+ <button class="action" id="exportCase">Ekspor analisis kasus</button>
+</div>
+<div class="card">
+ <h2>Kerangka evaluasi argumentasi</h2>
+ <ul>
+  <li>Definisi masalah dan konsep digunakan secara konsisten.</li>
+  <li>Fakta, asumsi, inferensi, dan penilaian normatif dibedakan.</li>
+  <li>Argumen mempertimbangkan bukti yang mendukung maupun yang melemahkan.</li>
+  <li>Konsekuensi kebijakan terhadap kelompok berbeda dipertimbangkan.</li>
+  <li>Rekomendasi menyebutkan batas, risiko, dan mekanisme akuntabilitas.</li>
+ </ul>
+</div>
+</section>
+
+
+<section class="panel" id="classroom">
+<div class="card">
+ <div class="pill">ACADEMIC CLASSROOM · DEMO MODE</div>
+ <h2>Ruang Kelas Akademik</h2>
+ <p>Simulasi alur masuk dosen dan mahasiswa, melihat tugas, mengumpulkan pekerjaan, serta menerima umpan balik. Pada versi ini akun dan data hanya tersimpan di browser perangkat ini.</p>
+ <div class="controls">
+  <div class="field"><label>Nama pengguna</label><input id="loginName" type="text" placeholder="Nama mahasiswa / dosen"></div>
+  <div class="field"><label>Peran</label><select id="loginRole"><option value="student">Mahasiswa</option><option value="lecturer">Dosen</option></select></div>
+  <div class="field"><label>Kode kelas</label><input id="classCode" type="text" value="FILKRI-S2-2026"></div>
+ </div>
+ <button class="action" id="enterClass" style="margin-top:10px">Masuk ruang kelas</button>
+ <div id="loginStatus" class="notice" style="margin-top:12px">Belum masuk. Ini adalah simulasi identitas lokal, bukan autentikasi akun resmi.</div>
+</div>
+<div class="card">
+ <h2>Daftar tugas perkuliahan</h2>
+ <div id="assignmentList"></div>
+</div>
+<div class="card">
+ <h2>Pengumpulan tugas mahasiswa</h2>
+ <div class="field"><label>Pilih tugas</label><select id="assignmentSelect"></select></div>
+ <div class="field"><label>Judul pekerjaan</label><input id="submissionTitle" type="text" placeholder="Judul reading memo / analisis"></div>
+ <div class="field"><label>Isi ringkasan atau jawaban</label><textarea id="submissionText" rows="6" placeholder="Tuliskan argumen, analisis, dan referensi singkat..."></textarea></div>
+ <div class="field"><label>Lampiran (opsional, file teks atau dokumen)</label><input id="submissionFile" type="file" accept=".txt,.md,.csv,.pdf,.doc,.docx"></div>
+ <button class="action" id="submitAssignment">Simpan pengumpulan</button>
+ <p class="small">Versi demo menyimpan teks dan metadata lokal. Lampiran tidak diunggah atau disimpan ke server. Unduh paket pengumpulan untuk dibagikan kepada dosen.</p>
+ <div id="submissionStatus"></div>
+</div>
+<div class="card">
+ <h2>Pengumpulan saya</h2>
+ <div id="mySubmissions" class="small">Belum ada pengumpulan.</div>
+ <button class="action secondary" id="exportMySubmissions">Ekspor seluruh pengumpulan saya</button>
+</div>
+</section>
+
+<section class="panel" id="lecturer">
+<div class="card">
+ <div class="pill">LECTURER CONSOLE · DEMO MODE</div>
+ <h2>Dashboard Dosen</h2>
+ <p>Kelola daftar tugas, periksa pengumpulan lokal, berikan nilai, dan tulis umpan balik. Data hanya terlihat pada browser yang menyimpannya.</p>
+ <div class="grid" id="lecturerKpis"></div>
+</div>
+<div class="card">
+ <h2>Buat tugas baru</h2>
+ <div class="field"><label>Nama tugas</label><input id="newAssignmentTitle" type="text" placeholder="Contoh: Reading Memo — Foucault"></div>
+ <div class="field"><label>Instruksi</label><textarea id="newAssignmentDesc" rows="3" placeholder="Jelaskan tujuan, ketentuan, dan pertanyaan tugas..."></textarea></div>
+ <div class="controls">
+  <div class="field"><label>Pertemuan</label><select id="newAssignmentWeek"></select></div>
+  <div class="field"><label>Batas waktu</label><input id="newAssignmentDue" type="date"></div>
+ </div>
+ <button class="action" id="createAssignment">Terbitkan tugas (lokal)</button>
+ <div id="createStatus" class="small" style="margin-top:8px"></div>
+</div>
+<div class="card">
+ <h2>Periksa dan nilai pengumpulan</h2>
+ <div class="field"><label>Pilih pengumpulan</label><select id="gradingSelect"></select></div>
+ <div id="gradingPreview" class="notice">Belum ada pengumpulan yang tersedia.</div>
+ <div class="controls" style="margin-top:12px">
+  <div class="field"><label>Nilai (0–100)</label><input id="gradeScore" type="number" min="0" max="100" placeholder="85"></div>
+  <div class="field"><label>Status</label><select id="gradeStatus"><option value="Reviewed">Sudah dinilai</option><option value="Revision">Perlu revisi</option></select></div>
+ </div>
+ <div class="field"><label>Umpan balik dosen</label><textarea id="gradeFeedback" rows="4" placeholder="Tuliskan kekuatan argumen, aspek yang perlu diperbaiki, dan saran bacaan..."></textarea></div>
+ <button class="action" id="saveGrade">Simpan penilaian</button>
+ <div id="gradeStatusMsg" class="small" style="margin-top:8px"></div>
+</div>
+<div class="card">
+ <h2>Rekap pengumpulan</h2>
+ <div id="allSubmissions"></div>
+ <button class="action secondary" id="exportGradebook" style="margin-top:10px">Ekspor rekap nilai CSV</button>
+</div>
+</section>
+
+<section class="panel" id="progress">
+<div class="card">
+ <div class="pill">LEARNING ANALYTICS · LOCAL DEMO</div>
+ <h2>Learning Progress</h2>
+ <p>Ringkasan aktivitas pembelajaran pada browser ini. Angka tidak mewakili keseluruhan kelas karena belum tersinkronisasi antarperangkat.</p>
+ <div class="grid" id="progressKpis"></div>
+</div>
+<div class="card">
+ <h2>Jejak pembelajaran</h2>
+ <div id="progressTimeline" class="small"></div>
+</div>
+<div class="card">
+ <h2>Rekomendasi tindak lanjut</h2>
+ <ul>
+  <li>Mahasiswa: lengkapi tugas yang belum dikumpulkan dan baca umpan balik dosen.</li>
+  <li>Dosen: tinjau tugas berstatus menunggu dan berikan umpan balik formatif.</li>
+  <li>Program studi: gunakan data agregat secara hati-hati dan jangan menyimpulkan capaian kelas dari prototipe lokal.</li>
+ </ul>
+</div>
+</section>
+
+
+<section class="panel" id="backend">
+<div class="card">
+ <div class="pill">BACKEND READINESS · VERSION 0.8</div>
+ <h2>Supabase Integration Readiness</h2>
+ <p>Versi ini menyiapkan rancangan integrasi database akademik secara terpisah. Belum ada koneksi ke proyek Supabase dan tidak ada data yang dikirim ke server.</p>
+ <div class="grid">
+  <div class="kpi"><b>6</b><span class="small">Tabel inti yang dirancang</span></div>
+  <div class="kpi"><b>RLS</b><span class="small">Akses berbasis peran</span></div>
+  <div class="kpi"><b>Private</b><span class="small">Rancangan penyimpanan tugas</span></div>
+  <div class="kpi"><b>Offline</b><span class="small">Status aplikasi saat ini</span></div>
+ </div>
+ <div class="notice" style="margin-top:12px">Penting: jangan memasukkan Supabase service-role key ke HTML, JavaScript browser, APK Android, atau repository publik. Integrasi produksi harus memakai Supabase Auth dan anon/publishable key dengan RLS aktif.</div>
+</div>
+<div class="card">
+ <h2>Backup & Restore data lokal</h2>
+ <p class="small">Buat salinan data kelas yang tersimpan di browser ini. File backup berisi nama pengguna demo, daftar tugas, pengumpulan, nilai, dan aktivitas.</p>
+ <div class="controls">
+  <div><button class="action" id="exportBackup">Ekspor backup JSON</button></div>
+  <div class="field"><label>Restore backup JSON</label><input id="importBackup" type="file" accept=".json,application/json"></div>
+ </div>
+ <div id="backupStatus" class="small" style="margin-top:10px">Belum ada proses backup atau restore.</div>
+</div>
+<div class="card">
+ <h2>Rancangan tabel database</h2>
+ <div class="tablewrap"><table><thead><tr><th>Tabel</th><th>Fungsi</th><th>Akses utama</th></tr></thead><tbody>
+ <tr><td>courses</td><td>Kelas dan mata kuliah</td><td>Dosen pemilik / anggota kelas</td></tr>
+ <tr><td>course_members</td><td>Keanggotaan dosen dan mahasiswa</td><td>Dosen mengelola; mahasiswa membaca keanggotaannya</td></tr>
+ <tr><td>assignments</td><td>Tugas, instruksi, tenggat</td><td>Dosen mengelola; anggota membaca</td></tr>
+ <tr><td>submissions</td><td>Pengumpulan tugas mahasiswa</td><td>Mahasiswa mengelola miliknya; dosen meninjau</td></tr>
+ <tr><td>grades</td><td>Nilai dan umpan balik</td><td>Dosen memberi nilai; mahasiswa membaca miliknya</td></tr>
+ <tr><td>learning_events</td><td>Log aktivitas pembelajaran minimal</td><td>Pengguna membaca miliknya; dosen melihat ringkasan kelas</td></tr>
+ </tbody></table></div>
+ <p class="small">SQL migration draft disertakan di Starter Package. Jalankan hanya setelah ditinjau dan dicocokkan dengan proyek Supabase tujuan.</p>
+</div>
+<div class="card">
+ <h2>Checklist sebelum koneksi produksi</h2>
+ <ul>
+  <li>Konfirmasi proyek Supabase khusus yang akan digunakan.</li>
+  <li>Periksa tabel, bucket, trigger, function, dan policy yang sudah ada.</li>
+  <li>Ambil backup skema sebelum migrasi.</li>
+  <li>Tinjau SQL migration dan uji di proyek staging terlebih dahulu.</li>
+  <li>Aktifkan RLS pada seluruh tabel akademik.</li>
+  <li>Uji akun dosen, mahasiswa, dan akses lintas kelas.</li>
+  <li>Atur bucket privat dan batas ukuran/jenis berkas.</li>
+  <li>Jangan menyimpan data pribadi atau identitas perkara sensitif tanpa dasar dan perlindungan yang memadai.</li>
+ </ul>
+</div>
+</section>
+
+
+<section class="panel" id="supabase">
+  <div class="card">
+    <h2>Supabase Connection & Authentication</h2>
+    <p class="small">Proyek khusus Criminology Lab · Project ref: <b>rurfluvlcnexxuwfngaj</b>. Panel ini menghubungkan website ke database yang sudah dibuat. Masukkan publishable key dari Supabase; jangan pernah memakai service-role/secret key di browser.</p>
+    <div class="notice">Status awal: website tetap dapat digunakan dalam mode demo lokal. Sinkronisasi database aktif setelah konfigurasi publishable key dan autentikasi berhasil.</div>
+    <div class="controls">
+      <div class="field"><label>Supabase Project URL</label><input id="sbUrl" type="text" value="https://rurfluvlcnexxuwfngaj.supabase.co"></div>
+      <div class="field"><label>Publishable key (sb_publishable_...)</label><input id="sbKey" type="password" placeholder="Tempel publishable key di sini"></div>
+    </div>
+    <p><button class="action" id="sbConnect">Simpan konfigurasi & uji koneksi</button> <button class="action secondary" id="sbForget">Hapus konfigurasi lokal</button></p>
+    <div id="sbConnectionStatus" class="small" aria-live="polite">Belum terhubung. Masukkan publishable key lalu uji koneksi.</div>
+  </div>
+  <div class="card">
+    <h2>Login pengguna</h2>
+    <p class="small">Gunakan akun email yang terdaftar pada Supabase Authentication. Untuk saat ini, pembuatan akun dan verifikasi email mengikuti pengaturan Auth proyek.</p>
+    <div class="controls">
+      <div class="field"><label>Email</label><input id="sbEmail" type="text" placeholder="nama@email.com"></div>
+      <div class="field"><label>Password</label><input id="sbPassword" type="password" placeholder="Password akun"></div>
+    </div>
+    <p>
+      <button class="action" id="sbSignIn">Login</button>
+      <button class="action secondary" id="sbSignUp">Daftar akun</button>
+      <button class="action secondary" id="sbSignOut">Logout</button>
+    </p>
+    <div id="sbAuthStatus" class="small" aria-live="polite">Belum ada sesi login.</div>
+  </div>
+  <div class="card">
+    
+  <div class="card">
+    <h2>Manajemen kelas — buat kelas pertama</h2>
+    <p class="small">Buat kelas perkuliahan langsung ke Supabase. Akun yang sedang login otomatis menjadi pemilik kelas.</p>
+    <div class="controls">
+      <div class="field"><label>Kode kelas</label><input id="clCourseCode" type="text" placeholder="Contoh: KRIM-S2-2026"></div>
+      <div class="field"><label>Nama kelas</label><input id="clCourseName" type="text" placeholder="Contoh: Filsafat Kriminologi"></div>
+      <div class="field"><label>Tahun akademik</label><input id="clAcademicYear" type="text" placeholder="2026/2027"></div>
+      <div class="field"><label>Semester</label><select id="clSemester"><option value="Ganjil">Ganjil</option><option value="Genap">Genap</option><option value="Antara">Antara</option></select></div>
+    </div>
+    <div class="field"><label>Deskripsi kelas (opsional)</label><textarea id="clCourseDescription" rows="3" placeholder="Deskripsi singkat kelas"></textarea></div>
+    <p><button class="action" id="clCreateCourse">Buat kelas di Supabase</button></p>
+    <div id="clCreateCourseStatus" class="small" aria-live="polite">Belum ada kelas yang dibuat.</div>
+  </div>
+
+    <h2>Database live check</h2>
+    <p class="small">Menguji akses baca tabel <code>cl_courses</code> menggunakan sesi pengguna saat ini. Karena RLS aktif, hasil hanya menampilkan kelas yang boleh diakses akun tersebut.</p>
+    <button class="action" id="sbTestDb">Uji akses tabel cl_courses</button>
+    <div id="sbDbStatus" class="small" aria-live="polite">Belum diuji.</div>
+    <div class="tablewrap"><table><thead><tr><th>Nama kelas</th><th>Kode</th><th>Tahun akademik</th><th>Status</th></tr></thead><tbody id="sbCourseRows"><tr><td colspan="4">Belum ada data.</td></tr></tbody></table></div>
+  </div>
+  <div class="card">
+    <h2>Modul website</h2>
+    <div class="grid">
+      <div class="kpi"><b>15</b>Area navigasi terpadu</div>
+      <div class="kpi"><b>6</b>Tabel database inti</div>
+      <div class="kpi"><b>18</b>Kebijakan RLS</div>
+      <div class="kpi"><b>3</b>Peran utama: dosen, asisten, mahasiswa</div>
+    </div>
+    <p class="small">Catatan: modul analisis, materi, simulasi, dan classroom versi demo tetap tersedia. Sinkronisasi seluruh aktivitas pembelajaran dan penilaian ke database memerlukan tahap pemetaan data dan pengujian berikutnya.</p>
+  </div>
+</section>
+
+</main><footer>Criminology Lab · Learning & Research Platform · Prototype 0.9.1 · Modul demo berjalan pada browser; koneksi database menggunakan Supabase.</footer>
+</div>
+<script>
+const $=id=>document.getElementById(id);let rows=[],headers=[],analysisLog=[];
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab,.panel').forEach(x=>x.classList.remove('active'));b.classList.add('active');$(b.dataset.tab).classList.add('active');}));
+function parseCSV(s){let first=s.split(/\r?\n/)[0]||'', sep=(first.match(/;/g)||[]).length>(first.match(/,/g)||[]).length?';':',';let out=[],row=[],v='',q=false;for(let i=0;i<s.length;i++){let c=s[i];if(c==='"'){if(q&&s[i+1]==='"'){v+='"';i++;}else q=!q;}else if(c===sep&&!q){row.push(v);v='';}else if((c==='\n'||c==='\r')&&!q){if(c==='\r'&&s[i+1]==='\n')i++;row.push(v);if(row.some(x=>x.trim()!==''))out.push(row);row=[];v='';}else v+=c;}row.push(v);if(row.some(x=>x.trim()!==''))out.push(row);return out;}
+function numeric(v){if(v===null||v===undefined||String(v).trim()==='')return null;let n=Number(String(v).trim().replace(',','.'));return Number.isFinite(n)?n:null;}
+function load(csv,name){let a=parseCSV(csv);if(a.length<2){$('dataStatus').textContent='CSV tidak memiliki data yang cukup.';return;}headers=a[0].map((h,i)=>h.trim()||`var_${i+1}`);rows=a.slice(1).map(r=>Object.fromEntries(headers.map((h,i)=>[h,(r[i]??'').trim()])));$('datasetName').value=name||'Dataset penelitian';analysisLog=[];render();}
+function nums(){return headers.filter(h=>{let vals=rows.map(r=>numeric(r[h])).filter(v=>v!==null);return vals.length>0&&vals.length>=Math.max(3,rows.length*.5);});}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function table(data,cols){return `<div class="tablewrap"><table><thead><tr>${cols.map(c=>`<th>${esc(c)}</th>`).join('')}</tr></thead><tbody>${data.map(r=>`<tr>${cols.map(c=>`<td>${esc(r[c]??'')}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;}
+function render(){let n=nums();let cats=headers.filter(h=>!n.includes(h));$('dataStatus').textContent=`Dataset aktif: ${$('datasetName').value} · ${rows.length} observasi · ${headers.length} variabel.`;$('dataKpis').innerHTML=[[rows.length,'Observasi'],[headers.length,'Variabel'],[n.length,'Numerik'],[cats.length,'Kategori/teks']].map(x=>`<div class="kpi"><b>${x[0]}</b><span class="small">${x[1]}</span></div>`).join('');$('preview').innerHTML=table(rows.slice(0,10),headers);let opts=n.map(h=>`<option value="${esc(h)}">${esc(h)}</option>`).join('');$('descVar').innerHTML=opts;$('yvar').innerHTML=opts;$('xvars').innerHTML=opts;$('diagnostics').innerHTML=diagnose();['clean','downloadCsv','downloadReport','estimate'].forEach(id=>$(id).disabled=false);desc();corr();$('exportSummary').textContent=`Dataset ${$('datasetName').value} siap dianalisis. Hasil model akan dicatat di laporan.`;}
+function diagnose(){let miss=headers.map(h=>({Variabel:h,'Nilai kosong':rows.filter(r=>r[h]==='').length,Tipe:nums().includes(h)?'Numerik':'Kategori/teks'}));let seen=new Set(),dups=0;rows.forEach(r=>{let k=headers.map(h=>r[h]).join('\u001f');if(seen.has(k))dups++;seen.add(k);});return `<div class="grid"><div class="kpi"><b>${rows.length}</b><span class="small">Jumlah baris</span></div><div class="kpi"><b>${dups}</b><span class="small">Baris duplikat penuh</span></div><div class="kpi"><b>${headers.reduce((s,h)=>s+rows.filter(r=>r[h]==='').length,0)}</b><span class="small">Total sel kosong</span></div></div><h3>Missing values per variabel</h3>${table(miss,['Variabel','Nilai kosong','Tipe'])}`;}
+function stats(a){a=a.filter(v=>v!==null).sort((x,y)=>x-y);if(!a.length)return null;let m=a.reduce((s,x)=>s+x,0)/a.length,sd=Math.sqrt(a.reduce((s,x)=>s+(x-m)**2,0)/(a.length-1||1));return {N:a.length,Mean:m,SD:sd,Min:a[0],P25:a[Math.floor((a.length-1)*.25)],Median:a[Math.floor((a.length-1)*.5)],P75:a[Math.floor((a.length-1)*.75)],Max:a[a.length-1]};}
+function fmt(x){return typeof x==='number'?(Number.isFinite(x)?x.toFixed(4):'—'):x;}
+function desc(){if(!rows.length)return;let h=$('descVar').value||nums()[0];if(!h)return;$('descResult').innerHTML=table([stats(rows.map(r=>numeric(r[h])))||{}],['N','Mean','SD','Min','P25','Median','P75','Max']);}
+$('descVar').addEventListener('change',desc);
+function corrVal(a,b){let pairs=a.map((x,i)=>[x,b[i]]).filter(p=>p[0]!==null&&p[1]!==null);if(pairs.length<3)return null;let ma=pairs.reduce((s,p)=>s+p[0],0)/pairs.length,mb=pairs.reduce((s,p)=>s+p[1],0)/pairs.length;let num=0,da=0,db=0;pairs.forEach(p=>{num+=(p[0]-ma)*(p[1]-mb);da+=(p[0]-ma)**2;db+=(p[1]-mb)**2;});return da&&db?num/Math.sqrt(da*db):null;}
+function corr(){if(!rows.length)return;let n=nums();$('corrResult').innerHTML=n.length<2?'Diperlukan minimal dua variabel numerik.':`<div class="tablewrap"><table><thead><tr><th>Variabel</th>${n.map(h=>`<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${n.map(a=>`<tr><th>${esc(a)}</th>${n.map(b=>`<td>${a===b?'1.0000':fmt(corrVal(rows.map(r=>numeric(r[a])),rows.map(r=>numeric(r[b]))))}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;}
+function transpose(A){return A[0].map((_,i)=>A.map(r=>r[i]));}
+function mm(A,B){return A.map(r=>B[0].map((_,j)=>r.reduce((s,x,k)=>s+x*B[k][j],0)));}
+function inv(A){let n=A.length,M=A.map((r,i)=>r.concat(r.map((_,j)=>i===j?1:0)));for(let i=0;i<n;i++){let p=i;for(let j=i+1;j<n;j++)if(Math.abs(M[j][i])>Math.abs(M[p][i]))p=j;if(Math.abs(M[p][i])<1e-10)throw Error('Matriks singular: periksa multikolinearitas atau jumlah observasi.');[M[i],M[p]]=[M[p],M[i]];let d=M[i][i];M[i]=M[i].map(x=>x/d);for(let j=0;j<n;j++)if(j!==i){let f=M[j][i];M[j]=M[j].map((x,k)=>x-f*M[i][k]);}}return M.map(r=>r.slice(n));}
+function estimate(){let y=$('yvar').value,xs=[...$('xvars').selectedOptions].map(o=>o.value).filter(x=>x!==y);if(!y||!xs.length){$('modelResult').innerHTML='<div class="notice">Pilih satu Y dan minimal satu X yang berbeda.</div>';return;}let logit=$('model').value==='logit';let obs=rows.map(r=>({y:numeric(r[y]),x:xs.map(h=>numeric(r[h]))})).filter(o=>o.y!==null&&o.x.every(v=>v!==null));if(obs.length<=xs.length+1){$('modelResult').textContent='Observasi lengkap tidak mencukupi untuk mengestimasi model.';return;}if(logit&&!obs.every(o=>o.y===0||o.y===1)){$('modelResult').textContent='Untuk logit, Y harus hanya berisi nilai 0 dan 1.';return;}let X=obs.map(o=>[1,...o.x]),Y=obs.map(o=>[o.y]),beta=X[0].map(()=>[0]),iterations=0;
+try{if(!logit){let Xt=transpose(X),A=mm(mm(inv(mm(Xt,X)),Xt),Y);beta=A;}else{for(iterations=0;iterations<100;iterations++){let p=X.map((r,i)=>{let z=r.reduce((s,v,j)=>s+v*beta[j][0],0);return 1/(1+Math.exp(-Math.max(-30,Math.min(30,z))));});let W=p.map(v=>[Math.max(v*(1-v),1e-7)]),z=X.map((r,i)=>[r.reduce((s,v,j)=>s+v*beta[j][0],0)+(obs[i].y-p[i])/W[i][0]]);let Xt=transpose(X),b=mm(mm(inv(mm(mm(Xt,W),X)),mm(Xt,W)),z);let diff=Math.max(...b.map((r,i)=>Math.abs(r[0]-beta[i][0])));beta=b;if(diff<1e-7)break;}}
+let pred=X.map(r=>logit?1/(1+Math.exp(-r.reduce((s,v,j)=>s+v*beta[j][0],0))):r.reduce((s,v,j)=>s+v*beta[j][0],0));let mean=Y.reduce((s,r)=>s+r[0],0)/Y.length;let sse=Y.reduce((s,r,i)=>s+(r[0]-pred[i])**2,0);let sst=Y.reduce((s,r)=>s+(r[0]-mean)**2,0);let r2=1-sse/sst;let Xt=transpose(X),bread=inv(mm(Xt,X));let resid=Y.map((r,i)=>r[0]-pred[i]);let se=beta.map((_,j)=>Math.sqrt(Math.max(0,bread[j][j]*(logit?1: sse/(obs.length-X[0].length)))));let names=['Konstanta',...xs];let out=names.map((nm,i)=>({Variabel:nm,Koefisien:fmt(beta[i][0]),'Std. Error':fmt(se[i]),'z/t (aproks.)':fmt(beta[i][0]/(se[i]||1e-12))}));let summary=`Model ${logit?'Logit biner':'OLS'} | N=${obs.length} | ${logit?'Iterasi='+iterations:'R²='+fmt(r2)} | Y=${y} | X=${xs.join(', ')}`;analysisLog.push(summary+'\n'+JSON.stringify(out,null,2));$('modelResult').innerHTML=`<div class="good">${esc(summary)}</div><h3>Koefisien</h3>${table(out,['Variabel','Koefisien','Std. Error','z/t (aproks.)'])}<p class="small">${logit?'Logit: koefisien berada pada skala log-odds.':'OLS: koefisien menunjukkan perubahan rata-rata Y untuk satu unit perubahan X.'} Standard error dan statistik uji pada versi ini belum disesuaikan untuk heteroskedastisitas, klaster, atau panel.</p>`;$('exportSummary').textContent=`${analysisLog.length} estimasi model tersimpan dalam laporan ekspor.`;}catch(e){$('modelResult').textContent='Estimasi gagal: '+e.message;}}
+$('estimate').addEventListener('click',estimate);
+function download(name,content,type='text/plain'){let blob=new Blob([content],{type}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();URL.revokeObjectURL(a.href);}
+function toCSV(rs){return [headers.join(','),...rs.map(r=>headers.map(h=>{let v=String(r[h]??'');return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}).join(','))].join('\n');}
+$('clean').addEventListener('click',()=>{let seen=new Set(),clean=rows.filter(r=>{let k=headers.map(h=>r[h]).join('\u001f');if(seen.has(k))return false;seen.add(k);return true;});download('dataset_tanpa_duplikasi.csv',toCSV(clean),'text/csv');});
+$('downloadCsv').addEventListener('click',()=>download('criminology_lab_dataset.csv',toCSV(rows),'text/csv'));
+$('downloadReport').addEventListener('click',()=>download('criminology_lab_laporan_analisis.txt',`CRIMINOLOGY LAB — STATISTICAL RESEARCH WORKBENCH 0.4\nDataset: ${$('datasetName').value}\nObservasi: ${rows.length}\nVariabel: ${headers.join(', ')}\n\nHASIL ESTIMASI\n${analysisLog.join('\n\n')||'Belum ada estimasi model.'}\n\nCatatan: hasil eksploratif; validasi lebih lanjut dengan perangkat statistik dan pemeriksaan asumsi diperlukan.`));
+$('file').addEventListener('change',e=>{let f=e.target.files[0];if(f){let reader=new FileReader();reader.onload=()=>load(reader.result,f.name);reader.readAsText(f);}});
+$('sample').addEventListener('click',()=>{let csv='region,year,incident_index,clearance_rate,unemployment_rate,prevention_budget,police_density\n';let regions=['Wilayah A','Wilayah B','Wilayah C','Wilayah D','Wilayah E'];regions.forEach((r,i)=>{for(let y=2021;y<=2025;y++){let t=y-2021;let incident=68+i*5-t*(1.1+i*.12)+(i*7+t*3)%6;let clearance=48+i*4+t*1.6+(i+t)%4;let unemp=7.8-i*.45-t*.22+((i*2+t)%3)*.15;let prevention=20+i*3+t*2+(i+t)%4;let police=12+i*1.8+(t%2)*.7;csv+=`${r},${y},${incident.toFixed(1)},${clearance.toFixed(1)},${unemp.toFixed(2)},${prevention.toFixed(1)},${police.toFixed(1)}\n`;}});load(csv,'Synthetic_Crime_Justice_Panel.csv');});
+</script>
+<script>
+const lectureData = [
+["01 · Mengapa Filsafat Kriminologi?",[
+["Pertanyaan pembuka","Mengapa kita perlu berfilsafat tentang kejahatan? Kriminologi bukan hanya mengumpulkan fakta; ia juga memuat asumsi tentang manusia, masyarakat, pengetahuan, dan keadilan."],
+["Empat dimensi","Ontologi: apa yang dianggap nyata? Epistemologi: bagaimana kita mengetahui? Aksiologi: nilai apa yang diprioritaskan? Etika: apa yang patut dilakukan?"],
+["Kriminologi dan nilai","Pemilihan isu, kategori, indikator, sampel, dan rekomendasi kebijakan dapat memuat pilihan nilai. Transparansi asumsi adalah bagian dari tanggung jawab ilmiah."],
+["Diskusi","Apakah kriminologi dapat sepenuhnya bebas nilai? Bedakan objektivitas prosedural dari klaim bahwa penelitian tidak memiliki konsekuensi normatif."]
+]],
+["02 · Apa Itu Kejahatan?",[
+["Definisi legal","Kejahatan sebagai perbuatan yang dilarang hukum dan diancam sanksi. Definisi ini penting bagi asas legalitas, tetapi berubah menurut ruang dan waktu."],
+["Social harm","Kerugian sosial dapat melampaui kategori pidana. Tidak semua kerugian dikriminalisasi dan tidak semua kriminalisasi otomatis adil."],
+["Konstruksi sosial","Proses penamaan, pelabelan, pelaporan, dan respons institusi turut membentuk apa yang terlihat sebagai masalah kriminal."],
+["Diskusi","Bandingkan kejahatan jalanan, kerugian korporasi, dan kerusakan lingkungan: apakah semuanya terlihat dan diperlakukan setara?"]
+]],
+["03 · Pencerahan dan Mazhab Klasik",[
+["Konteks Pencerahan","Pemikiran klasik berkembang sebagai kritik terhadap penghukuman yang sewenang-wenang dan tidak proporsional."],
+["Beccaria","Legalitas, kepastian hukum, proporsionalitas, dan pembatasan kekuasaan menghukum menjadi prinsip utama."],
+["Bentham","Utilitarianisme menilai kebijakan melalui konsekuensi dan manfaat sosial; hukuman perlu dibenarkan, bukan dianggap baik pada dirinya."],
+["Diskusi","Apakah peningkatan berat hukuman selalu lebih efektif daripada peningkatan kepastian penegakan?"]
+]],
+["04 · Positivisme dan Determinisme",[
+["Proyek positivisme","Mencari keteraturan dan penjelasan kausal melalui observasi sistematis."],
+["Sejarah kritis","Kriminologi biologis awal memperlihatkan risiko mengubah perbedaan manusia menjadi klaim deterministik dan dasar stigma."],
+["Penjelasan multilevel","Faktor biologis, psikologis, sosial, ekonomi, dan institusional perlu dianalisis tanpa reduksionisme."],
+["Diskusi","Bagaimana membedakan faktor risiko pada tingkat populasi dari penilaian terhadap individu?"]
+]],
+["05 · Filsafat Ilmu Kriminologi",[
+["Teori dan observasi","Teori memengaruhi apa yang dihitung, bagaimana kategori dibuat, dan apa yang dianggap sebagai bukti."],
+["Falsifikasi dan interpretasi","Klaim kausal perlu dapat diuji; pendekatan interpretif mengkaji makna, pengalaman, dan konteks tindakan."],
+["Batas inferensi","Korelasi bukan sebab. Prediksi akurat tidak otomatis menjelaskan mekanisme atau membenarkan intervensi."],
+["Diskusi","Apa perbedaan pertanyaan deskriptif, prediktif, kausal, dan normatif?"]
+]],
+["06 · Pilihan Rasional dan Ekonomi Kejahatan",[
+["Pilihan dan insentif","Rational choice menelaah bagaimana manfaat, biaya, peluang, dan persepsi risiko memengaruhi keputusan."],
+["Becker","Pendekatan ekonomi terhadap kejahatan menganalisis alokasi waktu dan insentif, termasuk biaya yang diharapkan dari sanksi."],
+["Kritik asumsi","Keputusan nyata dibatasi informasi, emosi, kebiasaan, paksaan, relasi kuasa, dan ketimpangan."],
+["Diskusi","Kapan model expected utility berguna sebagai alat analisis, dan kapan ia menjadi penyederhanaan yang menyesatkan?"]
+]],
+["07 · Struktur Sosial dan Konflik",[
+["Durkheim dan Merton","Kejahatan dipahami dalam hubungan dengan struktur sosial, norma, tujuan budaya, dan akses terhadap sarana."],
+["Teori konflik","Pembentukan dan penegakan hukum perlu dibaca dalam relasi kekuasaan dan distribusi sumber daya."],
+["Ekonomi politik","Analisis menelaah hubungan kejahatan, ketimpangan, organisasi ekonomi, dan kontrol sosial."],
+["Diskusi","Apakah semua kelompok memiliki kapasitas yang sama untuk menghindari kriminalisasi?"]
+]],
+["08 · Ujian Tengah Semester",[
+["Tugas esai","Pilih satu kasus atau kebijakan kriminal Indonesia dan analisis melalui dua perspektif filosofis."],
+["Standar argumen","Jelaskan tesis, konsep, asumsi, bukti, keberatan, dan konsekuensi kebijakan."],
+["Refleksi","Sebutkan apa yang dapat mengubah atau melemahkan posisi argumentatif Anda."]
+]],
+["09 · Labeling dan Interaksionisme",[
+["Reaksi sosial","Penyimpangan tidak hanya terkait tindakan; reaksi sosial dan institusi turut membentuk status menyimpang."],
+["Becker dan Lemert","Moral entrepreneurs, pembuatan aturan, penyimpangan primer dan sekunder."],
+["Stigma","Label dapat membatasi akses kerja, pendidikan, relasi sosial, dan reintegrasi."],
+["Diskusi","Bagaimana merancang respons yang menjaga keselamatan publik tanpa memperkuat stigma?"]
+]],
+["10 · Foucault dan Pengawasan",[
+["Pengetahuan dan kuasa","Kategori, pengukuran, dan institusi dapat menjadi cara mengatur perilaku serta membentuk subjek."],
+["Panoptisisme","Kemungkinan diawasi dapat memengaruhi perilaku bahkan ketika pengawasan tidak selalu terlihat."],
+["Governmentality","Populasi diatur melalui statistik, risiko, normalisasi, dan intervensi administratif."],
+["Diskusi","Bagaimana menilai CCTV, biometrik, dan pemetaan risiko dari prinsip legalitas, kebutuhan, dan proporsionalitas?"]
+]],
+["11 · Feminist dan Critical Criminology",[
+["Kritik terhadap arus utama","Pengalaman perempuan dan kelompok marginal sering diabaikan dalam teori, data, dan kebijakan."],
+["Interseksionalitas","Gender, kelas, rasialisasi, disabilitas, dan posisi sosial dapat berinteraksi membentuk pengalaman kriminalisasi."],
+["Pascakolonial","Kategori dan institusi hukum dapat membawa warisan sejarah kolonial yang perlu diperiksa."],
+["Diskusi","Siapa yang tidak terwakili dalam data dan siapa yang tidak didengar dalam perumusan kebijakan?"]
+]],
+["12 · Filsafat Hukuman",[
+["Retributivisme","Hukuman dibenarkan sebagai respons atas kesalahan, dengan batas proporsionalitas."],
+["Konsekuensialisme","Hukuman dinilai melalui manfaat seperti pencegahan, perlindungan, dan pengurangan kerugian."],
+["Alternatif","Rehabilitasi, reintegrasi, restorative justice, dan kritik terhadap pemenjaraan."],
+["Diskusi","Apa dasar moral negara untuk menghukum, dan batas apa yang tidak boleh dilanggar?"]
+]],
+["13 · Korban dan Keadilan Restoratif",[
+["Korban sebagai subjek","Kebutuhan, keselamatan, martabat, dan suara korban perlu menjadi pusat perhatian."],
+["Pemulihan","Restorative justice mengkaji kerugian, tanggung jawab, partisipasi, dan kemungkinan pemulihan."],
+["Batas etik","Ketimpangan kuasa, tekanan berdamai, dan reviktimisasi dapat merusak proses restoratif."],
+["Diskusi","Bagaimana memastikan partisipasi korban benar-benar sukarela dan aman?"]
+]],
+["14 · Etika Data, AI, dan Prediksi",[
+["Data tidak netral","Data kriminalitas dipengaruhi pelaporan, patroli, prioritas aparat, definisi, dan akses institusi."],
+["Bias algoritmik","Sistem prediksi dapat mengulang pola penegakan historis dan menghasilkan false positives."],
+["Prinsip tata kelola","Validitas, privasi, transparansi, audit independen, akuntabilitas, dan mekanisme keberatan."],
+["Diskusi","Bolehkah prediksi statistik menjadi dasar pembatasan kebebasan seseorang?"]
+]],
+["15 · Konteks Indonesia",[
+["Horizon normatif","Pancasila dan UUD 1945 menjadi rujukan untuk menilai martabat manusia, keadilan, kebebasan, dan kewenangan negara."],
+["Pluralisme hukum","Hukum adat dan pluralitas norma menimbulkan pertanyaan tentang legitimasi, kesetaraan, dan hak individu."],
+["Uji kontekstual","Korupsi, kekerasan, narkotika, konflik sumber daya, kejahatan siber, dan kejahatan korporasi memperlihatkan relasi kerugian dan kuasa."],
+["Diskusi","Bagaimana menggunakan teori global tanpa mengabaikan pengalaman lokal dan hak asasi?"]
+]],
+["16 · Seminar Sintesis",[
+["Tesis argumentatif","Hubungkan konsep filosofis, bukti yang relevan, dan implikasi kebijakan."],
+["Sanggahan","Argumen kuat mengakui keberatan, keterbatasan bukti, serta konsekuensi yang tidak diinginkan."],
+["Kontribusi filsafat","Memperjelas asumsi, menguji legitimasi, dan memperluas pilihan kebijakan yang dapat dipertanggungjawabkan."],
+["Presentasi","Sampaikan pertanyaan, tesis, kerangka, argumen, keberatan, dan implikasi secara ringkas."]
+]]
+];
+let currentLecture=0,currentSlide=0;
+const lsel=document.getElementById('lectureSelect');
+if(lsel){
+ lectureData.forEach((x,i)=>{let o=document.createElement('option');o.value=i;o.textContent=x[0];lsel.appendChild(o);});
+ function renderSlide(){let data=lectureData[currentLecture],slides=data[1];currentSlide=Math.max(0,Math.min(currentSlide,slides.length-1));document.getElementById('slideCounter').textContent=`PERTEMUAN ${currentLecture+1} · SLIDE ${currentSlide+1}/${slides.length}`;document.getElementById('slideTitle').textContent=slides[currentSlide][0];document.getElementById('slideBody').textContent=slides[currentSlide][1];document.getElementById('slideHint').textContent=data[0];}
+ lsel.addEventListener('change',()=>{currentLecture=Number(lsel.value);currentSlide=0;renderSlide();});
+ document.getElementById('prevSlide').addEventListener('click',()=>{if(currentSlide>0)currentSlide--;else if(currentLecture>0){currentLecture--;lsel.value=currentLecture;currentSlide=lectureData[currentLecture][1].length-1;}renderSlide();});
+ document.getElementById('nextSlide').addEventListener('click',()=>{if(currentSlide<lectureData[currentLecture][1].length-1)currentSlide++;else if(currentLecture<lectureData.length-1){currentLecture++;lsel.value=currentLecture;currentSlide=0;}renderSlide();});
+ renderSlide();
+ document.getElementById('exportNotes').addEventListener('click',()=>{let s=`Catatan pengajar\n${lectureData[currentLecture][0]}\n\n${document.getElementById('lecturerNotes').value}`;download('catatan_pengajar_pertemuan_'+(currentLecture+1)+'.txt',s);});
+ document.getElementById('printSlides').addEventListener('click',()=>window.print());
+}
+const quiz=[
+["Ontologi dalam filsafat kriminologi terutama menanyakan…",["Bagaimana data dikumpulkan?","Apa hakikat atau status realitas kejahatan?","Berapa besar koefisien regresi?","Bagaimana format sitasi?"],1,"Ontologi membahas apa yang dianggap nyata, termasuk status kejahatan sebagai kategori."],
+["Prinsip penting dalam pemikiran Beccaria adalah…",["Hukuman tanpa batas","Legalitas dan proporsionalitas","Prediksi algoritmik","Pelabelan permanen"],1,"Beccaria mengkritik penghukuman sewenang-wenang dan menekankan legalitas serta proporsionalitas."],
+["Korelasi antara dua variabel dengan sendirinya membuktikan…",["Hubungan sebab-akibat","Tidak ada hubungan","Tidak membuktikan kausalitas","Kebenaran moral kebijakan"],2,"Korelasi saja tidak cukup untuk menyimpulkan sebab-akibat."],
+["Konsep panoptisisme diasosiasikan dengan…",["Foucault","Beccaria","Merton","Bentham saja"],0,"Foucault menggunakan panoptisisme untuk menjelaskan mekanisme disiplin dan pengawasan."],
+["Labeling theory menekankan pentingnya…",["Hanya faktor biologis","Reaksi sosial dan proses pelabelan","Hanya berat hukuman","Kalkulasi utilitas"],1,"Labeling theory mengkaji bagaimana reaksi sosial ikut membentuk identitas menyimpang."],
+["Dalam retributivisme, dasar utama hukuman adalah…",["Kesalahan dan kepantasan hukuman","Prediksi cuaca","Popularitas kebijakan","Efisiensi administrasi saja"],0,"Retributivisme mengaitkan hukuman dengan kesalahan dan proporsionalitas."],
+["Kritik utama predictive policing terkait data historis adalah…",["Selalu bebas bias","Dapat mereproduksi bias penegakan sebelumnya","Tidak menggunakan data","Tidak pernah memengaruhi keputusan"],1,"Data penegakan dapat mencerminkan pola patroli dan pelaporan yang tidak netral."],
+["Social harm membantu kriminologi untuk…",["Mengabaikan penderitaan","Melihat kerugian yang mungkin tidak masuk kategori pidana","Menghapus asas legalitas","Menyamakan semua kerugian"],1,"Konsep ini memperluas perhatian pada kerugian sosial di luar definisi legal."],
+["Bounded rationality menunjukkan bahwa keputusan manusia…",["Selalu optimal","Dibuat dengan informasi dan kapasitas yang terbatas","Tidak dipengaruhi konteks","Selalu sepenuhnya acak"],1,"Rasionalitas manusia dibatasi informasi, waktu, kemampuan, dan konteks."],
+["Proses restoratif yang etis harus memperhatikan…",["Tekanan agar korban berdamai","Partisipasi sukarela dan keselamatan","Penghapusan semua hak korban","Kerahasiaan tanpa batas"],1,"Keselamatan, kesukarelaan, dan pencegahan reviktimisasi merupakan syarat penting."]
+];
+const quizArea=document.getElementById('quizArea');
+if(quizArea){
+ function renderQuiz(){quizArea.innerHTML=quiz.map((q,i)=>`<div class="card" style="background:#f8fafc"><b>${i+1}. ${q[0]}</b>${q[1].map((a,j)=>`<label style="display:block;padding:6px 0;font-weight:400"><input type="radio" name="q${i}" value="${j}"> ${a}</label>`).join('')}<div class="small" id="explain${i}"></div></div>`).join('');document.getElementById('quizScore').innerHTML='';}
+ renderQuiz();
+ document.getElementById('resetQuiz').addEventListener('click',renderQuiz);
+ document.getElementById('submitQuiz').addEventListener('click',()=>{let score=0;quiz.forEach((q,i)=>{let chosen=document.querySelector(`input[name=q${i}]:checked`);let ok=chosen&&Number(chosen.value)===q[2];if(ok)score++;document.getElementById('explain'+i).textContent=(ok?'Benar. ':'Belum tepat. ')+q[3];});document.getElementById('quizScore').innerHTML=`<div class="${score>=7?'good':'notice'}"><b>Skor: ${score}/${quiz.length}</b><br>${score>=8?'Pemahaman konsep sangat baik.':score>=6?'Cukup baik; pelajari kembali penjelasan soal.':'Baca kembali modul dan ulangi kuis.'} Skor ini untuk latihan mandiri, bukan nilai resmi.</div>`;});
+ document.getElementById('exportMemo').addEventListener('click',()=>{let fields=['studentName','readingTitle','memoThesis','memoArgument','memoCritique','memoRelevance'];let labels=['Nama','Bacaan','Tesis utama','Struktur argumen dan asumsi','Kritik/keberatan','Relevansi Indonesia'];let content='READING MEMO — FILSAFAT KRIMINOLOGI\n\n'+fields.map((id,i)=>labels[i]+'\n'+document.getElementById(id).value).join('\n\n');download('reading_memo_filsafat_kriminologi.txt',content);});
+}
+const caseInfo={
+predictive:"Sebuah pemerintah daerah mempertimbangkan sistem prediksi risiko kriminalitas berbasis data laporan dan patroli untuk menentukan intensitas pengawasan wilayah. Audit independen belum dilakukan.",
+corporate:"Sebuah kegiatan usaha diduga menimbulkan kerugian lingkungan dan kesehatan warga. Dampak tersebar, bukti teknis kompleks, dan proses pertanggungjawaban belum tuntas.",
+restorative:"Dalam perkara tertentu, aparat menawarkan proses restoratif. Korban menyatakan bersedia berdialog tetapi khawatir proses tersebut menekan dirinya untuk menerima perdamaian.",
+sentencing:"Setelah perhatian publik terhadap suatu tindak pidana meningkat, muncul usulan menaikkan ancaman pidana sebagai respons utama, tanpa evaluasi menyeluruh atas kepastian penegakan."
+};
+const cs=document.getElementById('caseSelect');
+if(cs){document.getElementById('casePrompt').textContent=caseInfo[cs.value];cs.addEventListener('change',()=>document.getElementById('casePrompt').textContent=caseInfo[cs.value]);document.getElementById('exportCase').addEventListener('click',()=>{let ids=['caseOntology','caseEpistemology','caseAxiology','caseEthics','caseThesis'];let labels=['Ontologi','Epistemologi','Aksiologi','Etika','Tesis/rekomendasi'];let textOut=`CASE LAB — ${cs.options[cs.selectedIndex].text}\n\nSkenario:\n${caseInfo[cs.value]}\n\n`+ids.map((id,i)=>labels[i]+'\n'+document.getElementById(id).value).join('\n\n');download('analisis_kasus_filsafat_kriminologi.txt',textOut);});}
+</script>
+
+
+<script>
+(function(){
+const assignmentsSeed=[
+{id:'A01',title:'Reading Memo: Becker (1968)',week:6,due:'2026-12-01',desc:'Identifikasi tesis utama, asumsi rasionalitas, kritik, dan relevansi pendekatan ekonomi kejahatan.'},
+{id:'A02',title:'Analisis Kasus: Pengawasan dan Kekuasaan',week:10,due:'2026-12-08',desc:'Analisis skenario pengawasan melalui ontologi, epistemologi, aksiologi, dan etika.'},
+{id:'A03',title:'Esai UTS: Dua Perspektif Filosofis',week:8,due:'2026-12-15',desc:'Pilih satu kebijakan kriminal Indonesia dan bandingkan dua perspektif filosofis.'}
+];
+const storeKey='criminology_lab_v07_demo';
+let state={user:null,assignments:assignmentsSeed.slice(),submissions:[],events:[]};
+try{let saved=JSON.parse(localStorage.getItem(storeKey)||'null');if(saved&&Array.isArray(saved.assignments))state={...state,...saved};}catch(e){}
+const el=id=>document.getElementById(id);
+function save(){try{localStorage.setItem(storeKey,JSON.stringify(state));}catch(e){console.warn('Local storage unavailable',e);}renderAll();}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function logEvent(label){state.events.unshift({label,time:new Date().toLocaleString('id-ID')});state.events=state.events.slice(0,30);}
+function renderAssignments(){
+ let htmlList=state.assignments.map(a=>`<div class="kpi" style="margin:7px 0"><b>${esc(a.title)}</b><span class="small">Pertemuan ${a.week} · Batas: ${esc(a.due||'Belum ditentukan')}</span><p class="small">${esc(a.desc)}</p></div>`).join('');
+ if(el('assignmentList'))el('assignmentList').innerHTML=htmlList||'<p class="small">Belum ada tugas.</p>';
+ if(el('assignmentSelect'))el('assignmentSelect').innerHTML=state.assignments.map(a=>`<option value="${esc(a.id)}">${esc(a.title)}</option>`).join('');
+}
+function renderMine(){
+ if(!el('mySubmissions'))return;
+ let mine=state.submissions.filter(s=>!state.user||state.user.role!=='student'||s.student===state.user.name);
+ el('mySubmissions').innerHTML=mine.length?mine.map(s=>`<div class="kpi" style="margin:7px 0"><b>${esc(s.title)}</b><span class="small">${esc(s.assignmentTitle)} · ${esc(s.created)}</span><p>${esc(s.status||'Menunggu penilaian')} ${s.score!==null&&s.score!==undefined?'· Nilai: '+esc(s.score):''}</p>${s.feedback?`<p class="small">Umpan balik: ${esc(s.feedback)}</p>`:''}</div>`).join(''):'Belum ada pengumpulan.';
+}
+function renderLecturer(){
+ if(!el('lecturerKpis'))return;
+ let pending=state.submissions.filter(s=>!s.status||s.status==='Submitted').length;
+ el('lecturerKpis').innerHTML=[[state.assignments.length,'Tugas aktif'],[state.submissions.length,'Pengumpulan'],[pending,'Menunggu penilaian'],[state.submissions.filter(s=>s.status==='Reviewed').length,'Sudah dinilai']].map(x=>`<div class="kpi"><b>${x[0]}</b><span class="small">${x[1]}</span></div>`).join('');
+ el('gradingSelect').innerHTML=state.submissions.map(s=>`<option value="${esc(s.id)}">${esc(s.student)} — ${esc(s.title)}</option>`).join('');
+ el('allSubmissions').innerHTML=state.submissions.length?`<div class="tablewrap"><table><thead><tr><th>Mahasiswa</th><th>Tugas</th><th>Status</th><th>Nilai</th></tr></thead><tbody>${state.submissions.map(s=>`<tr><td>${esc(s.student)}</td><td>${esc(s.title)}</td><td>${esc(s.status||'Submitted')}</td><td>${s.score??'—'}</td></tr>`).join('')}</tbody></table></div>`:'<p class="small">Belum ada pengumpulan di perangkat ini.</p>';
+}
+function renderProgress(){
+ if(!el('progressKpis'))return;
+ let mine=state.submissions.filter(s=>!state.user||state.user.role!=='student'||s.student===state.user.name);
+ let graded=mine.filter(s=>s.score!==null&&s.score!==undefined);
+ let avg=graded.length?Math.round(graded.reduce((a,s)=>a+Number(s.score),0)/graded.length):'—';
+ el('progressKpis').innerHTML=[[mine.length,'Tugas dikumpulkan'],[graded.length,'Tugas dinilai'],[avg,'Rata-rata nilai'],[state.events.length,'Aktivitas tercatat']].map(x=>`<div class="kpi"><b>${x[0]}</b><span class="small">${x[1]}</span></div>`).join('');
+ el('progressTimeline').innerHTML=state.events.length?state.events.map(e=>`<div style="padding:8px;border-bottom:1px solid var(--line)"><b>${esc(e.label)}</b><br><span>${esc(e.time)}</span></div>`).join(''):'Belum ada aktivitas.';
+}
+function renderAll(){renderAssignments();renderMine();renderLecturer();renderProgress();if(el('loginStatus')&&state.user)el('loginStatus').innerHTML=`<div class="good">Masuk sebagai <b>${esc(state.user.name)}</b> (${state.user.role==='lecturer'?'Dosen':'Mahasiswa'}) · Kelas ${esc(state.user.classCode)}. Mode lokal/demo.</div>`;}
+if(el('newAssignmentWeek'))el('newAssignmentWeek').innerHTML=Array.from({length:16},(_,i)=>`<option value="${i+1}">Pertemuan ${i+1}</option>`).join('');
+if(el('enterClass'))el('enterClass').addEventListener('click',()=>{let name=el('loginName').value.trim();if(!name){el('loginStatus').textContent='Masukkan nama terlebih dahulu.';return;}state.user={name,role:el('loginRole').value,classCode:el('classCode').value.trim()||'FILKRI-S2-2026'};logEvent('Masuk ruang kelas sebagai '+state.user.role);save();});
+if(el('submitAssignment'))el('submitAssignment').addEventListener('click',()=>{if(!state.user||state.user.role!=='student'){el('submissionStatus').innerHTML='<div class="notice">Masuk sebagai mahasiswa terlebih dahulu.</div>';return;}let title=el('submissionTitle').value.trim(),body=el('submissionText').value.trim(),aid=el('assignmentSelect').value;if(!title||!body){el('submissionStatus').textContent='Judul dan isi tugas wajib diisi.';return;}let a=state.assignments.find(x=>x.id===aid);state.submissions.push({id:'S'+Date.now(),student:state.user.name,assignmentId:aid,assignmentTitle:a?.title||'Tugas',title,body,created:new Date().toLocaleString('id-ID'),status:'Submitted',score:null,feedback:''});logEvent('Mengumpulkan: '+title);el('submissionTitle').value='';el('submissionText').value='';el('submissionStatus').innerHTML='<div class="good">Pengumpulan tersimpan di browser ini. Ekspor salinan untuk mengirimkannya kepada dosen.</div>';save();});
+if(el('exportMySubmissions'))el('exportMySubmissions').addEventListener('click',()=>{let list=state.submissions.filter(s=>!state.user||state.user.role!=='student'||s.student===state.user.name);let content=list.map(s=>`MAHASISWA: ${s.student}\nTUGAS: ${s.assignmentTitle}\nJUDUL: ${s.title}\nWAKTU: ${s.created}\nISI:\n${s.body}\nSTATUS: ${s.status}\nNILAI: ${s.score??'-'}\nUMPAN BALIK: ${s.feedback||'-'}\n`).join('\n----------------------\n');download('pengumpulan_criminology_lab.txt',content||'Belum ada pengumpulan.');});
+if(el('createAssignment'))el('createAssignment').addEventListener('click',()=>{if(!state.user||state.user.role!=='lecturer'){el('createStatus').textContent='Masuk sebagai dosen terlebih dahulu.';return;}let title=el('newAssignmentTitle').value.trim(),desc=el('newAssignmentDesc').value.trim();if(!title||!desc){el('createStatus').textContent='Nama tugas dan instruksi wajib diisi.';return;}state.assignments.push({id:'A'+Date.now(),title,desc,week:Number(el('newAssignmentWeek').value),due:el('newAssignmentDue').value});logEvent('Membuat tugas: '+title);el('newAssignmentTitle').value='';el('newAssignmentDesc').value='';el('createStatus').textContent='Tugas ditambahkan di browser ini.';save();});
+if(el('gradingSelect'))el('gradingSelect').addEventListener('change',showGrade);
+function showGrade(){let s=state.submissions.find(x=>x.id===el('gradingSelect').value);if(!s){el('gradingPreview').textContent='Belum ada pengumpulan.';return;}el('gradingPreview').innerHTML=`<b>${esc(s.student)} · ${esc(s.assignmentTitle)}</b><p>${esc(s.title)}</p><p style="white-space:pre-wrap">${esc(s.body)}</p><p class="small">Dikirim: ${esc(s.created)}</p>`;el('gradeScore').value=s.score??'';el('gradeStatus').value=s.status==='Revision'?'Revision':'Reviewed';el('gradeFeedback').value=s.feedback||'';}
+if(el('saveGrade'))el('saveGrade').addEventListener('click',()=>{if(!state.user||state.user.role!=='lecturer'){el('gradeStatusMsg').textContent='Masuk sebagai dosen terlebih dahulu.';return;}let s=state.submissions.find(x=>x.id===el('gradingSelect').value);let score=Number(el('gradeScore').value);if(!s){el('gradeStatusMsg').textContent='Pilih pengumpulan.';return;}if(!Number.isFinite(score)||score<0||score>100){el('gradeStatusMsg').textContent='Masukkan nilai 0 sampai 100.';return;}s.score=score;s.status=el('gradeStatus').value;s.feedback=el('gradeFeedback').value.trim();s.gradedBy=state.user.name;logEvent('Memberi penilaian untuk '+s.student);el('gradeStatusMsg').textContent='Penilaian tersimpan secara lokal.';save();showGrade();});
+if(el('exportGradebook'))el('exportGradebook').addEventListener('click',()=>{let data=[['Student','Assignment','Submission','Status','Score','Feedback'],...state.submissions.map(s=>[s.student,s.assignmentTitle,s.title,s.status,s.score??'',s.feedback||''])];let csv=data.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n');download('criminology_lab_gradebook.csv',csv,'text/csv');});
+renderAll();if(el('gradingSelect'))showGrade();
+})();
+</script>
+
+
+<script>
+(function(){
+const key='criminology_lab_v07_demo';
+const status=document.getElementById('backupStatus');
+const exportBtn=document.getElementById('exportBackup');
+const importInput=document.getElementById('importBackup');
+function downloadJSON(name,obj){let blob=new Blob([JSON.stringify(obj,null,2)],{type:'application/json'});let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();URL.revokeObjectURL(a.href);}
+if(exportBtn)exportBtn.addEventListener('click',()=>{let raw=localStorage.getItem(key);if(!raw){status.textContent='Belum ada data lokal untuk dibackup.';return;}try{let data=JSON.parse(raw);downloadJSON('criminology_lab_backup_'+new Date().toISOString().slice(0,10)+'.json',{app:'Criminology Lab',version:'0.8',exported_at:new Date().toISOString(),data});status.textContent='Backup JSON berhasil disiapkan. Simpan file di lokasi yang aman.';}catch(e){status.textContent='Backup gagal dibaca: '+e.message;}});
+if(importInput)importInput.addEventListener('change',async e=>{let f=e.target.files[0];if(!f)return;try{let obj=JSON.parse(await f.text());let data=obj.data||obj;if(!data||!Array.isArray(data.assignments)||!Array.isArray(data.submissions)||!Array.isArray(data.events)){throw new Error('Struktur backup tidak dikenali.');}if(!confirm('Restore akan mengganti data demo lokal yang sedang tersimpan pada browser ini. Lanjutkan?'))return;localStorage.setItem(key,JSON.stringify(data));status.textContent='Restore berhasil. Muat ulang halaman untuk melihat seluruh perubahan.';}catch(err){status.textContent='Restore gagal: '+err.message;}finally{importInput.value='';}});
+})();
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function(){
+  const PROJECT_URL='https://rurfluvlcnexxuwfngaj.supabase.co';
+  const STORE='criminology_lab_supabase_config_v09';
+  let client=null;
+  const $=id=>document.getElementById(id);
+  const say=(id,msg,ok=false)=>{const n=$(id); if(n){n.textContent=msg;n.style.color=ok?'#087443':'#9a5b13';}};
+  function initClient(url,key){
+    if(!window.supabase || !window.supabase.createClient) throw new Error('Library Supabase belum termuat. Periksa koneksi internet.');
+    client=window.supabase.createClient(url,key);
+  }
+  function loadConfig(){
+    try{
+      const c=JSON.parse(localStorage.getItem(STORE)||'null');
+      if(c){$('sbUrl').value=c.url||PROJECT_URL;$('sbKey').value=c.key||'';}
+    }catch(e){}
+  }
+  $('sbConnect')?.addEventListener('click',async()=>{
+    const url=$('sbUrl').value.trim(), key=$('sbKey').value.trim();
+    if(!url || !key){say('sbConnectionStatus','Isi Project URL dan publishable key terlebih dahulu.');return;}
+    if(!/^https:\/\/[a-z0-9-]+\.supabase\.co$/i.test(url)){say('sbConnectionStatus','Format Project URL tidak valid.');return;}
+    try{
+      initClient(url,key);
+      localStorage.setItem(STORE,JSON.stringify({url,key}));
+      const {data,error}=await client.auth.getSession();
+      if(error) throw error;
+      say('sbConnectionStatus','Koneksi Supabase berhasil dibuat. '+(data.session?'Sesi pengguna ditemukan.':'Belum ada sesi login.'),true);
+      say('sbAuthStatus',data.session?'Login sebagai '+(data.session.user.email||data.session.user.id):'Belum login. Silakan login atau daftar akun.');
+    }catch(e){client=null;say('sbConnectionStatus','Koneksi gagal: '+(e.message||e));}
+  });
+  $('sbForget')?.addEventListener('click',()=>{
+    localStorage.removeItem(STORE);client=null;$('sbKey').value='';
+    say('sbConnectionStatus','Konfigurasi lokal dihapus. Website kembali ke mode demo.');
+    say('sbAuthStatus','Belum ada sesi login.');say('sbDbStatus','Belum diuji.');
+  });
+  async function ensureClient(){
+    if(client)return client;
+    const c=JSON.parse(localStorage.getItem(STORE)||'null');
+    if(!c)throw new Error('Konfigurasi belum disimpan. Masukkan publishable key dahulu.');
+    initClient(c.url,c.key);return client;
+  }
+  $('sbSignIn')?.addEventListener('click',async()=>{
+    try{const sb=await ensureClient();const {data,error}=await sb.auth.signInWithPassword({email:$('sbEmail').value.trim(),password:$('sbPassword').value});if(error)throw error;say('sbAuthStatus','Login berhasil: '+data.user.email,true);}
+    catch(e){say('sbAuthStatus','Login gagal: '+(e.message||e));}
+  });
+  $('sbSignUp')?.addEventListener('click',async()=>{
+    try{const sb=await ensureClient();const {data,error}=await sb.auth.signUp({email:$('sbEmail').value.trim(),password:$('sbPassword').value});if(error)throw error;say('sbAuthStatus',data.session?'Akun berhasil dibuat dan login.':'Pendaftaran berhasil. Periksa email untuk verifikasi jika diminta oleh pengaturan Supabase.',true);}
+    catch(e){say('sbAuthStatus','Pendaftaran gagal: '+(e.message||e));}
+  });
+  $('sbSignOut')?.addEventListener('click',async()=>{
+    try{const sb=await ensureClient();const {error}=await sb.auth.signOut();if(error)throw error;say('sbAuthStatus','Logout berhasil.',true);}
+    catch(e){say('sbAuthStatus','Logout gagal: '+(e.message||e));}
+  });
+
+  $('clCreateCourse')?.addEventListener('click',async()=>{
+    try{
+      const sb=await ensureClient();
+      const {data:{session},error:sessionError}=await sb.auth.getSession();
+      if(sessionError) throw sessionError;
+      if(!session) throw new Error('Login terlebih dahulu.');
+      const course_code=$('clCourseCode').value.trim();
+      const course_name=$('clCourseName').value.trim();
+      if(!course_code || !course_name) throw new Error('Kode kelas dan nama kelas wajib diisi.');
+      const payload={course_code,course_name,
+        academic_year:$('clAcademicYear').value.trim()||null,
+        semester:$('clSemester').value,
+        description:$('clCourseDescription').value.trim()||null,
+        owner_id:session.user.id};
+      const {data,error}=await sb.from('cl_courses').insert(payload)
+        .select('id,course_code,course_name,academic_year,is_active').single();
+      if(error) throw error;
+      say('clCreateCourseStatus','Kelas berhasil dibuat di Supabase: '+data.course_name,true);
+      $('clCourseCode').value=''; $('clCourseName').value='';
+      $('clCourseDescription').value='';
+      $('sbTestDb').click();
+    }catch(e){say('clCreateCourseStatus','Gagal membuat kelas: '+(e.message||e));}
+  });
+
+  $('sbTestDb')?.addEventListener('click',async()=>{
+    try{
+      const sb=await ensureClient();
+      const {data:{session}}=await sb.auth.getSession();
+      if(!session)throw new Error('Silakan login terlebih dahulu. RLS hanya memberi akses kepada pengguna terautentikasi.');
+      const {data,error}=await sb.from('cl_courses').select('id,course_code,course_name,academic_year,is_active').limit(50);
+      if(error)throw error;
+      $('sbCourseRows').innerHTML=data.length?data.map(r=>'<tr><td>'+String(r.course_name||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))+'</td><td>'+String(r.course_code||'')+'</td><td>'+String(r.academic_year||'')+'</td><td>'+(r.is_active?'Aktif':'Nonaktif')+'</td></tr>').join(''):'<tr><td colspan="4">Koneksi berhasil. Belum ada kelas pada database.</td></tr>';
+      say('sbDbStatus','Berhasil membaca cl_courses. '+data.length+' kelas ditemukan.',true);
+    }catch(e){say('sbDbStatus','Uji database gagal: '+(e.message||e));}
+  });
+  loadConfig();
+  try{
+    const c=JSON.parse(localStorage.getItem(STORE)||'null');
+    if(c && c.key){initClient(c.url,c.key);say('sbConnectionStatus','Konfigurasi ditemukan di browser. Tekan tombol uji koneksi untuk memvalidasi.',true);}
+  }catch(e){}
+})();
+</script>
+
+</body></html>
