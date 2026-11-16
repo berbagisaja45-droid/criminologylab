@@ -778,5 +778,660 @@ $('downloadDict').addEventListener('click',()=>{
  });
 })();
 </script>
+<!--
+CRIMINOLOGY LAB — INSTALLER VISUAL ANALYTICS v1.4 + CRIMINAL JUSTICE SYSTEM DASHBOARD v1.0
+Paket tambahan. Jangan hapus kode utama index.html.
+Tempel seluruh isi file ini sebelum tag penutup </body> di index.html.
+Urutan skrip: Visual Analytics v1.4, lalu Criminal Justice System Dashboard v1.0.
+Jangan tempel di dalam skrip lain dan jangan ikut menyalin baris </body> atau </html> dari file utama.
+-->
+
+<script>
+/*
+ * Criminology Lab — Visual Analytics Add-on v1.4
+ * Additive-only enhancement for the existing public portal.
+ * Does not change data sources, database settings, or existing analysis formulas.
+ * Install by adding this script immediately before </body> in index.html.
+ */
+(() => {
+  'use strict';
+  if (window.__criminologyVisualEnhancementInstalled) return;
+  window.__criminologyVisualEnhancementInstalled = true;
+
+  const COLORS = {
+    navy: '#18334c', blue: '#28799a', teal: '#087f78', red: '#c65b5b',
+    muted: '#64748b', line: '#e5ebf1', pale: '#f4f8fb'
+  };
+  const $ = (id) => document.getElementById(id);
+
+  const css = `
+    .clv-card{margin-top:14px;padding:14px;border:1px solid var(--line,#d9e3ec);border-radius:13px;background:#fbfdff}
+    .clv-card h3{margin:0 0 7px;color:var(--navy,#10253d)}
+    .clv-card canvas{display:block;width:100%;height:260px;max-width:100%;border:1px solid var(--line,#d9e3ec);border-radius:10px;background:#fff}
+    .clv-caption{font-size:12px;color:var(--muted,#64748b);line-height:1.55;margin:8px 0 0}
+    .clv-legend{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--muted,#64748b);margin:8px 0}
+    .clv-key{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:middle}
+    #corrResult .clv-heat-table td{text-align:center;min-width:68px;font-weight:650;font-variant-numeric:tabular-nums}
+    #corrResult .clv-heat-table th{font-size:12px}
+    @media(max-width:600px){.clv-card{padding:10px}.clv-card canvas{height:245px}}
+  `;
+  const style = document.createElement('style');
+  style.id = 'clv-visual-style';
+  style.textContent = css;
+  document.head.appendChild(style);
+
+  function makeCard(title, canvasId, caption, afterId) {
+    if ($(canvasId)) return $(canvasId).closest('.clv-card');
+    const after = $(afterId);
+    if (!after || !after.parentNode) return null;
+    const card = document.createElement('div');
+    card.className = 'clv-card';
+    const h = document.createElement('h3');
+    h.textContent = title;
+    const canvas = document.createElement('canvas');
+    canvas.id = canvasId;
+    canvas.setAttribute('role', 'img');
+    canvas.setAttribute('aria-label', title);
+    canvas.width = 900;
+    canvas.height = 260;
+    const p = document.createElement('p');
+    p.className = 'clv-caption';
+    p.id = canvasId + 'Caption';
+    p.textContent = caption;
+    card.append(h, canvas, p);
+    after.insertAdjacentElement('afterend', card);
+    return card;
+  }
+
+  function canvasContext(id, height = 260) {
+    const canvas = $(id);
+    if (!canvas) return null;
+    const width = Math.max(280, Math.floor(canvas.getBoundingClientRect().width || 320));
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.style.height = height + 'px';
+    canvas.width = Math.round(width * dpr);
+    canvas.height = Math.round(height * dpr);
+    const ctx = canvas.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, width, height);
+    return { ctx, width, height };
+  }
+
+  function drawObservatoryComparison() {
+    const f = canvasContext('clvObservatoryReports');
+    if (!f) return;
+    const { ctx: c, width: w, height: h } = f;
+    const left = 62, right = 18, top = 22, bottom = 46;
+    const plotW = w - left - right, plotH = h - top - bottom;
+    const values = [351906, 376948];
+    const labels = ['Jan–Okt 2025', 'Jan–28 Okt 2026'];
+    const max = 420000;
+    c.font = '12px system-ui'; c.textAlign = 'right'; c.fillStyle = COLORS.muted; c.strokeStyle = COLORS.line;
+    for (let i = 0; i <= 4; i++) {
+      const v = max * i / 4, y = top + plotH - (v / max) * plotH;
+      c.beginPath(); c.moveTo(left, y); c.lineTo(w - right, y); c.stroke();
+      c.fillText(Math.round(v / 1000) + ' rb', left - 8, y + 4);
+    }
+    const bw = Math.min(108, plotW / 4);
+    values.forEach((v, i) => {
+      const x = left + plotW * (i + 0.5) / 2 - bw / 2;
+      const bh = v / max * plotH, y = top + plotH - bh;
+      c.fillStyle = i === 0 ? '#6c9fbd' : COLORS.teal;
+      c.beginPath(); c.roundRect(x, y, bw, bh, 7); c.fill();
+      c.textAlign = 'center'; c.fillStyle = COLORS.navy; c.font = 'bold 12px system-ui';
+      c.fillText(v.toLocaleString('id-ID'), x + bw / 2, y - 8);
+      c.font = '12px system-ui'; c.fillStyle = COLORS.muted;
+      c.fillText(labels[i], x + bw / 2, h - 15);
+    });
+  }
+
+  function drawHistogram(values, label) {
+    values = values.filter((v) => Number.isFinite(v));
+    if (!values.length) return;
+    const f = canvasContext('clvHistogram');
+    if (!f) return;
+    const { ctx: c, width: w, height: h } = f;
+    const left = 48, right = 14, top = 20, bottom = 40;
+    const plotW = w - left - right, plotH = h - top - bottom;
+    const min = Math.min(...values), max = Math.max(...values), range = max - min || 1;
+    const bins = Math.max(5, Math.min(12, Math.ceil(Math.sqrt(values.length))));
+    const counts = Array(bins).fill(0);
+    values.forEach((v) => { const i = Math.min(bins - 1, Math.floor((v - min) / range * bins)); counts[i]++; });
+    const peak = Math.max(...counts, 1), gap = 4, bw = (plotW - gap * (bins - 1)) / bins;
+    c.font = '11px system-ui'; c.textAlign = 'right'; c.fillStyle = COLORS.muted; c.strokeStyle = COLORS.line;
+    for (let i = 0; i <= 4; i++) {
+      const v = peak * i / 4, y = top + plotH - v / peak * plotH;
+      c.beginPath(); c.moveTo(left, y); c.lineTo(w - right, y); c.stroke();
+      c.fillText(String(Math.round(v)), left - 7, y + 4);
+    }
+    counts.forEach((n, i) => {
+      const bh = n / peak * plotH, x = left + i * (bw + gap), y = top + plotH - bh;
+      c.fillStyle = COLORS.blue; c.beginPath(); c.roundRect(x, y, bw, bh, 4); c.fill();
+      if (bins <= 8 || i % 2 === 0) {
+        c.textAlign = 'center'; c.fillStyle = COLORS.muted;
+        c.fillText((min + range * i / bins).toFixed(1), x + bw / 2, h - 16);
+      }
+    });
+    const cap = $('clvHistogramCaption');
+    if (cap) cap.textContent = `Histogram ${label}: ${values.length} observasi valid dalam ${bins} interval kelas. Batas kelas dibentuk otomatis untuk eksplorasi awal.`;
+  }
+
+  function tintCorrelationTable() {
+    const table = document.querySelector('#corrResult table');
+    if (!table) return;
+    table.classList.add('clv-heat-table');
+    table.querySelectorAll('tbody tr').forEach((row) => {
+      Array.from(row.cells).slice(1).forEach((cell) => {
+        const val = Number(String(cell.textContent).replace(',', '.'));
+        if (!Number.isFinite(val)) { cell.style.background = '#edf1f5'; return; }
+        const strength = 0.10 + Math.min(1, Math.abs(val)) * 0.55;
+        cell.style.background = val >= 0
+          ? `rgba(8,127,120,${strength})`
+          : `rgba(198,91,91,${strength})`;
+        cell.title = 'Pearson r = ' + val.toFixed(4);
+      });
+    });
+  }
+
+  function drawCoefficientChart() {
+    const table = $('modelResult')?.querySelector('table');
+    if (!table) return;
+    const values = Array.from(table.querySelectorAll('tbody tr')).map((row) => {
+      const cells = row.querySelectorAll('td');
+      if (cells.length < 2) return null;
+      const value = Number(String(cells[1].textContent).replace(',', '.'));
+      return Number.isFinite(value) ? { name: cells[0].textContent.trim(), value } : null;
+    }).filter(Boolean);
+    if (!values.length) return;
+
+    let box = $('clvCoefficientCard');
+    if (!box) {
+      box = document.createElement('div'); box.id = 'clvCoefficientCard'; box.className = 'clv-card';
+      const heading = document.createElement('h3'); heading.textContent = 'Grafik koefisien model';
+      const canvas = document.createElement('canvas'); canvas.id = 'clvCoefficientChart'; canvas.width = 900; canvas.height = 320;
+      canvas.setAttribute('role', 'img'); canvas.setAttribute('aria-label', 'Grafik batang koefisien hasil regresi');
+      const cap = document.createElement('p'); cap.className = 'clv-caption';
+      cap.textContent = 'Batang ke kanan menunjukkan koefisien positif dan ke kiri negatif. Grafik ini menampilkan skala koefisien, bukan interval kepercayaan atau signifikansi statistik.';
+      box.append(heading, canvas, cap);
+      table.insertAdjacentElement('afterend', box);
+    }
+    const height = Math.max(260, Math.min(460, values.length * 38 + 65));
+    const f = canvasContext('clvCoefficientChart', height);
+    if (!f) return;
+    const { ctx: c, width: w, height: h } = f;
+    const left = Math.min(175, Math.max(105, w * 0.34)), right = 52, top = 25, bottom = 24;
+    const plotW = w - left - right, mid = left + plotW / 2;
+    const max = Math.max(...values.map((d) => Math.abs(d.value)), 0.01), half = plotW / 2 - 6;
+    c.strokeStyle = COLORS.line; c.beginPath(); c.moveTo(mid, top); c.lineTo(mid, h - bottom); c.stroke();
+    values.forEach((d, i) => {
+      const y = top + i * 34 + 8, bar = Math.abs(d.value) / max * half;
+      c.textAlign = 'right'; c.font = '12px system-ui'; c.fillStyle = COLORS.navy;
+      c.fillText(d.name.length > 22 ? d.name.slice(0, 20) + '…' : d.name, left - 8, y + 4);
+      c.fillStyle = d.value >= 0 ? COLORS.teal : COLORS.red;
+      const x = d.value >= 0 ? mid : mid - bar;
+      c.beginPath(); c.roundRect(x, y - 9, Math.max(2, bar), 18, 4); c.fill();
+      c.textAlign = d.value >= 0 ? 'left' : 'right'; c.fillStyle = COLORS.navy;
+      c.fillText(d.value.toFixed(4), d.value >= 0 ? mid + bar + 5 : mid - bar - 5, y + 4);
+    });
+  }
+
+  function addVisualElements() {
+    const obsSection = $('observatory');
+    if (obsSection && !$('clvObservatoryReports')) {
+      const cards = obsSection.querySelectorAll('.card');
+      const target = Array.from(cards).find((card) => card.textContent.includes('Perkembangan laporan tindak pidana nasional'));
+      if (target) {
+        const box = document.createElement('div'); box.className = 'clv-card';
+        box.innerHTML = '<h3>Perbandingan laporan tindak pidana tercatat</h3><canvas id="clvObservatoryReports" width="900" height="260" role="img" aria-label="Perbandingan laporan Pusiknas 2025 dan 2026"></canvas><p class="clv-caption">Snapshot Pusiknas yang ditampilkan pada portal: 351.906 laporan pada 2025 dan 376.948 pada 2026. Perbandingan ini menggunakan periode yang sama sebagaimana dinyatakan pada halaman, bukan estimasi seluruh kejadian kriminalitas.</p>';
+        target.appendChild(box);
+        drawObservatoryComparison();
+      }
+    }
+    const descResult = $('descResult');
+    if (descResult) makeCard('Distribusi frekuensi variabel terpilih', 'clvHistogram', 'Histogram akan muncul setelah dataset dimuat.', 'descResult');
+    const corrResult = $('corrResult');
+    if (corrResult && !corrResult.previousElementSibling?.classList.contains('clv-legend')) {
+      const legend = document.createElement('div'); legend.className = 'clv-legend';
+      legend.innerHTML = '<span><i class="clv-key" style="background:#f3caca"></i>Negatif</span><span><i class="clv-key" style="background:#c7e8e3"></i>Positif</span><span><i class="clv-key" style="background:#edf1f5"></i>Tidak tersedia</span>';
+      corrResult.insertAdjacentElement('beforebegin', legend);
+    }
+  }
+
+  function wrapGlobal(name, after) {
+    const original = window[name];
+    if (typeof original !== 'function' || original.__clvWrapped) return;
+    const wrapped = function (...args) {
+      const result = original.apply(this, args);
+      requestAnimationFrame(() => { try { after(); } catch (e) { console.warn('Criminology Lab visual:', e); } });
+      return result;
+    };
+    wrapped.__clvWrapped = true;
+    window[name] = wrapped;
+  }
+
+  function install() {
+    addVisualElements();
+    wrapGlobal('desc', () => {
+      const field = $('descVar');
+      if (!field) return;
+      const vals = Array.from(document.querySelectorAll('#preview table tbody tr')).length;
+      // Use the active dataset through the existing global rows/header declarations.
+      try {
+        const data = window.rows || rows;
+        const variable = field.value;
+        if (Array.isArray(data) && variable) {
+          const parsed = data.map((r) => Number(String(r[variable] ?? '').trim().replace(',', '.'))).filter(Number.isFinite);
+          drawHistogram(parsed, variable);
+        }
+      } catch (_) { /* The existing renderer remains authoritative. */ }
+    });
+    wrapGlobal('corr', tintCorrelationTable);
+    wrapGlobal('estimate', drawCoefficientChart);
+    document.querySelectorAll('.subtab[data-view]').forEach((button) => {
+      button.addEventListener('click', () => requestAnimationFrame(() => {
+        if (button.dataset.view === 'correlation') tintCorrelationTable();
+        if (button.dataset.view === 'descriptive' && typeof window.desc === 'function') window.desc();
+      }));
+    });
+    document.querySelectorAll('.tab[data-tab="observatory"]').forEach((button) => {
+      button.addEventListener('click', () => requestAnimationFrame(drawObservatoryComparison));
+    });
+    window.addEventListener('resize', () => {
+      if ($('observatory')?.classList.contains('active')) drawObservatoryComparison();
+      if ($('clvCoefficientChart')) drawCoefficientChart();
+      if ($('descHistogram') && typeof window.desc === 'function') window.desc();
+    });
+    // The source portal creates analytical controls on initial page load.
+    if (typeof window.desc === 'function') window.desc();
+    if (typeof window.corr === 'function') window.corr();
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', install, { once: true });
+  else install();
+})();
+</script>
+
+<script>
+/*
+ * CRIMINOLOGY LAB — CRIMINAL JUSTICE SYSTEM DASHBOARD v1.0
+ * Additive-only module. Paste after existing add-ons and before </body>.
+ * Data are published annual/dated snapshots from official Indonesian institutions.
+ * Do not treat agency counts as a same-cohort sequential funnel.
+ */
+(() => {
+  'use strict';
+  if (window.__criminologyCJSDashboardInstalled) return;
+  window.__criminologyCJSDashboardInstalled = true;
+
+  const $ = (id) => document.getElementById(id);
+  const fmt = (n) => new Intl.NumberFormat('id-ID').format(n);
+  const pct = (n) => `${Number(n).toFixed(2).replace('.', ',')}%`;
+
+  const DATA = {
+    police: {
+      period: '1 Januari–31 Desember 2025',
+      cases: 325345, resolved: 248076, clearance: 76.22,
+      source: 'https://pusiknas.polri.go.id/detail_artikel/crime_clearance_76_persen%2C_bukti_komitmen_polri_menegakkan_hukum_sepanjang_2025',
+      sourceName: 'Pusiknas Bareskrim Polri — Crime Clearance 76 Persen, 8 Januari 2026',
+      note: 'Kasus yang ditangani dan diselesaikan menurut rilis akhir tahun Polri. Bukan jumlah seluruh kejadian yang benar-benar terjadi atau seluruh pengaduan masyarakat.'
+    },
+    prosecutor: {
+      period: '1 Januari–31 Desember 2025',
+      spdp: 175624, tahap1: 130722, tahap2: 115745, forwarded: 110208,
+      verdict: 96690, execution: 99491, restorative: 2080,
+      source: 'https://badiklat.kejaksaan.go.id/berita/s/capaian-kinerja-kejaksaan-ri-sepanjang-tahun-2025-bc174',
+      sourceName: 'Kejaksaan RI — Capaian Kinerja Tahun 2025, 31 Desember 2025',
+      note: 'SPDP, Tahap I, Tahap II, pelimpahan ke PN, perkara memperoleh putusan, dan eksekusi adalah indikator aktivitas tahunan pada tahap berbeda. Angka-angka tersebut tidak boleh dibaca sebagai kohor identik atau dihitung menjadi tingkat konversi antar tahap.'
+    },
+    court: {
+      period: 'Tahun 2025',
+      allHandled: 3025152, allResolved: 2937634, allRate: 97.11,
+      maBurden: 38148, maNew: 37918, maCarry: 230, maDecided: 37973, maRate: 99.54,
+      under3m: 37791, under3mRate: 99.52,
+      source: 'https://www.mahkamahagung.go.id/id/berita/7167/laptah-2025-ketua-ma-ungkap-capaian-9954-persen-penyelesaian-perkara',
+      sourceName: 'Mahkamah Agung — Laporan Tahunan 2025, 10 Februari 2026',
+      note: 'Angka 3.025.152 mencakup perkara yang ditangani MA dan badan peradilan di bawahnya lintas lingkungan peradilan, bukan khusus perkara pidana. Angka 38.148 dan 37.973 adalah beban serta perkara diputus pada tingkat MA (kasasi/PK).'
+    },
+    correction: {
+      period: 'Snapshot penghuni Juni 2025',
+      inmates: 279537, capacity: 147414, overcrowding: 89.64,
+      guards: 27341, guardRatio: 40, integrationH1: 65049,
+      recidivists: 9808, releasedBase: 148156, recidivismRate: 6.62,
+      source: 'https://www.ditjenpas.go.id/ditjenpas-gandeng-media-perkuat-edukasi-publik-soal-program-prioritas',
+      sourceName: 'Ditjenpas — Data overcrowding Juni 2025, 15 Juli 2025',
+      live: 'https://dashboard.ditjenpas.go.id/',
+      liveName: 'SDP Dashboard — Pemasyarakatan dalam Data',
+      liveStamp: '10 November 2026, 10:30 WIB',
+      recidNote: 'SDP Dashboard mendefinisikan residivisme sebagai mantan narapidana yang telah bebas dan tercatat kembali melakukan tindak pidana dalam horizon dua tahun. Angka 9.808/148.156 dan 6,62% mengikuti snapshot dashboard; definisi dan kohor harus dipertahankan.'
+    }
+  };
+
+  const css = `
+    #cjs-panel{color:var(--ink,#192b3d)}
+    #cjs-panel .cjs-hero{padding:20px;border-radius:16px;background:linear-gradient(125deg,#10253d,#1b5a81 72%,#0c7169);color:#fff}
+    #cjs-panel .cjs-hero h2{color:#fff;margin:8px 0}
+    #cjs-panel .cjs-hero p{color:#dfedf5;margin:0;max-width:900px}
+    #cjs-panel .cjs-tag{display:inline-block;border:1px solid #ffffff55;background:#ffffff16;color:#e5f3fa;padding:4px 9px;border-radius:99px;font-size:11px;font-weight:800;letter-spacing:.06em}
+    #cjs-panel .cjs-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:15px}
+    #cjs-panel .cjs-kpi{border:1px solid var(--line);border-radius:12px;background:#f5f8fb;padding:13px;min-width:0}
+    #cjs-panel .cjs-kpi strong{display:block;color:var(--blue);font-size:clamp(20px,2.5vw,27px);line-height:1.2;overflow-wrap:anywhere}
+    #cjs-panel .cjs-kpi span{display:block;font-size:12px;color:var(--muted);margin-top:5px}
+    #cjs-panel .cjs-kpi small{display:block;font-size:11px;color:var(--muted);margin-top:6px}
+    #cjs-panel .cjs-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    #cjs-panel .cjs-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:15px;margin:10px 0;min-width:0}
+    #cjs-panel .cjs-card h3{margin:0 0 6px;color:var(--navy)}
+    #cjs-panel .cjs-muted{font-size:12px;color:var(--muted);line-height:1.55}
+    #cjs-panel .cjs-chart{display:block;width:100%;height:280px;background:#fff;border:1px solid var(--line);border-radius:10px}
+    #cjs-panel .cjs-chart.tall{height:350px}
+    #cjs-panel .cjs-flow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;align-items:stretch}
+    #cjs-panel .cjs-stage{border:1px solid var(--line);border-radius:12px;padding:13px;background:#fbfdff;position:relative;min-width:0}
+    #cjs-panel .cjs-stage:not(:last-child):after{content:'→';position:absolute;right:-13px;top:48%;z-index:2;background:#fff;color:#16877c;font-size:18px;font-weight:900}
+    #cjs-panel .cjs-stage .num{font-size:11px;color:#16877c;font-weight:850;letter-spacing:.08em}
+    #cjs-panel .cjs-stage h3{font-size:15px;margin:7px 0}
+    #cjs-panel .cjs-stage strong{display:block;font-size:20px;color:var(--blue);margin-top:8px;overflow-wrap:anywhere}
+    #cjs-panel .cjs-stage small{display:block;color:var(--muted);font-size:11px;margin-top:5px}
+    #cjs-panel .cjs-callout{padding:12px 14px;background:#fff7e8;border-left:4px solid #c88b26;border-radius:8px;font-size:13px;color:#664d1b;line-height:1.55}
+    #cjs-panel .cjs-good{padding:12px 14px;background:#edf8f5;border-left:4px solid #087f78;border-radius:8px;font-size:13px;color:#22594f;line-height:1.55}
+    #cjs-panel .cjs-tablewrap{overflow:auto;max-height:420px;border:1px solid var(--line);border-radius:10px}
+    #cjs-panel table{border-collapse:collapse;width:100%;font-size:13px}
+    #cjs-panel th,#cjs-panel td{padding:9px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top;white-space:normal}
+    #cjs-panel th{background:#f4f7fa;color:var(--navy);position:sticky;top:0}
+    #cjs-panel .cjs-status{display:inline-block;padding:3px 7px;border-radius:99px;font-size:11px;font-weight:750;background:#e6f5ef;color:#087356}
+    #cjs-panel .cjs-status.historical{background:#fff4df;color:#85580b}
+    #cjs-panel a{color:#145b87;font-weight:700;text-decoration:none}
+    #cjs-panel a:hover{text-decoration:underline}
+    #cjs-panel .cjs-duration{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    #cjs-panel .cjs-duration>div{border:1px solid var(--line);border-radius:11px;padding:12px;background:#f8fafc}
+    #cjs-panel .cjs-duration strong{display:block;font-size:24px;color:var(--blue)}
+    #cjs-panel .cjs-duration span{font-size:12px;color:var(--muted)}
+    #cjs-panel .cjs-sources{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+    #cjs-panel .cjs-source{border:1px solid var(--line);border-radius:11px;padding:12px;background:#fbfdff;min-width:0}
+    #cjs-panel .cjs-source h4{margin:0 0 6px;color:var(--navy)}
+    #cjs-panel .cjs-source p{margin:0 0 8px}
+    #cjs-panel .cjs-actions{display:flex;gap:8px;flex-wrap:wrap}
+    #cjs-panel button.cjs-button{border:0;border-radius:9px;padding:10px 13px;background:var(--blue);color:#fff;font-weight:700;cursor:pointer}
+    #cjs-panel button.cjs-button.secondary{background:#e8eef4;color:var(--navy)}
+    @media(max-width:850px){#cjs-panel .cjs-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}#cjs-panel .cjs-flow{grid-template-columns:repeat(2,minmax(0,1fr))}#cjs-panel .cjs-stage:not(:last-child):after{display:none}}
+    @media(max-width:600px){#cjs-panel .cjs-grid,#cjs-panel .cjs-sources{grid-template-columns:1fr}#cjs-panel .cjs-flow{grid-template-columns:1fr}#cjs-panel .cjs-hero{padding:16px}#cjs-panel .cjs-chart{height:260px}#cjs-panel .cjs-chart.tall{height:340px}}
+  `;
+  const style = document.createElement('style');
+  style.id = 'cjs-dashboard-style';
+  style.textContent = css;
+  document.head.appendChild(style);
+
+  function addPanel() {
+    const nav = document.querySelector('nav');
+    const main = document.querySelector('main');
+    if (!nav || !main || $('cjs-panel')) return;
+    const tab = document.createElement('button');
+    tab.type = 'button';
+    tab.className = 'tab';
+    tab.dataset.tab = 'criminalJustice';
+    tab.textContent = 'Criminal Justice System';
+
+    const mappingTab = nav.querySelector('[data-tab="crimeMapping"]');
+    const obsTab = nav.querySelector('[data-tab="observatory"]');
+    if (mappingTab) mappingTab.insertAdjacentElement('afterend', tab);
+    else if (obsTab) obsTab.insertAdjacentElement('afterend', tab);
+    else nav.appendChild(tab);
+
+    const section = document.createElement('section');
+    section.className = 'panel';
+    section.id = 'criminalJustice';
+    section.innerHTML = `
+      <div id="cjs-panel">
+        <div class="cjs-hero">
+          <span class="cjs-tag">CRIMINAL JUSTICE SYSTEM OBSERVATORY · NATIONAL</span>
+          <h2>Criminal Justice System Dashboard</h2>
+          <p>Memantau tahapan penegakan hukum, beban kelembagaan, penyelesaian perkara, dan indikator pemasyarakatan melalui publikasi resmi lembaga. Snapshot utama: tahun 2025; indikator penghuni lapas/rutan: Juni 2025; tautan SDP menyediakan pembaruan operasional yang lebih baru.</p>
+        </div>
+
+        <div class="card">
+          <h2>Ringkasan kinerja empat institusi</h2>
+          <div class="cjs-kpis">
+            <div class="cjs-kpi"><strong>${fmt(DATA.police.cases)}</strong><span>Kasus ditangani Polri</span><small>2025 · Polri</small></div>
+            <div class="cjs-kpi"><strong>${fmt(DATA.prosecutor.spdp)}</strong><span>SPDP masuk Kejaksaan</span><small>2025 · Pidana umum</small></div>
+            <div class="cjs-kpi"><strong>${fmt(DATA.court.allHandled)}</strong><span>Beban perkara badan peradilan</span><small>2025 · seluruh lingkungan peradilan</small></div>
+            <div class="cjs-kpi"><strong>${fmt(DATA.correction.inmates)}</strong><span>Penghuni lapas dan rutan</span><small>Juni 2025 · Ditjenpas</small></div>
+          </div>
+          <p class="cjs-muted" style="margin-top:10px">Angka-angka ini merupakan indikator beban/aktivitas dari unit yang berbeda, bukan jumlah kasus yang sama berpindah secara berurutan di antara empat institusi.</p>
+        </div>
+
+        <div class="card">
+          <h2>Alur kelembagaan sistem peradilan pidana</h2>
+          <p class="cjs-muted">Diagram menunjukkan posisi dan contoh indikator setiap institusi. Panah menunjukkan urutan kelembagaan, bukan rekonsiliasi jumlah perkara antar lembaga.</p>
+          <div class="cjs-flow">
+            <div class="cjs-stage"><div class="num">01 · PENEGAKAN AWAL</div><h3>Kepolisian</h3><div class="cjs-muted">Penerimaan dan penanganan perkara, penyelidikan/penyidikan, serta penyelesaian perkara.</div><strong>${fmt(DATA.police.cases)}</strong><small>Kasus ditangani · 2025</small><strong>${pct(DATA.police.clearance)}</strong><small>Crime clearance resmi · 2025</small></div>
+            <div class="cjs-stage"><div class="num">02 · PENUNTUTAN</div><h3>Kejaksaan</h3><div class="cjs-muted">SPDP, prapenuntutan, Tahap I/II, pelimpahan ke pengadilan, dan eksekusi.</div><strong>${fmt(DATA.prosecutor.forwarded)}</strong><small>Perkara dilimpahkan ke PN · 2025</small></div>
+            <div class="cjs-stage"><div class="num">03 · PEMERIKSAAN</div><h3>Pengadilan</h3><div class="cjs-muted">Pemeriksaan perkara, putusan, upaya hukum, dan administrasi minutasi.</div><strong>${pct(DATA.court.allRate)}</strong><small>Rasio penyelesaian semua lingkungan peradilan · 2025</small></div>
+            <div class="cjs-stage"><div class="num">04 · PEMASYARAKATAN</div><h3>Lapas, Rutan & Bapas</h3><div class="cjs-muted">Pelaksanaan pidana, pembinaan, hak integrasi, pembimbingan, dan reintegrasi sosial.</div><strong>${fmt(DATA.correction.inmates)}</strong><small>Penghuni Lapas/Rutan · Juni 2025</small></div>
+          </div>
+          <div class="cjs-callout" style="margin-top:12px"><b>Catatan penting tentang “funnel”.</b> Data SPDP, Tahap I, Tahap II, pelimpahan, putusan, dan eksekusi merupakan hitungan kegiatan dalam satu tahun, bukan pelacakan kohor perkara dengan identitas yang sama. Jumlah eksekusi dapat lebih besar daripada putusan tahun berjalan karena perkara dari periode sebelumnya. Jangan menghitung rasio konversi langsung dari angka lintas lembaga di atas.</div>
+        </div>
+
+        <div class="cjs-grid">
+          <div class="cjs-card">
+            <h3>1. Kepolisian — penanganan dan penyelesaian</h3>
+            <p class="cjs-muted">${DATA.police.period}. Crime clearance adalah proporsi kasus yang diselesaikan menurut rilis Polri.</p>
+            <canvas id="cjs-police-chart" class="cjs-chart" width="900" height="280" role="img" aria-label="Grafik kasus ditangani dan diselesaikan Polri tahun 2025"></canvas>
+            <div class="cjs-good"><b>${fmt(DATA.police.resolved)} kasus diselesaikan (${pct(DATA.police.clearance)}).</b> Ini adalah tingkat penyelesaian yang dilaporkan Polri, bukan tingkat penghukuman oleh pengadilan.</div>
+            <p class="cjs-muted">Sumber: <a href="${DATA.police.source}" target="_blank" rel="noopener">Pusiknas Bareskrim Polri</a>.</p>
+          </div>
+
+          <div class="cjs-card">
+            <h3>2. Kejaksaan — aktivitas tahap penuntutan</h3>
+            <p class="cjs-muted">${DATA.prosecutor.period}; bidang tindak pidana umum.</p>
+            <canvas id="cjs-prosecutor-chart" class="cjs-chart tall" width="900" height="350" role="img" aria-label="Grafik indikator kegiatan penanganan perkara Kejaksaan tahun 2025"></canvas>
+            <p class="cjs-muted">Selain itu, Kejaksaan melaporkan 2.080 perkara diselesaikan melalui pendekatan keadilan restoratif sepanjang 2025.</p>
+            <p class="cjs-muted">Sumber: <a href="${DATA.prosecutor.source}" target="_blank" rel="noopener">Capaian Kinerja Kejaksaan RI Tahun 2025</a>.</p>
+          </div>
+
+          <div class="cjs-card">
+            <h3>3. Pengadilan — beban dan penyelesaian perkara</h3>
+            <p class="cjs-muted">Data gabungan Mahkamah Agung dan badan peradilan di bawahnya, lintas lingkungan peradilan.</p>
+            <canvas id="cjs-court-chart" class="cjs-chart" width="900" height="280" role="img" aria-label="Grafik perkara ditangani dan diselesaikan badan peradilan tahun 2025"></canvas>
+            <div class="cjs-good"><b>${fmt(DATA.court.allResolved)} dari ${fmt(DATA.court.allHandled)} perkara diselesaikan tepat waktu (${pct(DATA.court.allRate)}).</b> Lingkup ini mencakup perkara pada seluruh lingkungan peradilan, bukan hanya perkara pidana.</div>
+            <p class="cjs-muted">Sumber: <a href="${DATA.court.source}" target="_blank" rel="noopener">Mahkamah Agung — Laporan Tahunan 2025</a>.</p>
+          </div>
+
+          <div class="cjs-card">
+            <h3>4. Pemasyarakatan — penghuni dan kapasitas</h3>
+            <p class="cjs-muted">${DATA.correction.period}. Jumlah penghuni Lapas/Rutan dibanding kapasitas yang tersedia.</p>
+            <canvas id="cjs-prison-chart" class="cjs-chart" width="900" height="280" role="img" aria-label="Grafik penghuni lapas dan rutan dibanding kapasitas Juni 2025"></canvas>
+            <div class="cjs-kpis">
+              <div class="cjs-kpi"><strong>${fmt(DATA.correction.guards)}</strong><span>Petugas pengamanan</span></div>
+              <div class="cjs-kpi"><strong>1 : ${DATA.correction.guardRatio}</strong><span>Rasio petugas : warga binaan (rilis Ditjenpas)</span></div>
+            </div>
+            <p class="cjs-muted">Program integrasi Januari–Juni 2025: ${fmt(DATA.correction.integrationH1)} narapidana.</p>
+            <p class="cjs-muted">Sumber: <a href="${DATA.correction.source}" target="_blank" rel="noopener">Ditjenpas — data overcrowding Juni 2025</a>.</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Waktu penyelesaian perkara</h2>
+          <p class="cjs-muted">Dashboard hanya menampilkan durasi yang dinyatakan eksplisit oleh sumber. Tidak ada angka durasi rata-rata yang diasumsikan untuk polisi, kejaksaan, atau masa pembinaan.</p>
+          <div class="cjs-duration">
+            <div><strong>${fmt(DATA.court.under3m)}</strong><span>Perkara MA diputus dalam waktu kurang dari 3 bulan pada 2025</span></div>
+            <div><strong>${pct(DATA.court.under3mRate)}</strong><span>Proporsi dari ${fmt(DATA.court.maDecided)} perkara yang diputus MA</span></div>
+          </div>
+          <p class="cjs-muted" style="margin-top:10px">Lingkup durasi tersebut adalah perkara tingkat Mahkamah Agung, bukan seluruh perkara pengadilan tingkat pertama dan banding. Sumber: <a href="${DATA.court.source}" target="_blank" rel="noopener">Laporan Tahunan MA 2025</a>.</p>
+          <div class="cjs-tablewrap"><table><thead><tr><th>Tahap</th><th>Indikator waktu yang tersedia</th><th>Status data</th></tr></thead><tbody>
+            <tr><td>Kepolisian</td><td>Rata-rata hari dari laporan sampai penyelesaian belum disajikan pada sumber yang digunakan di modul ini.</td><td><span class="cjs-status historical">Belum tersedia</span></td></tr>
+            <tr><td>Kejaksaan</td><td>Rata-rata hari SPDP/Tahap I/Tahap II sampai pelimpahan belum tersedia dalam sumber ringkasan kinerja yang digunakan.</td><td><span class="cjs-status historical">Belum tersedia</span></td></tr>
+            <tr><td>Pengadilan</td><td>${pct(DATA.court.under3mRate)} perkara MA diputus kurang dari 3 bulan.</td><td><span class="cjs-status">Tersedia · MA 2025</span></td></tr>
+            <tr><td>Pemasyarakatan</td><td>Durasi aktual pembinaan atau lama tinggal sampai bebas tidak dihitung dari jumlah penghuni; perlu data cohort/masa pidana.</td><td><span class="cjs-status historical">Belum tersedia</span></td></tr>
+          </tbody></table></div>
+        </div>
+
+        <div class="card">
+          <h2>Beban kelembagaan dan indikator pembinaan</h2>
+          <div class="cjs-grid">
+            <div class="cjs-card">
+              <h3>Beban perkara Mahkamah Agung</h3>
+              <div class="cjs-kpis">
+                <div class="cjs-kpi"><strong>${fmt(DATA.court.maBurden)}</strong><span>Beban kasasi dan PK 2025</span></div>
+                <div class="cjs-kpi"><strong>${fmt(DATA.court.maDecided)}</strong><span>Perkara diputus MA</span></div>
+                <div class="cjs-kpi"><strong>${pct(DATA.court.maRate)}</strong><span>Rasio produktivitas memutus</span></div>
+                <div class="cjs-kpi"><strong>${pct(DATA.court.under3mRate)}</strong><span>Diputus kurang dari 3 bulan</span></div>
+              </div>
+              <p class="cjs-muted">Beban MA 38.148 terdiri dari 37.918 perkara baru dan 230 perkara sisa tahun 2024. Ini statistik tingkat MA, jangan dicampur dengan total seluruh badan peradilan.</p>
+            </div>
+            <div class="cjs-card">
+              <h3>Overcrowding Lapas/Rutan</h3>
+              <div class="cjs-kpis">
+                <div class="cjs-kpi"><strong>${fmt(DATA.correction.inmates)}</strong><span>Penghuni</span></div>
+                <div class="cjs-kpi"><strong>${fmt(DATA.correction.capacity)}</strong><span>Kapasitas</span></div>
+                <div class="cjs-kpi"><strong>${pct(DATA.correction.overcrowding)}</strong><span>Kelebihan kapasitas</span></div>
+                <div class="cjs-kpi"><strong>${fmt(DATA.correction.integrationH1)}</strong><span>Program integrasi Jan–Jun 2025</span></div>
+              </div>
+              <p class="cjs-muted">Persentase kelebihan kapasitas menggunakan angka resmi yang diumumkan Ditjenpas pada Juni 2025.</p>
+            </div>
+          </div>
+          <div class="cjs-card">
+            <h3>Residivisme dua tahun — snapshot SDP</h3>
+            <div class="cjs-kpis">
+              <div class="cjs-kpi"><strong>${fmt(DATA.correction.releasedBase)}</strong><span>Basis narapidana bebas pada definisi SDP</span></div>
+              <div class="cjs-kpi"><strong>${fmt(DATA.correction.recidivists)}</strong><span>Tercatat mengulangi dalam horizon dua tahun</span></div>
+              <div class="cjs-kpi"><strong>${pct(DATA.correction.recidivismRate)}</strong><span>Persentase residivis pada dashboard SDP</span></div>
+              <div class="cjs-kpi"><strong>2025</strong><span>Tahun kinerja yang ditampilkan SDP</span></div>
+            </div>
+            <p class="cjs-muted">${DATA.correction.recidNote}</p>
+            <p><a href="${DATA.correction.live}" target="_blank" rel="noopener">Buka dashboard resmi SDP Ditjenpas — data versi ${DATA.correction.liveStamp} →</a></p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Tabel indikator dan metadata sumber</h2>
+          <div class="cjs-actions" style="margin-bottom:10px"><button class="cjs-button" id="cjs-export">Unduh tabel indikator CSV</button><button class="cjs-button secondary" id="cjs-source-open">Buka dashboard SDP Ditjenpas</button></div>
+          <div class="cjs-tablewrap"><table><thead><tr><th>Institusi</th><th>Indikator</th><th>Nilai</th><th>Periode</th><th>Unit/definisi</th><th>Status</th></tr></thead><tbody>
+            <tr><td>Polri</td><td>Kasus ditangani</td><td>${fmt(DATA.police.cases)}</td><td>2025</td><td>Kasus ditangani nasional</td><td>Publikasi resmi</td></tr>
+            <tr><td>Polri</td><td>Kasus diselesaikan</td><td>${fmt(DATA.police.resolved)}</td><td>2025</td><td>Kasus diselesaikan menurut rilis Polri</td><td>Publikasi resmi</td></tr>
+            <tr><td>Polri</td><td>Crime clearance</td><td>${pct(DATA.police.clearance)}</td><td>2025</td><td>Tingkat penyelesaian perkara menurut Polri</td><td>Publikasi resmi</td></tr>
+            <tr><td>Kejaksaan</td><td>SPDP masuk</td><td>${fmt(DATA.prosecutor.spdp)}</td><td>2025</td><td>Aktivitas tahap tindak pidana umum</td><td>Publikasi resmi</td></tr>
+            <tr><td>Kejaksaan</td><td>Tahap I / Tahap II</td><td>${fmt(DATA.prosecutor.tahap1)} / ${fmt(DATA.prosecutor.tahap2)}</td><td>2025</td><td>Aktivitas tahapan berkas/perkara</td><td>Publikasi resmi</td></tr>
+            <tr><td>Kejaksaan</td><td>Dilimpahkan ke Pengadilan Negeri</td><td>${fmt(DATA.prosecutor.forwarded)}</td><td>2025</td><td>Pelimpahan oleh Kejaksaan</td><td>Publikasi resmi</td></tr>
+            <tr><td>Kejaksaan</td><td>Memperoleh putusan / dieksekusi</td><td>${fmt(DATA.prosecutor.verdict)} / ${fmt(DATA.prosecutor.execution)}</td><td>2025</td><td>Aktivitas tahunan; bukan harus kohor yang sama</td><td>Publikasi resmi</td></tr>
+            <tr><td>Pengadilan</td><td>Beban perkara seluruh badan peradilan</td><td>${fmt(DATA.court.allHandled)}</td><td>2025</td><td>Lintas lingkungan peradilan</td><td>Publikasi resmi</td></tr>
+            <tr><td>Pengadilan</td><td>Diselesaikan tepat waktu</td><td>${fmt(DATA.court.allResolved)} (${pct(DATA.court.allRate)})</td><td>2025</td><td>Semua lingkungan peradilan</td><td>Publikasi resmi</td></tr>
+            <tr><td>Mahkamah Agung</td><td>Beban kasasi dan PK</td><td>${fmt(DATA.court.maBurden)}</td><td>2025</td><td>37.918 perkara baru + 230 sisa 2024</td><td>Publikasi resmi</td></tr>
+            <tr><td>Mahkamah Agung</td><td>Diputus kurang dari 3 bulan</td><td>${fmt(DATA.court.under3m)} (${pct(DATA.court.under3mRate)})</td><td>2025</td><td>37.973 perkara diputus MA</td><td>Publikasi resmi</td></tr>
+            <tr><td>Ditjenpas</td><td>Penghuni / kapasitas</td><td>${fmt(DATA.correction.inmates)} / ${fmt(DATA.correction.capacity)}</td><td>Juni 2025</td><td>Penghuni Lapas/Rutan</td><td>Snapshot historis</td></tr>
+            <tr><td>Ditjenpas</td><td>Residivisme dua tahun</td><td>${fmt(DATA.correction.recidivists)} / ${fmt(DATA.correction.releasedBase)} (${pct(DATA.correction.recidivismRate)})</td><td>Snapshot SDP 2025</td><td>Definisi dan horizon dua tahun mengikuti SDP</td><td>Dashboard resmi</td></tr>
+          </tbody></table></div>
+        </div>
+
+        <div class="card">
+          <h2>Sumber data resmi dan keterbatasan</h2>
+          <div class="cjs-sources">
+            <div class="cjs-source"><h4>Kepolisian — Pusiknas</h4><p class="cjs-muted">${DATA.police.sourceName}. Data kasus ditangani, diselesaikan, dan crime clearance sepanjang 2025.</p><a href="${DATA.police.source}" target="_blank" rel="noopener">Buka sumber Polri →</a></div>
+            <div class="cjs-source"><h4>Kejaksaan RI</h4><p class="cjs-muted">${DATA.prosecutor.sourceName}. Angka SPDP sampai eksekusi untuk tindak pidana umum tahun 2025.</p><a href="${DATA.prosecutor.source}" target="_blank" rel="noopener">Buka sumber Kejaksaan →</a></div>
+            <div class="cjs-source"><h4>Mahkamah Agung</h4><p class="cjs-muted">${DATA.court.sourceName}. Beban, perkara diputus, rasio penyelesaian, dan durasi pada tingkat MA.</p><a href="${DATA.court.source}" target="_blank" rel="noopener">Buka sumber MA →</a></div>
+            <div class="cjs-source"><h4>Direktorat Jenderal Pemasyarakatan</h4><p class="cjs-muted">${DATA.correction.sourceName}. Data penghuni, kapasitas, petugas, dan program integrasi.</p><a href="${DATA.correction.source}" target="_blank" rel="noopener">Buka rilis Ditjenpas →</a><br><a href="${DATA.correction.live}" target="_blank" rel="noopener">Buka SDP Dashboard →</a></div>
+          </div>
+          <div class="cjs-callout" style="margin-top:12px"><b>Batas interpretasi.</b> Tahun, unit analisis, tahap administrasi, dan cakupan kelembagaan berbeda. Jumlah perkara di seluruh lingkungan peradilan tidak setara dengan perkara pidana yang dilimpahkan Kejaksaan. Penghuni lapas/rutan adalah stok pada tanggal tertentu, bukan arus perkara tahunan. Rasio penyelesaian antarlembaga tidak dapat dibandingkan langsung tanpa data kohor perkara yang terhubung, definisi seragam, dan periode yang sama.</div>
+        </div>
+      </div>`;
+    main.appendChild(section);
+
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab[data-tab]').forEach(x => x.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(x => x.classList.remove('active'));
+      tab.classList.add('active');
+      section.classList.add('active');
+      requestAnimationFrame(drawAllCharts);
+    });
+
+    $('cjs-export').addEventListener('click', downloadCSV);
+    $('cjs-source-open').addEventListener('click', () => window.open(DATA.correction.live, '_blank', 'noopener'));
+  }
+
+  function canvas(id, height=280) {
+    const c=$(id); if(!c) return null;
+    const width=Math.max(280,Math.floor(c.getBoundingClientRect().width||320));
+    const dpr=Math.min(window.devicePixelRatio||1,2);
+    c.style.height=height+'px'; c.width=width*dpr; c.height=height*dpr;
+    const ctx=c.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0);
+    ctx.clearRect(0,0,width,height);
+    return {ctx,w:width,h:height};
+  }
+  function horizontalBars(id, rows, options={}) {
+    const h=options.height||280, f=canvas(id,h); if(!f)return;
+    const {ctx:c,w,h:hh}=f;
+    const left=options.left||Math.min(205,Math.max(112,w*.36)), right=66, top=24, bottom=26;
+    const plotW=w-left-right, rowH=(hh-top-bottom)/rows.length;
+    const max=options.max||Math.max(...rows.map(r=>r.value),1);
+    c.font='12px system-ui'; c.textBaseline='middle';
+    rows.forEach((r,i)=>{
+      const y=top+i*rowH+rowH/2, bar=Math.max(2,r.value/max*plotW);
+      c.fillStyle='#334e68'; c.textAlign='right';
+      const label=r.label.length>27?r.label.slice(0,25)+'…':r.label;
+      c.fillText(label,left-9,y);
+      c.fillStyle=r.color||'#28799a';
+      c.beginPath(); c.roundRect(left,y-Math.min(10,rowH*.27),bar,Math.min(20,rowH*.55),5); c.fill();
+      c.fillStyle='#263b50'; c.textAlign='left';
+      c.fillText(fmt(r.value),Math.min(w-right+5,left+bar+7),y);
+      c.strokeStyle='#edf1f5'; c.beginPath(); c.moveTo(left,y+rowH/2); c.lineTo(w-right,y+rowH/2); c.stroke();
+    });
+  }
+  function twoBars(id, firstLabel, first, secondLabel, second, unit='', height=280) {
+    const f=canvas(id,height); if(!f)return;
+    const {ctx:c,w,h}=f, left=66,right=20,top=38,bottom=54,plotW=w-left-right,plotH=h-top-bottom;
+    const max=Math.max(first,second)*1.12;
+    c.font='12px system-ui'; c.textAlign='right'; c.fillStyle='#64748b'; c.strokeStyle='#e5ebf1';
+    for(let i=0;i<=4;i++){const v=max*i/4,y=top+plotH-v/max*plotH;c.beginPath();c.moveTo(left,y);c.lineTo(w-right,y);c.stroke();c.fillText(fmt(Math.round(v)),left-8,y+4);}
+    const vals=[{v:first,l:firstLabel,col:'#28799a'},{v:second,l:secondLabel,col:'#087f78'}],bw=Math.min(105,plotW/4);
+    vals.forEach((d,i)=>{const x=left+plotW*(i+.5)/2-bw/2,bh=d.v/max*plotH,y=top+plotH-bh;c.fillStyle=d.col;c.beginPath();c.roundRect(x,y,bw,bh,6);c.fill();c.fillStyle='#1e3448';c.textAlign='center';c.font='bold 12px system-ui';c.fillText(fmt(d.v),x+bw/2,y-8);c.font='12px system-ui';c.fillStyle='#64748b';c.fillText(d.l,x+bw/2,h-19);});
+  }
+  function drawAllCharts() {
+    twoBars('cjs-police-chart','Kasus ditangani',DATA.police.cases,'Kasus diselesaikan',DATA.police.resolved,'',280);
+    horizontalBars('cjs-prosecutor-chart',[
+      {label:'SPDP masuk',value:DATA.prosecutor.spdp,color:'#28799a'},
+      {label:'Tahap I',value:DATA.prosecutor.tahap1},
+      {label:'Tahap II',value:DATA.prosecutor.tahap2},
+      {label:'Dilimpahkan ke PN',value:DATA.prosecutor.forwarded},
+      {label:'Memperoleh putusan',value:DATA.prosecutor.verdict},
+      {label:'Dieksekusi',value:DATA.prosecutor.execution,color:'#087f78'}
+    ],{height:350});
+    twoBars('cjs-court-chart','Beban perkara',DATA.court.allHandled,'Diselesaikan tepat waktu',DATA.court.allResolved,'',280);
+    twoBars('cjs-prison-chart','Kapasitas',DATA.correction.capacity,'Penghuni',DATA.correction.inmates,'',280);
+  }
+  function downloadCSV() {
+    const rows=[
+      ['institution','indicator','value','unit','period','status','source_url','notes'],
+      ['Polri','cases_handled',DATA.police.cases,'cases',DATA.police.period,'official_published',DATA.police.source,DATA.police.note],
+      ['Polri','cases_resolved',DATA.police.resolved,'cases',DATA.police.period,'official_published',DATA.police.source,DATA.police.note],
+      ['Polri','crime_clearance',DATA.police.clearance,'percent',DATA.police.period,'official_published',DATA.police.source,DATA.police.note],
+      ['Kejaksaan','SPDP',DATA.prosecutor.spdp,'notifications',DATA.prosecutor.period,'official_published',DATA.prosecutor.source,DATA.prosecutor.note],
+      ['Kejaksaan','Tahap_I',DATA.prosecutor.tahap1,'cases',DATA.prosecutor.period,'official_published',DATA.prosecutor.source,DATA.prosecutor.note],
+      ['Kejaksaan','Tahap_II',DATA.prosecutor.tahap2,'cases',DATA.prosecutor.period,'official_published',DATA.prosecutor.source,DATA.prosecutor.note],
+      ['Kejaksaan','forwarded_to_district_court',DATA.prosecutor.forwarded,'cases',DATA.prosecutor.period,'official_published',DATA.prosecutor.source,DATA.prosecutor.note],
+      ['Kejaksaan','obtained_verdict',DATA.prosecutor.verdict,'cases',DATA.prosecutor.period,'official_published',DATA.prosecutor.source,DATA.prosecutor.note],
+      ['Kejaksaan','executed',DATA.prosecutor.execution,'cases',DATA.prosecutor.period,'official_published',DATA.prosecutor.source,DATA.prosecutor.note],
+      ['Kejaksaan','restorative_justice_completed',DATA.prosecutor.restorative,'cases',DATA.prosecutor.period,'official_published',DATA.prosecutor.source,DATA.prosecutor.note],
+      ['Pengadilan','all_courts_cases_handled',DATA.court.allHandled,'cases',DATA.court.period,'official_published',DATA.court.source,DATA.court.note],
+      ['Pengadilan','all_courts_cases_resolved_on_time',DATA.court.allResolved,'cases',DATA.court.period,'official_published',DATA.court.source,DATA.court.note],
+      ['Pengadilan','all_courts_on_time_rate',DATA.court.allRate,'percent',DATA.court.period,'official_published',DATA.court.source,DATA.court.note],
+      ['Mahkamah Agung','cassation_and_review_workload',DATA.court.maBurden,'cases',DATA.court.period,'official_published',DATA.court.source,DATA.court.note],
+      ['Mahkamah Agung','decided_under_3_months',DATA.court.under3m,'cases',DATA.court.period,'official_published',DATA.court.source,DATA.court.note],
+      ['Mahkamah Agung','decided_under_3_months_rate',DATA.court.under3mRate,'percent',DATA.court.period,'official_published',DATA.court.source,DATA.court.note],
+      ['Ditjenpas','inmates',DATA.correction.inmates,'persons','Juni 2025','historical_official_snapshot',DATA.correction.source,'Penghuni Lapas/Rutan; stok pada snapshot.'],
+      ['Ditjenpas','capacity',DATA.correction.capacity,'persons','Juni 2025','historical_official_snapshot',DATA.correction.source,'Kapasitas resmi yang dilaporkan Ditjenpas.'],
+      ['Ditjenpas','overcrowding',DATA.correction.overcrowding,'percent','Juni 2025','historical_official_snapshot',DATA.correction.source,'Persentase kelebihan kapasitas dari rilis Ditjenpas.'],
+      ['Ditjenpas','security_guards',DATA.correction.guards,'persons','Juni 2025','historical_official_snapshot',DATA.correction.source,'Jumlah petugas pengamanan.'],
+      ['Ditjenpas','recidivism_rate_2yr',DATA.correction.recidivismRate,'percent','SDP 2025','official_dashboard_snapshot',DATA.correction.live,DATA.correction.recidNote]
+    ];
+    const csv='\uFEFF'+rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\r\n');
+    const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+    const url=URL.createObjectURL(blob),a=document.createElement('a');
+    a.href=url;a.download='CriminologyLab_Criminal_Justice_System_Indicators.csv';a.click();URL.revokeObjectURL(url);
+  }
+  function install() {
+    addPanel();
+    window.addEventListener('resize',()=>{if($('criminalJustice')?.classList.contains('active'))drawAllCharts();});
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});
+  else install();
+})();
+</script>
 
 </body></html>
