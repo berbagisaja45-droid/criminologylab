@@ -1982,4 +1982,452 @@ async function requestBoundaryGeoJSON() {
   else install();
 })();
 </script>
+ <!--
+CRIMINOLOGY LAB — VICTIMOLOGY & CRIME UNDERREPORTING OBSERVATORY v1.0
+Additive-only module. Paste this entire block once before </body> in index.html.
+Do not replace or delete existing scripts. It adds one tab and one panel.
+National indicators are BPS snapshots for reference year 2024, based on stated sources.
+Provincial figures are not invented: import aggregate CSV or download the blank 38-province template.
+-->
+<script>
+/*
+ * CRIMINOLOGY LAB — VICTIMOLOGY & CRIME UNDERREPORTING OBSERVATORY v1.0
+ * Additive-only module. Insert this entire script immediately before </body>.
+ * National snapshot indicators are sourced to BPS publications/metadata.
+ * Provincial data are NOT fabricated: upload a verified aggregate CSV or use
+ * the downloadable 38-province blank template.
+ */
+(() => {
+  'use strict';
+  if (window.__clVictimologyObservatoryV10) return;
+  window.__clVictimologyObservatoryV10 = true;
+
+  const PROVINCES = [
+    'Aceh','Sumatera Utara','Sumatera Barat','Riau','Jambi','Sumatera Selatan',
+    'Bengkulu','Lampung','Kepulauan Bangka Belitung','Kepulauan Riau','DKI Jakarta',
+    'Jawa Barat','Jawa Tengah','DI Yogyakarta','Jawa Timur','Banten','Bali',
+    'Nusa Tenggara Barat','Nusa Tenggara Timur','Kalimantan Barat','Kalimantan Tengah',
+    'Kalimantan Selatan','Kalimantan Timur','Kalimantan Utara','Sulawesi Utara',
+    'Sulawesi Tengah','Sulawesi Selatan','Sulawesi Tenggara','Gorontalo',
+    'Sulawesi Barat','Maluku','Maluku Utara','Papua Barat','Papua Barat Daya',
+    'Papua','Papua Selatan','Papua Tengah','Papua Pegunungan'
+  ];
+
+  // Snapshot values: reference period 1 Jan–31 Dec 2024, sourced by BPS.
+  const NATIONAL = {
+    victimization: 0.73,
+    urban: 0.84,
+    rural: 0.56,
+    male: 0.90,
+    female: 0.55,
+    reporting: 20.28,
+    villagesTheft: 29.92,
+    provincesAbove: 16,
+    provincesBelow: 22,
+    reference: '1 Januari–31 Desember 2024',
+    survey: 'Susenas Maret 2025',
+    publication: 'Statistik Kriminal 2024/2025'
+  };
+
+  const $ = id => document.getElementById(id);
+  const esc = value => String(value ?? '').replace(/[&<>"']/g, ch => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[ch]));
+  const norm = value => String(value ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .toUpperCase().replace(/\bPROVINSI\b|\bPROV\.?\b/g,' ')
+    .replace(/[^A-Z0-9]+/g,' ').trim().replace(/\s+/g,' ');
+
+  const PROVINCE_LOOKUP = new Map(PROVINCES.map(name => [norm(name), name]));
+  PROVINCE_LOOKUP.set(norm('Daerah Istimewa Yogyakarta'), 'DI Yogyakarta');
+  PROVINCE_LOOKUP.set(norm('Kep. Bangka Belitung'), 'Kepulauan Bangka Belitung');
+  PROVINCE_LOOKUP.set(norm('Kepulauan Bangka-Belitung'), 'Kepulauan Bangka Belitung');
+  PROVINCE_LOOKUP.set(norm('Kep. Riau'), 'Kepulauan Riau');
+  PROVINCE_LOOKUP.set(norm('Jakarta'), 'DKI Jakarta');
+
+  let provinceRows = [];
+  let importedName = '';
+  let importedHeaders = [];
+
+  function canonicalProvince(value) {
+    return PROVINCE_LOOKUP.get(norm(value)) || null;
+  }
+
+  function parseCSV(source) {
+    const first = (source.split(/\r?\n/).find(line => line.trim()) || '');
+    const semicolons = (first.match(/;/g) || []).length;
+    const commas = (first.match(/,/g) || []).length;
+    const separator = semicolons > commas ? ';' : ',';
+    const result = [];
+    let row = [], field = '', quoted = false;
+    for (let i = 0; i < source.length; i++) {
+      const ch = source[i];
+      if (ch === '"') {
+        if (quoted && source[i + 1] === '"') { field += '"'; i++; }
+        else quoted = !quoted;
+      } else if (ch === separator && !quoted) {
+        row.push(field); field = '';
+      } else if ((ch === '\n' || ch === '\r') && !quoted) {
+        if (ch === '\r' && source[i + 1] === '\n') i++;
+        row.push(field);
+        if (row.some(cell => String(cell).trim() !== '')) result.push(row);
+        row = []; field = '';
+      } else field += ch;
+    }
+    row.push(field);
+    if (row.some(cell => String(cell).trim() !== '')) result.push(row);
+    return result;
+  }
+
+  function asNumber(value) {
+    if (value === null || value === undefined || String(value).trim() === '') return null;
+    let raw = String(value).trim().replace(/\s/g,'');
+    if (raw.includes(',') && !raw.includes('.')) raw = raw.replace(',','.');
+    else if (raw.includes(',') && raw.includes('.')) raw = raw.replace(/\./g,'').replace(',','.');
+    const number = Number(raw.replace(/%$/,''));
+    return Number.isFinite(number) ? number : null;
+  }
+
+  function downloadFile(filename, content, mime='text/csv;charset=utf-8') {
+    const blob = new Blob(['\ufeff', content], {type:mime});
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = filename;
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  function csvCell(value) {
+    const text = String(value ?? '');
+    return '"' + text.replace(/"/g,'""') + '"';
+  }
+
+  function templateCSV() {
+    const headers = ['province','victimization_pct','violent_reporting_pct','reference_period','source','source_url','verification_status'];
+    const rows = PROVINCES.map(province => [province,'','','','','','not_verified']);
+    return [headers, ...rows].map(row => row.map(csvCell).join(',')).join('\n');
+  }
+
+  function setStatus(message, isError=false) {
+    const box = $('vct-status');
+    if (!box) return;
+    box.className = isError ? 'vct-notice vct-error' : 'vct-notice';
+    box.textContent = message;
+  }
+
+  function addStyles() {
+    if ($('vct-style')) return;
+    const style = document.createElement('style');
+    style.id = 'vct-style';
+    style.textContent = `
+      #vct-panel{--vct-ink:#172b43;--vct-muted:#64748b;--vct-line:#dbe4ed;--vct-blue:#256b91;--vct-teal:#0d8179;color:var(--vct-ink)}
+      #vct-panel .vct-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+      #vct-panel .vct-card{background:#fff;border:1px solid var(--vct-line);border-radius:13px;padding:15px;margin:10px 0;box-shadow:0 2px 8px rgba(20,40,60,.035)}
+      #vct-panel .vct-kpi{background:#f4f8fb;border:1px solid var(--vct-line);border-radius:11px;padding:13px;min-width:0}
+      #vct-panel .vct-kpi strong{display:block;font-size:clamp(21px,3vw,28px);color:var(--vct-blue);line-height:1.2}
+      #vct-panel .vct-kpi span{display:block;font-size:12px;color:var(--vct-muted);margin-top:5px;line-height:1.45}
+      #vct-panel .vct-muted,#vct-panel .vct-small{color:var(--vct-muted);font-size:12px;line-height:1.55}
+      #vct-panel .vct-notice{background:#eef7f6;border-left:4px solid var(--vct-teal);border-radius:8px;padding:11px 13px;font-size:13px;line-height:1.5;margin:10px 0}
+      #vct-panel .vct-error{background:#fff4f1;border-left-color:#ba513d}
+      #vct-panel .vct-chart{display:grid;gap:10px;margin-top:14px}
+      #vct-panel .vct-bar-row{display:grid;grid-template-columns:minmax(95px,170px) 1fr 62px;gap:9px;align-items:center;font-size:12px}
+      #vct-panel .vct-track{height:13px;border-radius:99px;background:#edf2f6;overflow:hidden}
+      #vct-panel .vct-bar{height:100%;border-radius:99px;background:var(--vct-blue)}
+      #vct-panel .vct-bar.teal{background:var(--vct-teal)}
+      #vct-panel .vct-bars{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+      #vct-panel .vct-field{display:grid;gap:5px;min-width:0}
+      #vct-panel label{font-size:12px;font-weight:700}
+      #vct-panel input,#vct-panel select{border:1px solid #cbd5e1;border-radius:8px;padding:9px;background:white;color:inherit;max-width:100%;font:inherit}
+      #vct-panel button{border:1px solid #cbd5e1;border-radius:8px;background:#fff;padding:9px 12px;cursor:pointer;color:#17344c;font:inherit;font-size:12px;font-weight:700}
+      #vct-panel button.primary{background:#17344c;border-color:#17344c;color:#fff}
+      #vct-panel .vct-toolbar{display:flex;gap:9px;flex-wrap:wrap;align-items:end}
+      #vct-panel .vct-tablewrap{overflow:auto;max-width:100%}
+      #vct-panel table{width:100%;border-collapse:collapse;font-size:12px}
+      #vct-panel th,#vct-panel td{padding:8px;border-bottom:1px solid var(--vct-line);text-align:left;white-space:nowrap}
+      #vct-panel th{background:#f3f6f9;position:sticky;top:0}
+      #vct-panel .vct-source a{color:#17628e;font-weight:700;text-decoration:none}
+      #vct-panel .vct-source a:hover{text-decoration:underline}
+      #vct-panel .vct-tag{display:inline-block;background:#edf4f8;border-radius:999px;padding:4px 8px;font-size:11px;font-weight:700;color:#315a72}
+      #vct-panel .vct-section-title{margin:0 0 7px;font-size:17px}
+      @media(max-width:760px){#vct-panel .vct-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#vct-panel .vct-bars{grid-template-columns:1fr}#vct-panel .vct-bar-row{grid-template-columns:100px 1fr 52px}}
+      @media(max-width:430px){#vct-panel .vct-card{padding:11px}#vct-panel .vct-kpi{padding:10px}#vct-panel .vct-bar-row{grid-template-columns:88px 1fr 48px;font-size:11px}}
+    `;
+    document.head.appendChild(style);
+  }
+
+  function barChart(containerId, rows, maxValue, suffix='%') {
+    const box = $(containerId);
+    if (!box) return;
+    if (!rows.length) {
+      box.innerHTML = '<p class="vct-small">Belum ada observasi numerik yang dapat divisualisasikan.</p>';
+      return;
+    }
+    box.innerHTML = rows.map((item, index) => {
+      const width = Math.max(0, Math.min(100, item.value / maxValue * 100));
+      return `<div class="vct-bar-row"><span>${esc(item.label)}</span><div class="vct-track"><div class="vct-bar ${index % 2 ? 'teal' : ''}" style="width:${width}%"></div></div><b style="text-align:right">${item.value.toFixed(2)}${suffix}</b></div>`;
+    }).join('');
+  }
+
+  function nationalMarkup() {
+    const complement = 100 - NATIONAL.reporting;
+    return `
+      <div class="vct-grid">
+        <div class="vct-kpi"><strong>${NATIONAL.victimization.toFixed(2)}%</strong><span>Penduduk menjadi korban kejahatan · nasional</span></div>
+        <div class="vct-kpi"><strong>${NATIONAL.reporting.toFixed(2)}%</strong><span>Tingkat pelaporan kepada polisi · nasional</span></div>
+        <div class="vct-kpi"><strong>${complement.toFixed(2)}%</strong><span>Komplemen aritmetis tingkat pelaporan (100% − 20,28%)</span></div>
+        <div class="vct-kpi"><strong>${NATIONAL.villagesTheft.toFixed(2)}%</strong><span>Desa/kelurahan yang mencatat pencurian · Podes</span></div>
+      </div>
+      <div class="vct-notice"><b>Periode korban:</b> ${NATIONAL.reference}. Sumber pengukuran korban: ${NATIONAL.survey}. Nilai 79,72% adalah komplemen aritmetis dari tingkat pelaporan 20,28%, bukan indikator terpisah yang dikutip sebagai angka mandiri oleh BPS.</div>
+      <div class="vct-bars">
+        <div class="vct-card"><h3 class="vct-section-title">Penduduk menjadi korban menurut klasifikasi tempat tinggal</h3><div id="vct-area-chart" class="vct-chart"></div><p class="vct-small">Persentase penduduk. Perkotaan 0,84%; perdesaan 0,56%.</p></div>
+        <div class="vct-card"><h3 class="vct-section-title">Penduduk menjadi korban menurut jenis kelamin</h3><div id="vct-sex-chart" class="vct-chart"></div><p class="vct-small">Persentase penduduk. Laki-laki 0,90%; perempuan 0,55%.</p></div>
+      </div>
+      <div class="vct-card"><h3 class="vct-section-title">Posisi provinsi terhadap angka nasional</h3>
+        <div class="vct-grid" style="grid-template-columns:repeat(2,minmax(0,1fr))">
+          <div class="vct-kpi"><strong>${NATIONAL.provincesAbove}</strong><span>Provinsi di atas angka nasional 0,73%</span></div>
+          <div class="vct-kpi"><strong>${NATIONAL.provincesBelow}</strong><span>Provinsi di bawah angka nasional 0,73%</span></div>
+        </div>
+        <p class="vct-small">BPS menyajikan jumlah provinsi di atas dan di bawah angka nasional. Modul ini tidak mengarang nilai atau urutan provinsi yang tidak tersedia pada ringkasan sumber.</p>
+      </div>`;
+  }
+
+  function renderImported() {
+    const metric = $('vct-metric')?.value || 'victimization_pct';
+    const search = norm($('vct-search')?.value || '');
+    const rows = provinceRows.filter(row => {
+      const hasValue = metric === 'victimization_pct' ? row.victimization_pct !== null : row.violent_reporting_pct !== null;
+      return hasValue && (!search || norm(row.province).includes(search));
+    }).sort((a,b) => (b[metric] ?? -Infinity) - (a[metric] ?? -Infinity));
+
+    const values = rows.map(row => row[metric]).filter(Number.isFinite);
+    const avg = values.length ? values.reduce((sum,val)=>sum+val,0)/values.length : null;
+    const highest = rows[0] || null;
+    const lowest = rows.length ? rows[rows.length-1] : null;
+    const metricLabel = metric === 'victimization_pct' ? 'Penduduk menjadi korban' : 'Korban kekerasan yang melapor';
+
+    $('vct-import-kpis').innerHTML = [
+      [values.length, 'Provinsi dengan nilai terisi'],
+      [avg === null ? '—' : avg.toFixed(2)+'%', 'Rata-rata provinsi tidak berbobot'],
+      [highest ? highest.province : '—', 'Nilai tertinggi'],
+      [lowest ? lowest.province : '—', 'Nilai terendah']
+    ].map(item => `<div class="vct-kpi"><strong style="font-size:${typeof item[0] === 'number' ? '26px' : '17px'}">${esc(item[0])}</strong><span>${esc(item[1])}</span></div>`).join('');
+
+    barChart('vct-province-chart', rows.slice(0,15).map(r=>({label:r.province,value:r[metric]})),
+      metric === 'victimization_pct' ? Math.max(1, ...values) : 100);
+
+    $('vct-province-table').innerHTML = rows.length ? `<div class="vct-tablewrap"><table><thead><tr><th>Provinsi</th><th>Korban kejahatan (%)</th><th>Korban kekerasan melapor (%)</th><th>Periode</th><th>Status verifikasi</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${esc(r.province)}</td><td>${r.victimization_pct === null ? '—' : r.victimization_pct.toFixed(2)}</td><td>${r.violent_reporting_pct === null ? '—' : r.violent_reporting_pct.toFixed(2)}</td><td>${esc(r.reference_period || '—')}</td><td>${esc(r.verification_status || 'not_verified')}</td></tr>`).join('')}</tbody></table></div>` : '<p class="vct-small">Belum ada data provinsi numerik untuk indikator yang dipilih. Unduh template, isi dengan angka BPS yang terverifikasi, kemudian unggah kembali.</p>';
+
+    const sourceNote = $('vct-import-note');
+    if (sourceNote) sourceNote.textContent = provinceRows.length
+      ? `${importedName || 'Dataset pengguna'} · ${provinceRows.length} baris provinsi dikenali. Grafik menampilkan ${metricLabel.toLowerCase()} untuk ${values.length} provinsi dengan nilai valid. Rata-rata yang ditampilkan tidak berbobot.`
+      : 'Belum ada dataset provinsi yang diimpor.';
+  }
+
+  function loadProvinceCSV(text, filename) {
+    const matrix = parseCSV(text);
+    if (matrix.length < 2) throw new Error('CSV minimal harus memuat header dan satu baris data.');
+    const headers = matrix[0].map(h => norm(h).replace(/ /g,'_'));
+    const known = {
+      province:['PROVINCE','PROVINSI','NAMA_PROVINSI','WILAYAH'],
+      victimization_pct:['VICTIMIZATION_PCT','VICTIMIZATION','PERSENTASE_KORBAN_KEJAHATAN','KORBAN_KEJAHATAN_PCT'],
+      violent_reporting_pct:['VIOLENT_REPORTING_PCT','REPORTING_VIOLENT_CRIME_PCT','PROPORTION_VIOLENT_VICTIMS_REPORTING','PROPORSI_KORBAN_KEKERASAN_MELAPOR_PCT','PROPORSI_KORBAN_KEKERASAN_MELAPOR_KE_POLISI'],
+      reference_period:['REFERENCE_PERIOD','PERIODE','TAHUN_REFERENSI'],
+      source:['SOURCE','SUMBER','SOURCE_NAME'],
+      source_url:['SOURCE_URL','URL_SUMBER'],
+      verification_status:['VERIFICATION_STATUS','STATUS_VERIFIKASI']
+    };
+    const positions = {};
+    Object.entries(known).forEach(([key, aliases]) => {
+      positions[key] = headers.findIndex(h => aliases.includes(h));
+    });
+    if (positions.province < 0) throw new Error('Kolom province/provinsi tidak ditemukan. Gunakan template resmi modul.');
+    const allowedPositions = new Set(Object.values(positions).filter(i=>i>=0));
+    const sensitive = headers.filter((h,i)=>!allowedPositions.has(i) && /(NIK|NOMOR_IDENTITAS|ALAMAT|NO_TELP|TELEPON|EMAIL|NAMA_KORBAN|NAMA_PELAKU|NAMA_SAKSI|TANGGAL_LAHIR)/.test(h));
+    if (sensitive.length) throw new Error('Kolom yang berpotensi memuat data pribadi ditolak: '+sensitive.join(', ')+'. Gunakan data agregat per provinsi saja.');
+
+    const rows = matrix.slice(1).map(cells => {
+      const get = key => positions[key] < 0 ? '' : String(cells[positions[key]] ?? '').trim();
+      const province = canonicalProvince(get('province'));
+      if (!province) return null;
+      const victim = asNumber(get('victimization_pct'));
+      const reporting = asNumber(get('violent_reporting_pct'));
+      if (victim !== null && (victim < 0 || victim > 100)) throw new Error(`Nilai victimization_pct di ${province} harus 0–100.`);
+      if (reporting !== null && (reporting < 0 || reporting > 100)) throw new Error(`Nilai violent_reporting_pct di ${province} harus 0–100.`);
+      return {
+        province,
+        victimization_pct:victim,
+        violent_reporting_pct:reporting,
+        reference_period:get('reference_period'),
+        source:get('source'),
+        source_url:get('source_url'),
+        verification_status:get('verification_status') || 'not_verified'
+      };
+    }).filter(Boolean);
+
+    if (!rows.length) throw new Error('Tidak ada nama provinsi yang dikenali. Periksa ejaan dan gunakan 38 nama provinsi pada template.');
+    const seen = new Set();
+    rows.forEach(row=>{
+      if (seen.has(row.province)) throw new Error('Provinsi duplikat ditemukan: '+row.province+'. Pastikan hanya satu baris per provinsi.');
+      seen.add(row.province);
+    });
+    if (!rows.some(row=>row.victimization_pct !== null || row.violent_reporting_pct !== null)) {
+      throw new Error('Baris provinsi dikenali, tetapi belum ada nilai numerik untuk dua indikator.');
+    }
+    provinceRows = rows;
+    importedName = filename || 'Dataset provinsi pengguna';
+    importedHeaders = matrix[0];
+    renderImported();
+    const populated = rows.filter(row=>row.victimization_pct !== null || row.violent_reporting_pct !== null).length;
+    setStatus(`Dataset berhasil dimuat: ${rows.length} provinsi dikenali; ${populated} provinsi memiliki setidaknya satu nilai indikator. Data tetap diproses di browser ini dan tidak dikirim ke server.`);
+  }
+
+  function exportImported() {
+    if (!provinceRows.length) { setStatus('Belum ada dataset provinsi untuk diekspor.', true); return; }
+    const headers = ['province','victimization_pct','violent_reporting_pct','reference_period','source','source_url','verification_status'];
+    const rows = [headers, ...provinceRows.map(r=>headers.map(h=>r[h] ?? ''))];
+    downloadFile('CriminologyLab_Victimology_Province_Data.csv', rows.map(r=>r.map(csvCell).join(',')).join('\n'));
+  }
+
+  function createPanel() {
+    const nav = document.querySelector('nav');
+    const main = document.querySelector('main');
+    if (!nav || !main) return false;
+    if ($('vct-panel')) return true;
+
+    const tab = document.createElement('button');
+    tab.className = 'tab'; tab.type = 'button'; tab.dataset.tab = 'victimologyLab';
+    tab.textContent = 'Victimology Observatory';
+    const anchorTab = nav.querySelector('[data-tab="crimeMapping"]') || nav.querySelector('[data-tab="observatory"]');
+    if (anchorTab) anchorTab.insertAdjacentElement('afterend', tab); else nav.appendChild(tab);
+
+    const section = document.createElement('section');
+    section.className = 'panel'; section.id = 'victimologyLab';
+    section.innerHTML = `
+      <div id="vct-panel">
+        <div class="vct-card">
+          <span class="vct-tag">VICTIMOLOGY & CRIME UNDERREPORTING · NATIONAL OBSERVATORY v1.0</span>
+          <h2 style="margin:8px 0">Victimology & Crime Underreporting Observatory</h2>
+          <p class="vct-muted">Membedakan pengalaman menjadi korban, kejadian yang tercatat dalam administrasi kepolisian, dan pelaporan korban kepada polisi. Angka-angka ini memiliki unit pengukuran berbeda dan tidak boleh dipertukarkan.</p>
+        </div>
+        <div class="vct-card">
+          <h3 class="vct-section-title">1. Profil nasional korban kejahatan</h3>
+          <p class="vct-muted">Snapshot BPS untuk referensi waktu 1 Januari–31 Desember 2024. Definisi korban mencakup penduduk yang diri atau harta bendanya mengalami tindak kejahatan atau usaha/percobaan tindak kejahatan.</p>
+          <div id="vct-national"></div>
+        </div>
+        <div class="vct-card">
+          <h3 class="vct-section-title">2. Memahami indikator pelaporan: dua cakupan yang berbeda</h3>
+          <div class="vct-bars">
+            <div>
+              <span class="vct-tag">AGREGAT NASIONAL · BPS 2024/2025</span>
+              <h3 style="margin:8px 0">Tingkat pelaporan kepada polisi: ${NATIONAL.reporting.toFixed(2)}%</h3>
+              <p class="vct-small">Angka ringkasan nasional dalam publikasi Statistik Kriminal 2024/2025. Komplemen aritmetisnya ${ (100-NATIONAL.reporting).toFixed(2) }%. Jangan menafsirkan komplemen itu sebagai jumlah korban absolut.</p>
+            </div>
+            <div>
+              <span class="vct-tag">INDIKATOR METADATA BPS · LEVEL PROVINSI</span>
+              <h3 style="margin:8px 0">Proporsi korban kekerasan yang melapor kepada polisi</h3>
+              <p class="vct-small">Cakupan khusus: korban penganiayaan, pencurian dengan kekerasan, dan/atau pelecehan seksual yang melapor ke polisi, dibagi seluruh korban kejahatan kekerasan dalam cakupan indikator.</p>
+              <p class="vct-small"><b>Rumus:</b> (jumlah korban kekerasan yang melapor ÷ jumlah korban kekerasan) × 100. Disagregasi: wilayah, jenis kelamin, dan kelompok umur.</p>
+            </div>
+          </div>
+          <div class="vct-notice"><b>Penting:</b> indikator pelaporan khusus korban kekerasan dari metadata BPS tidak identik dengan tingkat pelaporan agregat 20,28% dalam publikasi Statistik Kriminal. Jangan gabungkan keduanya dalam satu seri tanpa memeriksa definisi, populasi, dan referensi waktunya.</div>
+        </div>
+        <div class="vct-card">
+          <h3 class="vct-section-title">3. Analisis data korban kejahatan menurut provinsi</h3>
+          <p class="vct-muted">Unggah data agregat provinsi yang bersumber dari BPS. Modul tidak mengisi nilai provinsi yang belum diverifikasi. Unduh template untuk 38 provinsi, kemudian lengkapi nilai dan sumbernya.</p>
+          <div class="vct-toolbar">
+            <div class="vct-field"><label for="vct-file">Impor CSV agregat provinsi</label><input id="vct-file" type="file" accept=".csv,text/csv"></div>
+            <div class="vct-field"><label for="vct-metric">Indikator visualisasi</label><select id="vct-metric"><option value="victimization_pct">Penduduk menjadi korban (%)</option><option value="violent_reporting_pct">Korban kekerasan yang melapor (%)</option></select></div>
+            <div class="vct-field"><label for="vct-search">Cari provinsi</label><input id="vct-search" type="search" placeholder="Nama provinsi"></div>
+            <button class="primary" id="vct-template">Unduh template 38 provinsi</button>
+            <button id="vct-export">Ekspor data yang diimpor</button>
+          </div>
+          <div id="vct-status" class="vct-notice">Belum ada dataset provinsi. Profil nasional di atas dapat dibaca tanpa mengunggah data.</div>
+          <div id="vct-import-note" class="vct-small" style="margin:10px 0">Belum ada dataset provinsi yang diimpor.</div>
+          <div id="vct-import-kpis" class="vct-grid">
+            <div class="vct-kpi"><strong>—</strong><span>Provinsi dengan nilai terisi</span></div>
+            <div class="vct-kpi"><strong>—</strong><span>Rata-rata provinsi tidak berbobot</span></div>
+            <div class="vct-kpi"><strong>—</strong><span>Nilai tertinggi</span></div>
+            <div class="vct-kpi"><strong>—</strong><span>Nilai terendah</span></div>
+          </div>
+          <div class="vct-bars" style="margin-top:12px">
+            <div><h4>15 nilai tertinggi berdasarkan indikator terpilih</h4><div id="vct-province-chart" class="vct-chart"><p class="vct-small">Belum ada data.</p></div></div>
+            <div><h4>Tabel indikator provinsi</h4><div id="vct-province-table" class="vct-tablewrap"><p class="vct-small">Belum ada data.</p></div></div>
+          </div>
+          <p class="vct-small">Rata-rata provinsi yang ditampilkan adalah rata-rata aritmetis tidak berbobot. Untuk menghitung estimasi nasional berbobot, diperlukan denominator populasi/hasil survei dan metodologi pembobotan yang sesuai.</p>
+        </div>
+        <div class="vct-card">
+          <h3 class="vct-section-title">4. Catatan metodologis dan integritas data</h3>
+          <ul class="vct-small" style="padding-left:19px;line-height:1.65">
+            <li><b>Victimization rate</b> adalah persentase penduduk yang menjadi korban menurut survei; bukan jumlah laporan polisi.</li>
+            <li><b>Crime total</b> adalah kejahatan yang dilaporkan/tercatat dalam administrasi polisi; perubahan dapat dipengaruhi kejadian, perilaku melapor, dan pencatatan.</li>
+            <li><b>Reporting rate</b> adalah proporsi korban yang melapor; cakupan definisinya harus dibaca sesuai sumber.</li>
+            <li><b>Podes 29,92%</b> mengukur proporsi desa/kelurahan yang mencatat pencurian, bukan persentase penduduk yang menjadi korban pencurian.</li>
+            <li>Data impor harus agregat. Jangan mengunggah nama korban/pelaku/saksi, NIK, alamat, nomor kontak, informasi perkara, atau data pribadi lainnya.</li>
+            <li>Angka provinsi tanpa sumber, tahun referensi, dan status verifikasi tidak digunakan untuk menyusun peringkat kebijakan.</li>
+          </ul>
+        </div>
+        <div class="vct-card vct-source">
+          <h3 class="vct-section-title">Sumber resmi dan metadata</h3>
+          <p><a href="https://www.bps.go.id/id/publication/2025/12/12/2edc8ea4c35b19ba912fc7e4/statistik-kriminal-2024-2025.html" target="_blank" rel="noopener">BPS — Statistik Kriminal 2024/2025</a> <span class="vct-small">(rilis 12 Desember 2025; ringkasan angka nasional dan tingkat pelaporan).</span></p>
+          <p><a href="https://web-api.bps.go.id/download.php?f=FluG9rjj8Cb4NWle+2VpUnMyZVdhS1lEYzhRSW5PalBMSzZDTHVLamRJNTNudU5pamJTN2s2VUlOSTZVcWhnRnE1OTRYcWNKdUluOTVDQzNHWHZCTmxNYjZBSE9OditSM3VPS1o2QU0rODBBQXNnQWV1ZWJ0d21TbjR3cTIzVmhrZWo2ZHByT3cyTHIvQU1UcmlSQkFybmdmYUtBTVdyeUIwVVRIMEx6cXhOVWZaWUZKNkxsOHlQZzlhbkFjOERMUCt5YlJyUU4rSnljVWNOSzcrK3RkUzhmbm90a3ZObGFKMTdQWkdpallGMEpJM0hZL2xaMzAySTZFTDFIci9hMjJvdmRJWmJWUXB6b29VVWw5OE1NMVo0QThxdVNsS05ML1lmRHdnPT0%3D" target="_blank" rel="noopener">BPS — Infografis Statistik Kesejahteraan Rakyat 2025, bagian Korban Kejahatan</a> <span class="vct-small">(Susenas Maret 2025; referensi kejadian 1 Jan–31 Des 2024).</span></p>
+          <p><a href="https://sirusa.web.bps.go.id/metadata/indikator/117546" target="_blank" rel="noopener">BPS SIRUSA — Proporsi Korban Kekerasan yang Melapor kepada Polisi</a> <span class="vct-small">(definisi, rumus, level estimasi, dan disagregasi).</span></p>
+          <p class="vct-small">Snapshot di modul ini bukan feed real-time. Perbarui indikator hanya setelah memeriksa rilis dan periode sumber terbaru.</p>
+        </div>
+      </div>`;
+
+    const mappingPanel = $('crimeMapping');
+    if (mappingPanel && mappingPanel.parentNode === main) mappingPanel.insertAdjacentElement('afterend', section);
+    else main.appendChild(section);
+
+    tab.addEventListener('click', () => {
+      nav.querySelectorAll('.tab[data-tab]').forEach(button=>button.classList.remove('active'));
+      main.querySelectorAll('.panel').forEach(panel=>panel.classList.remove('active'));
+      tab.classList.add('active'); section.classList.add('active');
+    });
+
+    $('vct-national').innerHTML = nationalMarkup();
+    barChart('vct-area-chart', [
+      {label:'Perkotaan',value:NATIONAL.urban},
+      {label:'Perdesaan',value:NATIONAL.rural}
+    ], 1.0);
+    barChart('vct-sex-chart', [
+      {label:'Laki-laki',value:NATIONAL.male},
+      {label:'Perempuan',value:NATIONAL.female}
+    ], 1.0);
+
+    $('vct-template').addEventListener('click',()=>downloadFile('CriminologyLab_Victimology_38_Province_Template.csv',templateCSV()));
+    $('vct-export').addEventListener('click',exportImported);
+    $('vct-metric').addEventListener('change',renderImported);
+    $('vct-search').addEventListener('input',renderImported);
+    $('vct-file').addEventListener('change',event=>{
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+      if (file.size > 5*1024*1024) { setStatus('Ukuran CSV melebihi batas 5 MB.',true); event.target.value=''; return; }
+      const reader = new FileReader();
+      reader.onload = () => {
+        try { loadProvinceCSV(String(reader.result || ''),file.name); }
+        catch (error) { setStatus(error.message || 'CSV gagal dibaca.',true); }
+      };
+      reader.onerror = () => setStatus('Berkas tidak berhasil dibaca oleh browser.',true);
+      reader.readAsText(file);
+    });
+    return true;
+  }
+
+  function install() {
+    addStyles();
+    if (!createPanel()) return;
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', install, {once:true});
+  } else {
+    install();
+  }
+})();
+
+</script>
+
 </body></html>
