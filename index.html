@@ -1433,5 +1433,351 @@ Jangan tempel di dalam skrip lain dan jangan ikut menyalin baris </body> atau </
   else install();
 })();
 </script>
+<script>
+/*
+ * CRIMINOLOGY LAB — INDONESIA CRIME MAPPING v1.1
+ * Additive-only module. Place AFTER Visual Analytics v1.4 and BEFORE </body>.
+ * Map unit: BPS Kepolisian Daerah (Polda), not automatically 38 administrative provinces.
+ * Official values are 2024. Do not interpret UNMAPPED as zero.
+ */
+(() => {
+  'use strict';
+  if (window.__criminologyNationalMappingInstalled) return;
+  window.__criminologyNationalMappingInstalled = true;
 
+  const POLDAS = [{"polda":"ACEH","crimeTotal":11934,"crimeRate":207,"mapMode":"DIRECT","mapProvinces":["Aceh"],"notes":""},{"polda":"SUMATERA UTARA","crimeTotal":60724,"crimeRate":423,"mapMode":"DIRECT","mapProvinces":["Sumatera Utara"],"notes":""},{"polda":"SUMATERA BARAT","crimeTotal":13099,"crimeRate":242,"mapMode":"DIRECT","mapProvinces":["Sumatera Barat"],"notes":""},{"polda":"RIAU","crimeTotal":17799,"crimeRate":273,"mapMode":"DIRECT","mapProvinces":["Riau"],"notes":""},{"polda":"JAMBI","crimeTotal":7592,"crimeRate":197,"mapMode":"DIRECT","mapProvinces":["Jambi"],"notes":""},{"polda":"SUMATERA SELATAN","crimeTotal":25154,"crimeRate":253,"mapMode":"DIRECT","mapProvinces":["Sumatera Selatan"],"notes":""},{"polda":"BENGKULU","crimeTotal":5323,"crimeRate":276,"mapMode":"DIRECT","mapProvinces":["Bengkulu"],"notes":""},{"polda":"LAMPUNG","crimeTotal":16249,"crimeRate":186,"mapMode":"DIRECT","mapProvinces":["Lampung"],"notes":""},{"polda":"KEP. BANGKA BELITUNG","crimeTotal":2645,"crimeRate":194,"mapMode":"DIRECT","mapProvinces":["Kepulauan Bangka Belitung"],"notes":""},{"polda":"KEP. RIAU","crimeTotal":5294,"crimeRate":282,"mapMode":"DIRECT","mapProvinces":["Kepulauan Riau"],"notes":""},{"polda":"METRO JAYA","crimeTotal":77261,"crimeRate":316,"mapMode":"UNMAPPED","mapProvinces":[],"notes":"Cakupan lintas provinsi: mencakup DKI Jakarta, Kepulauan Seribu, sebagian wilayah Bekasi, Tangerang, Depok, Bandara Soekarno-Hatta, dan KP3 Tanjung Priok."},{"polda":"JAWA BARAT","crimeTotal":37636,"crimeRate":89,"mapMode":"UNMAPPED","mapProvinces":[],"notes":"Tidak dipetakan sebagai total administratif Jawa Barat karena sebagian wilayah Bekasi termasuk cakupan Polda Metro Jaya."},{"polda":"JAWA TENGAH","crimeTotal":41460,"crimeRate":111,"mapMode":"DIRECT","mapProvinces":["Jawa Tengah"],"notes":""},{"polda":"DI YOGYAKARTA","crimeTotal":11659,"crimeRate":310,"mapMode":"DIRECT","mapProvinces":["DI Yogyakarta"],"notes":""},{"polda":"JAWA TIMUR","crimeTotal":60102,"crimeRate":142,"mapMode":"DIRECT","mapProvinces":["Jawa Timur"],"notes":""},{"polda":"BANTEN","crimeTotal":6868,"crimeRate":98,"mapMode":"UNMAPPED","mapProvinces":[],"notes":"Tidak dipetakan sebagai total administratif Banten karena sebagian wilayah Tangerang masuk cakupan Polda Metro Jaya."},{"polda":"BALI","crimeTotal":13848,"crimeRate":343,"mapMode":"DIRECT","mapProvinces":["Bali"],"notes":""},{"polda":"NUSA TENGGARA BARAT","crimeTotal":7546,"crimeRate":146,"mapMode":"DIRECT","mapProvinces":["Nusa Tenggara Barat"],"notes":""},{"polda":"NUSA TENGGARA TIMUR","crimeTotal":13007,"crimeRate":258,"mapMode":"DIRECT","mapProvinces":["Nusa Tenggara Timur"],"notes":""},{"polda":"KALIMANTAN BARAT","crimeTotal":6246,"crimeRate":112,"mapMode":"DIRECT","mapProvinces":["Kalimantan Barat"],"notes":""},{"polda":"KALIMANTAN TENGAH","crimeTotal":4897,"crimeRate":174,"mapMode":"DIRECT","mapProvinces":["Kalimantan Tengah"],"notes":""},{"polda":"KALIMANTAN SELATAN","crimeTotal":5952,"crimeRate":147,"mapMode":"DIRECT","mapProvinces":["Kalimantan Selatan"],"notes":""},{"polda":"KALIMANTAN TIMUR","crimeTotal":7158,"crimeRate":173,"mapMode":"DIRECT","mapProvinces":["Kalimantan Timur"],"notes":""},{"polda":"KALIMANTAN UTARA","crimeTotal":1593,"crimeRate":255,"mapMode":"DIRECT","mapProvinces":["Kalimantan Utara"],"notes":""},{"polda":"SULAWESI UTARA","crimeTotal":13078,"crimeRate":540,"mapMode":"DIRECT","mapProvinces":["Sulawesi Utara"],"notes":""},{"polda":"SULAWESI TENGAH","crimeTotal":9623,"crimeRate":323,"mapMode":"DIRECT","mapProvinces":["Sulawesi Tengah"],"notes":""},{"polda":"SULAWESI SELATAN","crimeTotal":39443,"crimeRate":440,"mapMode":"DIRECT","mapProvinces":["Sulawesi Selatan"],"notes":""},{"polda":"SULAWESI TENGGARA","crimeTotal":5939,"crimeRate":245,"mapMode":"DIRECT","mapProvinces":["Sulawesi Tenggara"],"notes":""},{"polda":"GORONTALO","crimeTotal":3317,"crimeRate":292,"mapMode":"DIRECT","mapProvinces":["Gorontalo"],"notes":""},{"polda":"SULAWESI BARAT","crimeTotal":2882,"crimeRate":197,"mapMode":"DIRECT","mapProvinces":["Sulawesi Barat"],"notes":""},{"polda":"MALUKU","crimeTotal":4512,"crimeRate":253,"mapMode":"DIRECT","mapProvinces":["Maluku"],"notes":""},{"polda":"MALUKU UTARA","crimeTotal":2146,"crimeRate":188,"mapMode":"DIRECT","mapProvinces":["Maluku Utara"],"notes":""},{"polda":"PAPUA BARAT","crimeTotal":6085,"crimeRate":501,"mapMode":"GROUP","mapProvinces":["Papua Barat","Papua Barat Daya"],"notes":"Satu angka Polda gabungan untuk Papua Barat dan Papua Barat Daya; tidak tersedia pemisahan per provinsi pada sumber yang dirujuk."},{"polda":"PAPUA","crimeTotal":13922,"crimeRate":340,"mapMode":"UNMAPPED","mapProvinces":[],"notes":"Polda Papua tercantum pada tabel nasional, tetapi crosswalk ke empat provinsi hasil pemekaran belum diverifikasi dari sumber yang digunakan."}];
+  const PROVINCES = ["Aceh","Sumatera Utara","Sumatera Barat","Riau","Jambi","Sumatera Selatan","Bengkulu","Lampung","Kepulauan Bangka Belitung","Kepulauan Riau","DKI Jakarta","Jawa Barat","Jawa Tengah","DI Yogyakarta","Jawa Timur","Banten","Bali","Nusa Tenggara Barat","Nusa Tenggara Timur","Kalimantan Barat","Kalimantan Tengah","Kalimantan Selatan","Kalimantan Timur","Kalimantan Utara","Sulawesi Utara","Sulawesi Tengah","Sulawesi Selatan","Sulawesi Tenggara","Gorontalo","Sulawesi Barat","Maluku","Maluku Utara","Papua Barat","Papua Barat Daya","Papua","Papua Selatan","Papua Tengah","Papua Pegunungan"];
+  const SOURCE = {
+    total: 'https://www.bps.go.id/assets/statistics-table/2/MTAxIzI%3D/jumlah-tindak-pidana-menurut-kepolisian-daerah.html',
+    rate: 'https://www.bps.go.id/assets/statistics-table/2/Mjk5IzI%3D/risiko-penduduk-terkena-tindak-pidana--per-100-000-penduduk-.html',
+    boundary: 'https://geoservices.big.go.id/gis/rest/services/STIG/Batas_Provinsi/MapServer/0',
+    papuaBarat: 'https://papuabarat.bps.go.id/id/publication/2025/10/03/1d141aa1f129ffb5750b40e4/statistik-kriminal-provinsi-papua-barat-2024.html',
+    provinceList: 'https://www.bps.go.id/assets/statistics-table/2/NDQwIzI%3D/jumlah-perusahaan-industri-skala-mikro-dan-kecil-menurut-provinsi.html'
+  };
+  const $ = (id) => document.getElementById(id);
+  const nf = new Intl.NumberFormat('id-ID');
+  const norm = (v) => String(v || '').toUpperCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/PROVINSI|PROV\.?|DAERAH KHUSUS IBUKOTA|DAERAH ISTIMEWA/g, '')
+    .replace(/[^A-Z0-9]+/g, ' ').trim().replace(/\s+/g, ' ');
+  const alias = new Map();
+  const addAlias = (official, variants=[]) => {
+    [official, ...variants].forEach(v => alias.set(norm(v), official));
+  };
+  PROVINCES.forEach(p => addAlias(p));
+  addAlias('DKI Jakarta', ['Jakarta', 'Daerah Khusus Jakarta', 'DKI']);
+  addAlias('DI Yogyakarta', ['Yogyakarta', 'D I Yogyakarta', 'Daerah Istimewa Yogyakarta']);
+  addAlias('Kepulauan Bangka Belitung', ['Bangka Belitung', 'Kep Bangka Belitung']);
+  addAlias('Kepulauan Riau', ['Kepri', 'Kep Riau']);
+  addAlias('Nusa Tenggara Barat', ['NTB']);
+  addAlias('Nusa Tenggara Timur', ['NTT']);
+  addAlias('Papua Barat Daya', ['Papua Baratdaya']);
+  function canonicalProvince(name) { return alias.get(norm(name)) || null; }
+
+  const directByProvince = new Map();
+  const groupedByProvince = new Map();
+  POLDAS.forEach(row => {
+    if (row.mapMode === 'DIRECT') {
+      row.mapProvinces.forEach(p => directByProvince.set(p, row));
+    } else if (row.mapMode === 'GROUP') {
+      row.mapProvinces.forEach(p => groupedByProvince.set(p, row));
+    }
+  });
+
+  const css = `
+    #clm-panel{color:var(--ink,#1e293b)}
+    #clm-panel .clm-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+    #clm-panel .clm-kpi{padding:13px;border-radius:12px;border:1px solid var(--line);background:#f4f8fb}
+    #clm-panel .clm-kpi strong{display:block;font-size:24px;color:var(--blue);line-height:1.2}
+    #clm-panel .clm-kpi span{display:block;color:var(--muted);font-size:12px;margin-top:5px}
+    #clm-panel .clm-toolbar{display:grid;grid-template-columns:1fr 1fr minmax(180px,1.2fr);gap:10px;align-items:end}
+    #clm-panel .clm-field label{display:block;font-size:12px;font-weight:750;margin-bottom:5px}
+    #clm-panel select,#clm-panel input{width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:9px;background:#fff;font:inherit}
+    #clm-panel .clm-map{height:510px;width:100%;border:1px solid var(--line);border-radius:12px;background:#eaf0f4;z-index:1}
+    #clm-panel .clm-legend{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;font-size:12px}
+    #clm-panel .clm-legend span{display:inline-flex;align-items:center;gap:5px}
+    #clm-panel .clm-swatch{width:13px;height:13px;border-radius:3px;border:1px solid #64748b55;display:inline-block}
+    #clm-panel .clm-note{font-size:12px;color:var(--muted);line-height:1.55}
+    #clm-panel .clm-table td{white-space:normal;vertical-align:top}
+    #clm-panel .clm-table th{font-size:12px}
+    #clm-panel .clm-status{display:inline-block;padding:3px 7px;border-radius:99px;background:#edf1f5;color:#40566a;font-size:11px;font-weight:750}
+    #clm-panel .clm-status.direct{background:#e6f5ef;color:#087356}
+    #clm-panel .clm-status.group{background:#fff4df;color:#8a5b0b}
+    #clm-panel .clm-status.unmapped{background:#f1f3f5;color:#586575}
+    #clm-panel .clm-source{overflow-wrap:anywhere}
+    @media(max-width:760px){#clm-panel .clm-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#clm-panel .clm-toolbar{grid-template-columns:1fr 1fr}#clm-panel .clm-map{height:440px}}
+    @media(max-width:500px){#clm-panel .clm-toolbar{grid-template-columns:1fr}#clm-panel .clm-map{height:390px}}
+  `;
+  const style = document.createElement('style');
+  style.id = 'clm-national-map-style';
+  style.textContent = css;
+  document.head.appendChild(style);
+
+  function el(tag, attrs={}, children=[]) {
+    const n = document.createElement(tag);
+    Object.entries(attrs).forEach(([k,v]) => {
+      if (k === 'class') n.className = v;
+      else if (k === 'text') n.textContent = v;
+      else if (k === 'html') n.innerHTML = v;
+      else n.setAttribute(k, v);
+    });
+    children.forEach(c => n.appendChild(c));
+    return n;
+  }
+  function esc(value) {
+    return String(value ?? '').replace(/[&<>"']/g, c => ({
+      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+    }[c]));
+  }
+  function statusForProvince(province) {
+    if (directByProvince.has(province)) return {mode:'DIRECT', row:directByProvince.get(province)};
+    if (groupedByProvince.has(province)) return {mode:'GROUP', row:groupedByProvince.get(province)};
+    return {mode:'UNMAPPED', row:null};
+  }
+  function mappingLabel(province) {
+    const s = statusForProvince(province);
+    if (s.mode === 'DIRECT') return 'Polda–provinsi 1:1 pada tabel BPS';
+    if (s.mode === 'GROUP') return 'Angka gabungan Polda untuk 2 provinsi; tidak terpisah';
+    if (['DKI Jakarta','Jawa Barat','Banten'].includes(province)) return 'Cakupan Metro Jaya lintas provinsi/parsial';
+    if (province.startsWith('Papua')) return 'Crosswalk Polda–provinsi hasil pemekaran belum diverifikasi';
+    return 'Belum ada crosswalk terverifikasi';
+  }
+  function numberFor(province, metric) {
+    const s = statusForProvince(province);
+    if (!s.row) return null;
+    if (s.mode === 'GROUP') return null; // never present group value as province-specific
+    return metric === 'rate' ? s.row.crimeRate : s.row.crimeTotal;
+  }
+  function quantileBreaks(metric) {
+    const vals = POLDAS.filter(r => r.mapMode !== 'UNMAPPED')
+      .map(r => metric === 'rate' ? r.crimeRate : r.crimeTotal).sort((a,b)=>a-b);
+    return [0.2,0.4,0.6,0.8,1].map(q => vals[Math.min(vals.length-1, Math.ceil(q*vals.length)-1)]);
+  }
+  const PALETTE = ['#edf4f7','#c8e1e8','#8dc3ca','#4b9f9a','#176c70'];
+  function bucket(value, breaks) {
+    return breaks.findIndex(b => value <= b) < 0 ? 4 : breaks.findIndex(b => value <= b);
+  }
+  function fmt(value) { return value == null ? '—' : nf.format(value); }
+
+  let selectedMetric = 'rate';
+  let map = null;
+  let geoLayer = null;
+  let provinceFeatures = [];
+  let leafletLoading = false;
+  let boundariesLoaded = false;
+  let currentBreaks = [];
+
+  function renderProvinceTable() {
+    const body = $('clm-province-body');
+    if (!body) return;
+    const term = ($('clm-search')?.value || '').toLowerCase().trim();
+    body.innerHTML = PROVINCES.filter(p => !term || p.toLowerCase().includes(term) || mappingLabel(p).toLowerCase().includes(term))
+      .map(p => {
+        const s = statusForProvince(p);
+        let total='—', rate='—', detail=mappingLabel(p);
+        if (s.mode === 'DIRECT') { total=fmt(s.row.crimeTotal); rate=fmt(s.row.crimeRate); }
+        else if (s.mode === 'GROUP') { detail='Polda Papua Barat: 6.085 laporan; gabungan Papua Barat + Papua Barat Daya. Bukan angka terpisah.'; }
+        const cls=s.mode.toLowerCase();
+        return `<tr><td>${esc(p)}</td><td>${total}</td><td>${rate}</td><td><span class="clm-status ${cls}">${s.mode==='DIRECT'?'Langsung':s.mode==='GROUP'?'Gabungan':'Tidak dipetakan'}</span><div class="clm-note">${esc(detail)}</div></td></tr>`;
+      }).join('');
+  }
+
+  function renderPoldaTable() {
+    const body=$('clm-polda-body');
+    if (!body) return;
+    body.innerHTML=POLDAS.map(r=>{
+      const mode=r.mapMode==='DIRECT'?'Langsung 1:1':r.mapMode==='GROUP'?'Gabungan':'Tidak dipetakan';
+      const destinations=r.mapProvinces.length?r.mapProvinces.join('; '):'—';
+      return `<tr><td>${esc(r.polda)}</td><td>${fmt(r.crimeTotal)}</td><td>${fmt(r.crimeRate)}</td><td>${esc(mode)}</td><td>${esc(destinations)}</td><td>${esc(r.notes || 'Pemetaan langsung')}</td></tr>`;
+    }).join('');
+  }
+
+  function makeCSV() {
+    const rows=[['polda','crime_total_2024','crime_rate_per_100k_2024','map_mode','map_provinces','source_url_crime_total','source_url_crime_rate','source_update_date','unit_of_analysis','data_status','mapping_notes']];
+    POLDAS.forEach(r=>rows.push([r.polda,r.crimeTotal,r.crimeRate,r.mapMode,r.mapProvinces.join(';'), 'https://www.bps.go.id/assets/statistics-table/2/MTAxIzI%3D/jumlah-tindak-pidana-menurut-kepolisian-daerah.html', 'https://www.bps.go.id/assets/statistics-table/2/Mjk5IzI%3D/risiko-penduduk-terkena-tindak-pidana--per-100-000-penduduk-.html', '2025-12-12','Kepolisian Daerah (Polda)','VERIFIED_SOURCE_VALUE',r.notes]));
+    return '\uFEFF'+rows.map(row=>row.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\r\n');
+  }
+  function downloadCSV() {
+    const blob=new Blob([makeCSV()],{type:'text/csv;charset=utf-8'});
+    const url=URL.createObjectURL(blob),a=document.createElement('a');
+    a.href=url;a.download='CriminologyLab_BPS_Polda_Crime_2024.csv';a.click();URL.revokeObjectURL(url);
+  }
+
+  function createPanel() {
+    const nav=document.querySelector('nav');
+    const main=document.querySelector('main');
+    if (!nav || !main) return false;
+    if ($('clm-panel')) return true;
+    const tab=el('button',{class:'tab',type:'button','data-tab':'crimeMapping',text:'Crime Mapping'});
+    const obsTab = nav.querySelector('[data-tab="observatory"]');
+    if (obsTab) obsTab.insertAdjacentElement('afterend', tab); else nav.appendChild(tab);
+    const section=el('section',{class:'panel',id:'crimeMapping'});
+    section.innerHTML=`
+      <div id="clm-panel">
+        <div class="card">
+          <div class="pill">INDONESIA CRIME MAPPING · NATIONAL EDITION</div>
+          <h2>Peta Kriminalitas Indonesia — 38 Provinsi</h2>
+          <p class="section-intro">Peta batas administrasi provinsi dipadankan secara hati-hati dengan tabel kriminalitas BPS yang unit datanya adalah Kepolisian Daerah (Polda). Angka Polda tidak selalu sama dengan statistik administratif provinsi.</p>
+          <div class="public-notice"><b>Catatan integritas data:</b> warna peta hanya diberikan untuk Polda dengan kecocokan batas yang dapat dipertanggungjawabkan. Angka Polda gabungan atau lintas-provinsi tidak dipaksakan menjadi angka satu provinsi. Wilayah abu-abu berarti tidak dapat dipetakan secara sebanding, bukan nol kejahatan.</div>
+          <div class="clm-grid" style="margin-top:13px">
+            <div class="clm-kpi"><strong>38</strong><span>Provinsi administrasi pada daftar nasional</span></div>
+            <div class="clm-kpi"><strong>34</strong><span>Observasi Polda di tabel BPS 2024</span></div>
+            <div class="clm-kpi"><strong>29</strong><span>Polda dengan padanan langsung 1:1</span></div>
+            <div class="clm-kpi"><strong>7</strong><span>Provinsi tanpa angka 1:1 yang dapat ditampilkan</span></div>
+          </div>
+        </div>
+        <div class="card">
+          <h2>Interactive choropleth map</h2>
+          <div class="clm-toolbar">
+            <div class="clm-field"><label for="clm-year">Tahun data</label><select id="clm-year" disabled><option>2024 — tahun tersedia di tabel nasional BPS</option></select></div>
+            <div class="clm-field"><label for="clm-metric">Indikator peta</label><select id="clm-metric"><option value="rate">Crime rate per 100.000 penduduk</option><option value="total">Crime total (jumlah tindak pidana dilaporkan)</option></select></div>
+            <div class="clm-field"><label for="clm-search">Cari provinsi</label><input id="clm-search" type="search" placeholder="Contoh: Sumatera Barat, Papua..."></div>
+          </div>
+          <div id="clm-map-status" class="good" style="margin:12px 0">Memuat pustaka peta dan batas provinsi dari Badan Informasi Geospasial (BIG)...</div>
+          <div id="clm-map" class="clm-map" role="application" aria-label="Peta interaktif kriminalitas Indonesia"></div>
+          <div id="clm-legend" class="clm-legend"></div>
+          <p class="clm-note">Klik poligon untuk melihat nilai, unit sumber, status pemetaan, periode, dan catatan. Sumber geometri: BIG, layanan batas administrasi provinsi, EPSG:4326.</p>
+        </div>
+        <div class="card">
+          <h2>Data per provinsi — status padanan batas</h2>
+          <p class="clm-note">Tabel berisi 38 provinsi. Tanda “—” berarti angka provinsi tidak dapat diturunkan dari tabel Polda tanpa asumsi yang tidak didukung. Untuk Papua Barat dan Papua Barat Daya, sumber 2024 masih menyajikan satu angka gabungan bagi dua provinsi.</p>
+          <div class="tablewrap"><table class="clm-table"><thead><tr><th>Provinsi</th><th>Crime total</th><th>Crime rate /100 ribu</th><th>Status pemetaan & catatan</th></tr></thead><tbody id="clm-province-body"></tbody></table></div>
+        </div>
+        <div class="card">
+          <h2>Seluruh 34 observasi Polda dari BPS</h2>
+          <p class="clm-note">Data tetap ditampilkan lengkap, termasuk Polda yang belum dapat dipadankan ke satu provinsi. Catatan sumber BPS tentang cakupan lintas wilayah dipertahankan.</p>
+          <div class="tablewrap"><table class="clm-table"><thead><tr><th>Polda</th><th>Crime total</th><th>Crime rate</th><th>Status</th><th>Provinsi padanan</th><th>Catatan pemetaan</th></tr></thead><tbody id="clm-polda-body"></tbody></table></div>
+          <div style="margin-top:12px;display:flex;gap:9px;flex-wrap:wrap"><button class="action" type="button" id="clm-download">Unduh data CSV</button><a class="textlink" href="${SOURCE.total}" target="_blank" rel="noopener">Tabel crime total BPS →</a><a class="textlink" href="${SOURCE.rate}" target="_blank" rel="noopener">Tabel crime rate BPS →</a></div>
+        </div>
+        <div class="card">
+          <h2>Metodologi, sumber dan status verifikasi</h2>
+          <div class="source-grid">
+            <div class="source-card"><h3>1. Crime total 2024</h3><p>Jumlah tindak pidana menurut Kepolisian Daerah. Sumber pada tabel BPS: Biro Pengendalian Operasi, Mabes Polri. Terakhir diperbarui BPS: 12 Desember 2025.</p><a href="${SOURCE.total}" target="_blank" rel="noopener">Buka tabel BPS →</a></div>
+            <div class="source-card"><h3>2. Crime rate 2024</h3><p>Risiko penduduk terkena tindak pidana per 100.000 penduduk menurut Kepolisian Daerah. Angka mengikuti tabel BPS; tidak dihitung ulang oleh Criminology Lab.</p><a href="${SOURCE.rate}" target="_blank" rel="noopener">Buka tabel BPS →</a></div>
+            <div class="source-card"><h3>3. Batas administrasi</h3><p>Poligon provinsi disediakan oleh Badan Informasi Geospasial. Peta membutuhkan koneksi internet saat memuat geometri dan tile peta.</p><a href="${SOURCE.boundary}" target="_blank" rel="noopener">Buka layanan BIG →</a></div>
+            <div class="source-card"><h3>4. Papua Barat & Papua Barat Daya</h3><p>Publikasi BPS Papua Barat menjelaskan data kriminalitas 2024 masih digabung untuk 13 kabupaten/kota di Papua Barat dan Papua Barat Daya karena administrasi data Polda Papua Barat belum terpisah.</p><a href="${SOURCE.papuaBarat}" target="_blank" rel="noopener">Buka publikasi BPS Papua Barat →</a></div>
+            <div class="source-card"><h3>5. Daftar 38 provinsi</h3><p>Daftar wilayah administrasi digunakan sebagai kerangka tampilan peta. Daftar ini tidak menyatakan bahwa tabel kriminalitas Polda memiliki 38 observasi provinsi.</p><a href="${SOURCE.provinceList}" target="_blank" rel="noopener">Buka tabel BPS 38 provinsi →</a></div>
+          </div>
+          <div class="notice" style="margin-top:12px"><b>Status verifikasi:</b> nilai 34 Polda = disalin dari dua tabel BPS 2024 (sumber primer); batas geometri = layanan BIG; 29 padanan langsung = pemetaan satu-ke-satu pada tabel Polda; Polda Papua Barat = satu angka kelompok untuk dua provinsi; Metro Jaya/Jawa Barat/Banten serta Polda Papua = tidak dipaksakan menjadi nilai provinsi. Data ini hanya satu tahun (2024), bukan seri tren.</div>
+          <p class="clm-note">Benchmark nasional pada tabel BPS: 561.993 tindak pidana dilaporkan dan crime rate 204 per 100.000 penduduk. Angka nasional bukan jumlah dari 38 poligon administratif yang ditampilkan pada peta.</p>
+        </div>
+      </div>`;
+    main.appendChild(section);
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab[data-tab]').forEach(x=>x.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
+      tab.classList.add('active'); section.classList.add('active');
+      setTimeout(() => { if(map) map.invalidateSize(); if(!boundariesLoaded) loadMap(); }, 80);
+    });
+    $('clm-metric').addEventListener('change', () => { selectedMetric=$('clm-metric').value; refreshMap(); });
+    $('clm-search').addEventListener('input', renderProvinceTable);
+    $('clm-download').addEventListener('click', downloadCSV);
+    renderProvinceTable();
+    renderPoldaTable();
+    return true;
+  }
+
+  function setMapStatus(message, isError=false) {
+    const box=$('clm-map-status'); if(!box)return;
+    box.className=isError?'notice':'good'; box.textContent=message;
+  }
+  function loadLeaflet() {
+    if (window.L) return Promise.resolve();
+    if (leafletLoading) return new Promise((resolve,reject)=> {
+      const check=()=>window.L?resolve():setTimeout(()=>check(),100);
+      setTimeout(check,100);
+      setTimeout(()=>reject(new Error('Leaflet tidak berhasil dimuat.')),10000);
+    });
+    leafletLoading=true;
+    const link=document.createElement('link');
+    link.rel='stylesheet'; link.href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+    document.head.appendChild(link);
+    return new Promise((resolve,reject)=>{
+      const s=document.createElement('script');
+      s.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+      s.onload=()=>{leafletLoading=false;resolve();};
+      s.onerror=()=>{leafletLoading=false;reject(new Error('CDN Leaflet tidak dapat diakses.'));};
+      document.head.appendChild(s);
+    });
+  }
+  function featureProvince(feature) {
+    const p=feature.properties||{};
+    const raw=p.WADMPR||p.wadmpr||p.PROVINSI||p.provinsi||p.NAMOBJ||p.KDPPUM||'';
+    return canonicalProvince(raw) || raw;
+  }
+  function popupHTML(province) {
+    const s=statusForProvince(province);
+    if(s.mode==='DIRECT') {
+      const v=selectedMetric==='rate'?fmt(s.row.crimeRate)+' per 100.000':' '+fmt(s.row.crimeTotal)+' laporan';
+      return `<b>${esc(province)}</b><hr><b>${selectedMetric==='rate'?'Crime rate':'Crime total'} 2024:</b> ${esc(v)}<br><b>Unit sumber:</b> Polda ${esc(s.row.polda)}<br><b>Status:</b> Padanan langsung Polda–provinsi<br><small>Sumber: BPS; diperbarui 12 Desember 2025.</small>`;
+    }
+    if(s.mode==='GROUP') {
+      return `<b>${esc(province)}</b><hr><b>Nilai individual:</b> tidak tersedia.<br><b>Data kelompok:</b> Polda Papua Barat — ${selectedMetric==='rate'?fmt(s.row.crimeRate)+' per 100.000':fmt(s.row.crimeTotal)+' laporan'}<br><b>Cakupan:</b> Papua Barat + Papua Barat Daya (13 kabupaten/kota).<br><small>Angka kelompok ditampilkan untuk konteks dan tidak dapat diatribusikan secara terpisah kepada poligon ini. Sumber: BPS Papua Barat.</small>`;
+    }
+    return `<b>${esc(province)}</b><hr><b>Data provinsi:</b> belum dapat diturunkan dari tabel Polda 2024.<br><b>Alasan:</b> ${esc(mappingLabel(province))}<br><small>Abu-abu bukan berarti nol kasus.</small>`;
+  }
+  function refreshMap() {
+    if(!map||!geoLayer)return;
+    currentBreaks=quantileBreaks(selectedMetric);
+    geoLayer.setStyle(feature=>{
+      const province=featureProvince(feature), s=statusForProvince(province);
+      if(s.mode==='UNMAPPED')return {color:'#7d8c98',weight:1,fillColor:'#dce2e7',fillOpacity:.78,dashArray:'3 3'};
+      const value=s.row?(selectedMetric==='rate'?s.row.crimeRate:s.row.crimeTotal):null;
+      const idx=bucket(value,currentBreaks);
+      return {color:'#52697b',weight:1,fillColor:PALETTE[idx],fillOpacity:.88};
+    });
+    geoLayer.eachLayer(layer=>{
+      const province=featureProvince(layer.feature);
+      layer.bindPopup(popupHTML(province));
+      layer.bindTooltip(province,{sticky:true});
+    });
+    renderLegend();
+  }
+  function renderLegend() {
+    const box=$('clm-legend'); if(!box)return;
+    const unit=selectedMetric==='rate'?'per 100.000 penduduk':'laporan';
+    let html=PALETTE.map((c,i)=>`<span><i class="clm-swatch" style="background:${c}"></i>${i+1}: sampai ${fmt(currentBreaks[i])} ${unit}</span>`).join('');
+    html+=`<span><i class="clm-swatch" style="background:#dce2e7"></i>Tidak dipetakan</span>`;
+    box.innerHTML=html;
+  }
+  async function loadMap() {
+    if(boundariesLoaded)return;
+    try {
+      setMapStatus('Memuat pustaka peta Leaflet dan geometri batas administrasi dari layanan BIG...');
+      await loadLeaflet();
+      if (!map) map=L.map('clm-map',{scrollWheelZoom:false}).setView([-2.5,118],4.4);
+      else map.invalidateSize();
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+        maxZoom:10,attribution:'&copy; OpenStreetMap contributors'
+      }).addTo(map);
+      const url='https://geoservices.big.go.id/gis/rest/services/STIG/Batas_Provinsi/MapServer/0/query?where=1%3D1&outFields=KDPPUM%2CWADMPR&returnGeometry=true&outSR=4326&f=geojson';
+      const response=await fetch(url);
+      if(!response.ok)throw new Error('Layanan BIG merespons HTTP '+response.status);
+      const geo=await response.json();
+      if(!geo.features||!geo.features.length)throw new Error('Layanan BIG tidak mengembalikan poligon provinsi.');
+      provinceFeatures=geo.features;
+      geoLayer=L.geoJSON(geo,{style:{color:'#52697b',weight:1,fillColor:'#dce2e7',fillOpacity:.8}}).addTo(map);
+      const bounds=geoLayer.getBounds();
+      if(bounds.isValid())map.fitBounds(bounds.pad(.04));
+      refreshMap();
+      boundariesLoaded=true;
+      const n=geo.features.length;
+      setMapStatus(`Peta dimuat dari BIG: ${n} fitur batas administrasi. Daftar analisis memuat 38 provinsi dan tabel BPS memuat 34 Polda (2024). Jika jumlah fitur berbeda dari 38, periksa versi layer batas. Wilayah abu-abu belum dapat dipetakan sebagai angka provinsi yang sebanding.`);
+    } catch(err) {
+      console.error('Crime Mapping:',err);
+      setMapStatus('Peta geometri belum berhasil dimuat: '+err.message+'. Tabel 38 provinsi dan 34 observasi Polda tetap tersedia di bawah. Periksa koneksi internet atau coba muat ulang halaman.',true);
+      if (map) { try { map.remove(); } catch (_) {} map=null; geoLayer=null; }
+      const box=$('clm-map');
+      if(box)box.innerHTML='<div style="padding:18px;color:#40566a;font-size:13px">Peta belum dapat dimuat dari layanan geometri BIG. Tabel data resmi tetap tersedia di bawah. Buka kembali menu Crime Mapping untuk mencoba lagi.</div>';
+    }
+  }
+
+  function install() {
+    if(!createPanel())return;
+    // Load map only when the user opens the map tab, avoiding extra page-load cost.
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});
+  else install();
+})();
+</script>
 </body></html>
