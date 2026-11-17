@@ -1,0 +1,13 @@
+# Supabase local development configuration for Criminology Lab.
+# Project reference is public metadata; do not put keys or passwords here.
+project_id = "rurfluvlcnexxuwfngaj"
+
+[api]
+enabled = true
+schemas = ["public", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54322
+shadow_port = 54320
