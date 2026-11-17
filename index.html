@@ -2429,5 +2429,324 @@ Provincial figures are not invented: import aggregate CSV or download the blank 
 })();
 
 </script>
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Criminology Lab — Data Governance Preview</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f1f5f9;font:15px Arial,sans-serif;color:#1c3045}
+header{background:#142b42;color:#fff;padding:20px}header h1{margin:0 0 5px}nav{display:flex;gap:7px;flex-wrap:wrap;background:#fff;padding:12px;border-bottom:1px solid #d8e1e9}
+.tab{padding:9px 12px;border:1px solid #cbd7e2;border-radius:20px;background:#fff;color:#28445c;cursor:pointer}.tab.active{background:#245d80;color:#fff}
+main{max-width:1180px;margin:auto;padding:18px}.panel{display:none}.panel.active{display:block}.card{background:#fff;border:1px solid #dce4ec;border-radius:12px;padding:17px;margin-bottom:14px;box-shadow:0 2px 6px #1020300a}
+.pill{display:inline-block;background:#e9f1f7;color:#315b79;border-radius:20px;padding:5px 9px;font-size:11px;font-weight:bold}
+.public-notice{background:#eef6fb;border-left:3px solid #2a7894;padding:12px;margin:12px 0;font-size:13px}
+.section-intro{color:#596d80;line-height:1.55}
+</style></head><body>
+<header><h1>Criminology Lab</h1><p>Indonesia Crime Observatory · Module preview</p></header>
+<nav><button class="tab active" data-tab="home">Beranda</button><button class="tab" data-tab="dataInput">Input Data &amp; Tim Kurator</button></nav>
+<main><section class="panel active" id="home"><div class="card"><h2>Preview Data Governance</h2><p>Halaman preview sederhana untuk memeriksa bahwa modul dapat menambahkan tab dan panel secara mandiri.</p></div></section><section class="panel" id="dataInput"><div class="card"><h2>Input Data &amp; Tim Kurator</h2></div></section></main>
+<script>
+const $=id=>document.getElementById(id);
+document.querySelectorAll('.tab[data-tab]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));b.classList.add('active');$(b.dataset.tab)?.classList.add('active')}));
+</script>
+<script>
+/* CRIMINOLOGY LAB — DATA GOVERNANCE & INTELLIGENCE v1.0
+   Additive-only. Insert once before </body>. Local browser only; no server upload/storage.
+   Structure follows BPS MS-Keg, MS-Var, MS-Ind metadata concepts. */
+(() => {
+'use strict';
+if (window.__clDataGovernanceV10) return;
+window.__clDataGovernanceV10 = true;
+const $ = id => document.getElementById(id);
+const S = {activities:[],variables:[],indicators:[],audit:null,auditName:'',auditRows:[],auditHeaders:[],auditAt:''};
+const AF=['activity_id','activity_name','organizer','purpose','reference_period','geographic_scope','unit_of_analysis','collection_method','sampling_design','processing_method','analysis_method','release_schedule','access_level','steward','source_url','verification_status','validation_date','notes'];
+const VF=['activity_id','dataset_id','variable_name','alias','concept','definition','data_type','unit','reference_period','value_domain','missing_code','question_or_source','public_access','crime_classification_code','source_url','verification_status','notes'];
+const IF=['indicator_id','dataset_id','indicator_name','concept','definition','formula','numerator','denominator','unit','interpretation','reference_period','geographic_estimation_level','source_url','verification_status','notes'];
+const MAX=15*1024*1024, PII=/(nama|name|nik|ktp|alamat|address|telepon|phone|email|tanggal_lahir|birth|dob|passport|identity_number|nama_korban|nama_saksi|nama_tersangka)/i;
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function parseCSV(src){
+ src=String(src??'').replace(/^\uFEFF/,''); const first=src.split(/\r?\n/)[0]||'';
+ const sep=(first.match(/;/g)||[]).length>(first.match(/,/g)||[]).length?';':',';
+ const out=[]; let row=[],val='',q=false;
+ for(let i=0;i<src.length;i++){const c=src[i];if(c==='"'){if(q&&src[i+1]==='"'){val+='"';i++;}else q=!q;}
+ else if(c===sep&&!q){row.push(val);val='';}
+ else if((c==='\n'||c==='\r')&&!q){if(c==='\r'&&src[i+1]==='\n')i++;row.push(val);if(row.some(x=>String(x).trim()))out.push(row);row=[];val='';}
+ else val+=c;}
+ row.push(val);if(row.some(x=>String(x).trim()))out.push(row);return out;
+}
+function objects(parsed){if(parsed.length<2)return[];const h=parsed[0].map(x=>String(x??'').replace(/^\uFEFF/,'').trim());return parsed.slice(1).map(r=>Object.fromEntries(h.map((k,i)=>[k,String(r[i]??'').trim()]))).filter(o=>Object.values(o).some(Boolean));}
+const cell=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
+function csv(headers,rows){return [headers.map(cell).join(','),...rows.map(r=>headers.map(h=>cell(r[h])).join(','))].join('\r\n');}
+function download(name,data,mime='text/plain;charset=utf-8'){const u=URL.createObjectURL(new Blob([data],{type:mime})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);}
+function status(id,msg,error=false){const e=$(id);if(e){e.className=error?'dg-status dg-error':'dg-status';e.textContent=msg;}}
+function pill(v){const x=v||'belum_diverifikasi';const c=/tervalidasi|verified/i.test(x)?'ok':/revisi|perlu/i.test(x)?'warn':'neutral';return `<span class="dg-pill ${c}">${esc(x)}</span>`;}
+function table(id,heads,rows,empty){const e=$(id);if(!e)return;if(!rows.length){e.innerHTML=`<div class="dg-empty">${esc(empty)}</div>`;return;}e.innerHTML=`<div class="dg-table-wrap"><table class="dg-table"><thead><tr>${heads.map(x=>`<th>${esc(x)}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${heads.map(h=>`<td>${r[h]??''}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;}
+function completeness(items,fields){if(!items.length)return null;let n=0,t=0;items.forEach(r=>fields.forEach(f=>{t++;if(String(r[f]??'').trim())n++;}));return t?Math.round(n/t*100):null;}
+function render(){
+ $('dg-a-count').textContent=S.activities.length;$('dg-v-count').textContent=S.variables.length;$('dg-i-count').textContent=S.indicators.length;
+ $('dg-audit-count').textContent=S.audit?S.audit.rows:'—';
+ const scores=[completeness(S.activities,AF),completeness(S.variables,VF),completeness(S.indicators,IF)].filter(x=>x!==null);
+ $('dg-meta-score').textContent=scores.length?Math.round(scores.reduce((a,b)=>a+b,0)/scores.length)+'%':'—';
+ $('dg-findings').textContent=S.audit?S.audit.duplicateRows+S.audit.missingCells+S.audit.sensitive.length+S.audit.blankHeaders.length+S.audit.duplicateHeaders.length:'—';
+ $('dg-note').textContent=S.audit?`Audit terakhir: ${S.auditName} · ${S.audit.rows} observasi · ${S.audit.cols} variabel.`:'Belum ada audit dataset.';
+ table('dg-activity-table',['ID','Kegiatan','Penyelenggara','Periode','Cakupan','Unit','Metode','Status'],S.activities.map(r=>({ID:esc(r.activity_id),Kegiatan:esc(r.activity_name),Penyelenggara:esc(r.organizer),Periode:esc(r.reference_period),Cakupan:esc(r.geographic_scope),Unit:esc(r.unit_of_analysis),Metode:esc(r.collection_method),Status:pill(r.verification_status)})),'Belum ada metadata kegiatan.');
+ table('dg-variable-table',['Dataset','Variabel','Definisi','Tipe','Satuan','Domain','Status'],S.variables.filter(r=>!$('dg-v-filter').value||r.dataset_id===$('dg-v-filter').value).map(r=>({Dataset:esc(r.dataset_id||r.activity_id),Variabel:esc(r.variable_name),Definisi:esc(r.definition),Tipe:esc(r.data_type),Satuan:esc(r.unit),Domain:esc(r.value_domain),Status:pill(r.verification_status)})),'Belum ada kamus variabel.');
+ table('dg-indicator-table',['ID','Indikator','Definisi','Rumus','Satuan','Level estimasi','Status'],S.indicators.map(r=>({ID:esc(r.indicator_id),Indikator:esc(r.indicator_name),Definisi:esc(r.definition),Rumus:esc(r.formula),Satuan:esc(r.unit), 'Level estimasi':esc(r.geographic_estimation_level),Status:pill(r.verification_status)})),'Belum ada metadata indikator.');
+ const ids=[...new Set([...S.activities.map(x=>x.activity_id),...S.variables.map(x=>x.dataset_id).filter(Boolean)])].filter(Boolean).sort();
+ const filter=$('dg-v-filter'), current=filter.value;
+ filter.innerHTML='<option value="">Semua kegiatan/dataset</option>'+ids.map(x=>`<option>${esc(x)}</option>`).join('');
+ if(ids.includes(current))filter.value=current;
+ const linked=$('dg-v-dataset'), old=linked.value;
+ linked.innerHTML='<option value="">Pilih kegiatan/dataset</option>'+ids.map(x=>`<option>${esc(x)}</option>`).join('');
+ if(ids.includes(old))linked.value=old;
+}
+function styles(){
+ if($('dg-style'))return;const st=document.createElement('style');st.id='dg-style';st.textContent=`
+ #dg-panel{color:#1c3045;--dg-line:#dbe4ed;--dg-muted:#617386}
+ #dg-panel .dg-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+ #dg-panel .dg-kpi{background:#f4f8fb;border:1px solid var(--dg-line);border-radius:11px;padding:13px}
+ #dg-panel .dg-kpi b{display:block;font-size:25px;color:#245d80}#dg-panel .dg-kpi span{font-size:12px;color:var(--dg-muted)}
+ #dg-panel .dg-subnav{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}
+ #dg-panel .dg-subtab{border:1px solid #cbd7e2;border-radius:20px;background:white;padding:8px 12px;cursor:pointer}
+ #dg-panel .dg-subtab.active{background:#245d80;color:white}
+ #dg-panel .dg-view{display:none}#dg-panel .dg-view.active{display:block}
+ #dg-panel .dg-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+ #dg-panel .dg-field{display:flex;flex-direction:column;gap:5px;min-width:0}#dg-panel .dg-field.full{grid-column:1/-1}
+ #dg-panel .dg-field label{font-weight:600;font-size:13px}
+ #dg-panel .dg-field input,#dg-panel .dg-field select,#dg-panel .dg-field textarea{box-sizing:border-box;width:100%;padding:9px;border:1px solid #cbd7e2;border-radius:8px;font:inherit;background:#fff}
+ #dg-panel .dg-field textarea{min-height:70px}
+ #dg-panel .dg-actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+ #dg-panel .dg-btn{border:0;border-radius:8px;padding:9px 13px;background:#245d80;color:#fff;font-weight:600;cursor:pointer}
+ #dg-panel .dg-btn.secondary{background:#e8eff5;color:#29445b;border:1px solid #cbd7e2}
+ #dg-panel .dg-status{background:#eef6fb;border:1px solid #cfe0ea;color:#294f68;padding:10px;border-radius:8px;margin:10px 0;font-size:13px}
+ #dg-panel .dg-error{background:#fff3f0;border-color:#f1c9c1;color:#8b342a}
+ #dg-panel .dg-warn{background:#fff8e9;border:1px solid #ead8ac;color:#6c5526;border-radius:9px;padding:11px;font-size:13px;margin:10px 0}
+ #dg-panel .dg-note{font-size:12px;line-height:1.5;color:var(--dg-muted)}
+ #dg-panel .dg-table-wrap{overflow:auto;border:1px solid var(--dg-line);border-radius:9px;margin:10px 0}
+ #dg-panel table{border-collapse:collapse;width:100%;min-width:650px;font-size:12px}
+ #dg-panel th,#dg-panel td{padding:8px;border-bottom:1px solid #e6edf3;text-align:left;vertical-align:top;overflow-wrap:anywhere}
+ #dg-panel th{background:#f4f8fb}
+ #dg-panel .dg-empty{padding:13px;border:1px dashed #cbd7e2;border-radius:8px;color:#687b8d;font-size:13px}
+ #dg-panel .dg-pill{display:inline-block;padding:3px 8px;border-radius:15px;background:#eef1f4;font-size:11px}
+ #dg-panel .dg-pill.ok{background:#e6f4ed;color:#226447}#dg-panel .dg-pill.warn{background:#fff0df;color:#80521d}
+ @media(max-width:760px){#dg-panel .dg-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#dg-panel .dg-form{grid-template-columns:1fr}#dg-panel .dg-field.full{grid-column:auto}}`;
+ document.head.appendChild(st);
+}
+function addPanel(){
+ const nav=document.querySelector('nav'),main=document.querySelector('main');if(!nav||!main)return false;
+ if($('dg-panel'))return true;
+ const tab=document.createElement('button');tab.type='button';tab.className='tab';tab.dataset.tab='dataGovernance';tab.textContent='Data Governance';
+ const anchor=nav.querySelector('[data-tab="dataInput"]');if(anchor)anchor.insertAdjacentElement('afterend',tab);else nav.appendChild(tab);
+ const panel=document.createElement('section');panel.className='panel';panel.id='dataGovernance';
+ panel.innerHTML=`
+ <div id="dg-panel">
+  <div class="card"><div class="pill">CRIMINOLOGY DATA GOVERNANCE · v1.0</div><h2>Criminology Data Governance &amp; Intelligence</h2>
+   <p class="section-intro">Pusat dokumentasi metadata kegiatan, kamus variabel, metadata indikator, dan audit kualitas dataset kriminalitas.</p>
+   <div class="public-notice"><b>Prinsip:</b> setiap angka perlu sumber, periode, unit observasi, definisi, dan status verifikasi. Pemeriksaan teknis bukan pengesahan statistik resmi.</div>
+   <div class="dg-grid">
+    <div class="dg-kpi"><b id="dg-a-count">0</b><span>Metadata kegiatan / dataset</span></div>
+    <div class="dg-kpi"><b id="dg-v-count">0</b><span>Definisi variabel</span></div>
+    <div class="dg-kpi"><b id="dg-i-count">0</b><span>Metadata indikator</span></div>
+    <div class="dg-kpi"><b id="dg-audit-count">—</b><span>Observasi audit terakhir</span></div>
+    <div class="dg-kpi"><b id="dg-meta-score">—</b><span>Kelengkapan metadata (bukan akurasi)</span></div>
+    <div class="dg-kpi"><b id="dg-findings">—</b><span>Temuan audit terakhir</span></div>
+   </div><p id="dg-note" class="dg-note">Belum ada metadata atau audit.</p>
+  </div>
+  <div class="card">
+   <div class="dg-subnav">
+    <button class="dg-subtab active" data-dg="overview">Ringkasan</button><button class="dg-subtab" data-dg="activities">Kegiatan / Dataset (MS-Keg)</button>
+    <button class="dg-subtab" data-dg="variables">Kamus Variabel (MS-Var)</button><button class="dg-subtab" data-dg="indicators">Metadata Indikator (MS-Ind)</button>
+    <button class="dg-subtab" data-dg="audit">Audit Kualitas CSV</button><button class="dg-subtab" data-dg="export">Pedoman &amp; Ekspor</button>
+   </div>
+   <section class="dg-view active" id="dg-overview"><h3>Alur tata kelola</h3><div class="dg-grid">
+    <div class="dg-kpi"><b>01</b><span>Catat sumber, tujuan, periode, cakupan, dan metode</span></div>
+    <div class="dg-kpi"><b>02</b><span>Definisikan variabel, tipe data, satuan, domain nilai, dan kode missing</span></div>
+    <div class="dg-kpi"><b>03</b><span>Dokumentasikan indikator, formula, numerator, denominator, dan level estimasi</span></div>
+   </div><div class="dg-warn"><b>Catatan:</b> status terverifikasi hanya diberikan setelah kurator memeriksa sumber dan definisi. Lulus audit CSV bukan bukti kebenaran substantif.</div>
+   <p class="dg-note">Semua proses berlangsung di memori browser. Data tidak dikirim ke server dan tidak otomatis disimpan setelah halaman ditutup atau dimuat ulang. Ekspor cadangan secara berkala.</p></section>
+   <section class="dg-view" id="dg-activities"><h3>Registri kegiatan / dataset (MS-Keg)</h3>
+    <div class="dg-form">
+     <div class="dg-field"><label>ID kegiatan *</label><input id="dg-a-id" placeholder="BPS_SUSENAS_2024"></div><div class="dg-field"><label>Nama kegiatan *</label><input id="dg-a-name"></div>
+     <div class="dg-field"><label>Penyelenggara</label><input id="dg-a-org" placeholder="BPS, Polri, peneliti"></div><div class="dg-field"><label>Periode referensi</label><input id="dg-a-period" placeholder="2024"></div>
+     <div class="dg-field"><label>Cakupan geografis</label><input id="dg-a-geo" placeholder="Nasional / 38 provinsi"></div><div class="dg-field"><label>Unit observasi</label><input id="dg-a-unit" placeholder="Individu, rumah tangga, wilayah, perkara"></div>
+     <div class="dg-field"><label>Metode pengumpulan</label><input id="dg-a-collect" placeholder="Survei, registrasi, sensus"></div><div class="dg-field"><label>Rancangan sampling</label><input id="dg-a-sampling"></div>
+     <div class="dg-field"><label>Metode pengolahan</label><input id="dg-a-process"></div><div class="dg-field"><label>Metode analisis</label><input id="dg-a-analysis"></div>
+     <div class="dg-field"><label>Tingkat akses</label><select id="dg-a-access"><option>Publik-agregat</option><option>Terbatas</option><option>Internal</option><option>Belum ditentukan</option></select></div>
+     <div class="dg-field"><label>Status verifikasi</label><select id="dg-a-status"><option>belum_diverifikasi</option><option>perlu_revisi</option><option>tervalidasi_internal</option><option>terverifikasi_sumber</option></select></div>
+     <div class="dg-field"><label>URL sumber</label><input id="dg-a-url" type="url" placeholder="https://..."></div><div class="dg-field"><label>Kurator / steward</label><input id="dg-a-steward"></div>
+     <div class="dg-field"><label>Jadwal rilis</label><input id="dg-a-release" placeholder="Tahunan / semesteran"></div><div class="dg-field"><label>Tanggal validasi</label><input id="dg-a-date" type="date"></div>
+     <div class="dg-field full"><label>Tujuan dan catatan metodologis</label><textarea id="dg-a-purpose"></textarea></div><div class="dg-field full"><label>Catatan tambahan</label><textarea id="dg-a-notes"></textarea></div>
+    </div>
+    <div class="dg-actions"><button class="dg-btn" id="dg-add-a">Tambahkan kegiatan</button><button class="dg-btn secondary" id="dg-t-a">Unduh template MS-Keg</button><button class="dg-btn secondary" id="dg-i-a">Impor CSV</button><input type="file" id="dg-f-a" accept=".csv,text/csv" hidden></div><div class="dg-status" id="dg-s-a">Registri kosong.</div><div id="dg-activity-table"></div>
+   </section>
+   <section class="dg-view" id="dg-variables"><h3>Kamus variabel (MS-Var)</h3><div class="dg-form">
+    <div class="dg-field"><label>Kegiatan/dataset</label><select id="dg-v-dataset"><option value="">Pilih kegiatan/dataset</option></select></div><div class="dg-field"><label>Nama variabel *</label><input id="dg-v-name" placeholder="crime_rate_per_100k"></div>
+    <div class="dg-field"><label>Alias</label><input id="dg-v-alias"></div><div class="dg-field"><label>Tipe data</label><select id="dg-v-type"><option>Numerik-kontinu</option><option>Numerik-diskrit</option><option>Kategorik-nominal</option><option>Kategorik-ordinal</option><option>Biner</option><option>Tanggal</option><option>Teks</option><option>Identifier-anonim</option></select></div>
+    <div class="dg-field"><label>Satuan</label><input id="dg-v-unit"></div><div class="dg-field"><label>Periode referensi</label><input id="dg-v-period"></div>
+    <div class="dg-field"><label>Domain nilai / kategori</label><input id="dg-v-domain"></div><div class="dg-field"><label>Kode missing</label><input id="dg-v-missing" placeholder="NA / -99 jika didefinisikan"></div>
+    <div class="dg-field"><label>Akses publik</label><select id="dg-v-access"><option>publik_agregat</option><option>terbatas</option><option>tidak_publik</option><option>belum_diketahui</option></select></div><div class="dg-field"><label>Kode klasifikasi (opsional)</label><input id="dg-v-code"></div>
+    <div class="dg-field full"><label>Konsep / definisi *</label><textarea id="dg-v-definition"></textarea></div><div class="dg-field full"><label>Pertanyaan atau rujukan sumber</label><textarea id="dg-v-source"></textarea></div>
+   </div><div class="dg-actions"><button class="dg-btn" id="dg-add-v">Tambahkan variabel</button><button class="dg-btn secondary" id="dg-t-v">Unduh template MS-Var</button><button class="dg-btn secondary" id="dg-i-v">Impor CSV</button><input type="file" id="dg-f-v" accept=".csv,text/csv" hidden></div>
+   <div class="dg-status" id="dg-s-v">Kamus variabel kosong.</div><div class="dg-field" style="max-width:330px"><label>Filter dataset</label><select id="dg-v-filter"><option value="">Semua kegiatan/dataset</option></select></div><div id="dg-variable-table"></div></section>
+   <section class="dg-view" id="dg-indicators"><h3>Metadata indikator (MS-Ind)</h3><div class="dg-form">
+    <div class="dg-field"><label>ID indikator *</label><input id="dg-i-id" placeholder="IND_CRIME_RATE"></div><div class="dg-field"><label>Nama indikator *</label><input id="dg-i-name"></div>
+    <div class="dg-field"><label>Dataset terkait</label><input id="dg-i-dataset"></div><div class="dg-field"><label>Konsep</label><input id="dg-i-concept"></div>
+    <div class="dg-field"><label>Satuan</label><input id="dg-i-unit"></div><div class="dg-field"><label>Level estimasi</label><input id="dg-i-level" placeholder="Nasional / provinsi / kabupaten"></div>
+    <div class="dg-field"><label>Numerator</label><input id="dg-i-num"></div><div class="dg-field"><label>Denominator</label><input id="dg-i-den"></div>
+    <div class="dg-field"><label>Periode referensi</label><input id="dg-i-period"></div><div class="dg-field"><label>Status verifikasi</label><select id="dg-i-status"><option>belum_diverifikasi</option><option>perlu_revisi</option><option>tervalidasi_internal</option><option>terverifikasi_sumber</option></select></div>
+    <div class="dg-field full"><label>Definisi dan rumus *</label><textarea id="dg-i-definition"></textarea></div><div class="dg-field full"><label>Interpretasi dan batas penggunaan</label><textarea id="dg-i-interpret"></textarea></div><div class="dg-field full"><label>URL / referensi sumber</label><input id="dg-i-url" type="url"></div>
+   </div><div class="dg-actions"><button class="dg-btn" id="dg-add-i">Tambahkan indikator</button><button class="dg-btn secondary" id="dg-t-i">Unduh template MS-Ind</button><button class="dg-btn secondary" id="dg-i-i">Impor CSV</button><input type="file" id="dg-f-i" accept=".csv,text/csv" hidden></div><div class="dg-status" id="dg-s-i">Registri indikator kosong.</div><div id="dg-indicator-table"></div></section>
+   <section class="dg-view" id="dg-audit"><h3>Audit kualitas CSV</h3><div class="dg-warn"><b>Privasi:</b> gunakan data agregat/anonim. Jangan unggah nama korban/saksi/tersangka, NIK, alamat, telepon, email, atau berkas penyidikan. File diproses lokal.</div>
+    <div class="dg-form"><div class="dg-field"><label>Dataset CSV</label><input id="dg-a-file" type="file" accept=".csv,text/csv"></div><div class="dg-field"><label>Nama dataset</label><input id="dg-a-label" placeholder="Nama dataset / versi"></div></div>
+    <div class="dg-actions"><button class="dg-btn" id="dg-run-audit">Jalankan audit</button><button class="dg-btn secondary" id="dg-export-audit" disabled>Ekspor laporan CSV</button><button class="dg-btn secondary" id="dg-export-json" disabled>Ekspor laporan JSON</button></div>
+    <div class="dg-status" id="dg-s-audit">Pilih file CSV lalu jalankan audit.</div><div id="dg-audit-result"></div>
+   </section>
+   <section class="dg-view" id="dg-export"><h3>Pedoman dan ekspor</h3><div class="dg-actions">
+    <button class="dg-btn" id="dg-e-a">Ekspor MS-Keg CSV</button><button class="dg-btn" id="dg-e-v">Ekspor MS-Var CSV</button><button class="dg-btn" id="dg-e-i">Ekspor MS-Ind CSV</button><button class="dg-btn secondary" id="dg-e-bundle">Ekspor cadangan JSON</button><button class="dg-btn secondary" id="dg-i-bundle">Impor cadangan JSON</button><input id="dg-bundle-file" type="file" accept=".json,application/json" hidden>
+   </div><h4>Rujukan standar</h4><ul><li><a target="_blank" rel="noopener" href="https://sirusa.bps.go.id/metadata/">BPS — Metadata Statistik SIRUSA/INDAH</a></li><li><a target="_blank" rel="noopener" href="https://sirusa.bps.go.id/metadata/instrumen">BPS — Instrumen MS-Keg, MS-Var, MS-Ind</a></li><li><a target="_blank" rel="noopener" href="https://sirusa.bps.go.id/metadata/files/Peraturan%20Badan%20Pusat%20Statistik%20Nomor%205%20Tahun%202020%20Petunjuk%20Teknis%20Metadata%20Statistik.pdf">Peraturan BPS Nomor 5 Tahun 2020</a></li></ul>
+   <div class="dg-warn">Modul ini alat bantu dokumentasi internal, bukan pengesahan BPS, sertifikasi mutu, atau pengganti verifikasi Walidata/Pembina Data.</div></section>
+  </div>`;
+ main.appendChild(panel);
+ tab.addEventListener('click',()=>{document.querySelectorAll('.tab[data-tab]').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));tab.classList.add('active');panel.classList.add('active');});
+ panel.querySelectorAll('[data-dg]').forEach(b=>b.addEventListener('click',()=>{panel.querySelectorAll('[data-dg]').forEach(x=>x.classList.remove('active'));panel.querySelectorAll('.dg-view').forEach(x=>x.classList.remove('active'));b.classList.add('active');$('dg-'+b.dataset.dg).classList.add('active');}));
+ return true;
+}
+function form(ids){const o={};ids.forEach(([k,id])=>o[k]=$(id).value.trim());return o;}
+function addActivity(){
+ const r=form([['activity_id','dg-a-id'],['activity_name','dg-a-name'],['organizer','dg-a-org'],['reference_period','dg-a-period'],['geographic_scope','dg-a-geo'],['unit_of_analysis','dg-a-unit'],['collection_method','dg-a-collect'],['sampling_design','dg-a-sampling'],['processing_method','dg-a-process'],['analysis_method','dg-a-analysis'],['access_level','dg-a-access'],['verification_status','dg-a-status'],['source_url','dg-a-url'],['steward','dg-a-steward'],['release_schedule','dg-a-release'],['validation_date','dg-a-date'],['purpose','dg-a-purpose'],['notes','dg-a-notes']]);
+ if(!r.activity_id||!r.activity_name){status('dg-s-a','ID dan nama kegiatan wajib diisi.',true);return;}
+ if(S.activities.some(x=>x.activity_id===r.activity_id)){status('dg-s-a','ID kegiatan sudah ada.',true);return;}
+ S.activities.push(r);render();status('dg-s-a','Metadata kegiatan ditambahkan ke sesi browser. Ekspor untuk menyimpan.');
+}
+function addVariable(){
+ const id=$('dg-v-dataset').value,r=form([['variable_name','dg-v-name'],['alias','dg-v-alias'],['data_type','dg-v-type'],['unit','dg-v-unit'],['reference_period','dg-v-period'],['value_domain','dg-v-domain'],['missing_code','dg-v-missing'],['public_access','dg-v-access'],['crime_classification_code','dg-v-code'],['definition','dg-v-definition'],['question_or_source','dg-v-source']]);
+ r.dataset_id=id;r.activity_id=id;r.concept=r.definition;r.verification_status='belum_diverifikasi';
+ if(!r.variable_name||!r.definition){status('dg-s-v','Nama variabel dan definisi wajib diisi.',true);return;}
+ if(S.variables.some(x=>x.dataset_id===id&&x.variable_name===r.variable_name)){status('dg-s-v','Variabel tersebut sudah tercatat pada dataset.',true);return;}
+ S.variables.push(r);render();status('dg-s-v','Variabel ditambahkan ke sesi browser. Ekspor metadata untuk menyimpan.');
+}
+function addIndicator(){
+ const r=form([['indicator_id','dg-i-id'],['indicator_name','dg-i-name'],['dataset_id','dg-i-dataset'],['concept','dg-i-concept'],['unit','dg-i-unit'],['geographic_estimation_level','dg-i-level'],['numerator','dg-i-num'],['denominator','dg-i-den'],['reference_period','dg-i-period'],['verification_status','dg-i-status'],['definition','dg-i-definition'],['interpretation','dg-i-interpret'],['source_url','dg-i-url']]);
+ r.formula=r.definition;
+ if(!r.indicator_id||!r.indicator_name||!r.definition){status('dg-s-i','ID, nama, dan definisi/rumus wajib diisi.',true);return;}
+ if(S.indicators.some(x=>x.indicator_id===r.indicator_id)){status('dg-s-i','ID indikator sudah digunakan.',true);return;}
+ S.indicators.push(r);render();status('dg-s-i','Indikator ditambahkan ke sesi browser.');
+}
+function importReg(file,collection,required,statusId){
+ if(!file)return;if(file.size>MAX){status(statusId,'File melebihi batas 15 MB.',true);return;}
+ const rd=new FileReader();rd.onload=()=>{try{const p=parseCSV(rd.result);if(p.length<2)throw Error('CSV harus memiliki header dan sedikitnya satu baris.');const h=p[0].map(x=>String(x??'').trim());const missing=required.filter(x=>!h.includes(x));if(missing.length)throw Error('Kolom wajib tidak ditemukan: '+missing.join(', '));S[collection]=objects(p);render();status(statusId,`${S[collection].length} baris metadata berhasil diimpor.`);}catch(e){status(statusId,e.message,true);}};rd.onerror=()=>status(statusId,'File tidak dapat dibaca.',true);rd.readAsText(file);
+}
+function profile(rows,headers){
+ const h=headers.map(x=>String(x??'').trim()), lower=h.map(x=>x.toLowerCase());
+ const blank=h.map((x,i)=>x?null:i+1).filter(Boolean), counts={};lower.forEach(x=>counts[x]=(counts[x]||0)+1);
+ const duplicates=Object.entries(counts).filter(([,n])=>n>1).map(([x])=>x);
+ let missing=0,dups=0;const seen=new Set();
+ const vars=h.map((name,j)=>{
+  const v=rows.map(r=>String(r[j]??'').trim()), non=v.filter(x=>x!==''&&!/^(na|n\/a|null)$/i.test(x)), miss=v.length-non.length;missing+=miss;
+  const n=non.filter(x=>Number.isFinite(Number(x.replace(',','.')))).length,d=non.filter(x=>/^\d{4}-\d{2}-\d{2}$/.test(x)||/^\d{1,2}[/-]\d{1,2}[/-]\d{4}$/.test(x)).length;
+  let type='teks/kategorik';if(non.length&&n/non.length>=.9)type=non.every(x=>Number.isInteger(Number(x.replace(',','.'))))?'numerik-diskrit':'numerik-kontinu';else if(non.length&&d/non.length>=.8)type='tanggal';else if(non.length&&non.every(x=>/^(0|1|true|false|ya|tidak)$/i.test(x)))type='biner';
+  return {name:name||`kolom_${j+1}`,filled:non.length,missing:miss,pct:rows.length?miss/rows.length*100:0,unique:new Set(non).size,type,sensitive:PII.test(name)};
+ });
+ rows.forEach(row=>{const k=JSON.stringify(row.map(x=>String(x??'').trim()));if(seen.has(k))dups++;else seen.add(k);});
+ const idName=h.find(x=/(^id$|_id$|kode|code|record_id|case_id|dataset_id)/i.test(x));
+ let duplicateIds=null;if(idName){const ix=h.indexOf(idName),vals=rows.map(r=>String(r[ix]??'').trim()).filter(Boolean);duplicateIds=vals.length-new Set(vals).size;}
+ return {rows:rows.length,cols:h.length,missing,missingPct:rows.length&&h.length?missing/(rows.length*h.length)*100:0,duplicateRows:dups,blankHeaders:blank,duplicateHeaders:duplicates,variables:vars,sensitive:vars.filter(x=>x.sensitive).map(x=>x.name),idName,duplicateIds};
+}
+function runAudit(file){
+ if(!file){status('dg-s-audit','Pilih file CSV terlebih dahulu.',true);return;}if(file.size>MAX){status('dg-s-audit','File melebihi batas 15 MB.',true);return;}
+ const rd=new FileReader();rd.onload=()=>{try{const p=parseCSV(rd.result);if(p.length<2)throw Error('CSV harus memiliki header dan minimal satu baris data.');S.auditHeaders=p[0].map(x=>String(x??'').trim());S.auditRows=p.slice(1).filter(r=>r.some(x=>String(x??'').trim()));S.audit=profile(S.auditRows,S.auditHeaders);S.auditName=$('dg-a-label').value.trim()||file.name;S.auditAt=new Date().toISOString();renderAudit();render();status('dg-s-audit','Audit teknis selesai. Hasil bukan validasi kebenaran substantif.');$('dg-export-audit').disabled=false;$('dg-export-json').disabled=false;}catch(e){status('dg-s-audit',e.message,true);}};rd.onerror=()=>status('dg-s-audit','File tidak dapat dibaca.',true);rd.readAsText(file);
+}
+function renderAudit(){
+ const a=S.audit;if(!a)return;
+ let html=`<div class="dg-grid"><div class="dg-kpi"><b>${a.rows.toLocaleString('id-ID')}</b><span>Observasi</span></div><div class="dg-kpi"><b>${a.cols}</b><span>Variabel</span></div><div class="dg-kpi"><b>${a.missingPct.toFixed(2)}%</b><span>Sel kosong / missing</span></div><div class="dg-kpi"><b>${a.duplicateRows}</b><span>Baris duplikat penuh</span></div><div class="dg-kpi"><b>${a.blankHeaders.length}</b><span>Header kosong</span></div><div class="dg-kpi"><b>${a.duplicateHeaders.length}</b><span>Header duplikat</span></div></div>`;
+ if(a.sensitive.length)html+=`<div class="dg-warn"><b>Periksa potensi data pribadi:</b> ${a.sensitive.map(esc).join(', ')}. Anonimkan sebelum berbagi.</div>`;
+ if(a.idName)html+=`<div class="dg-status">Kandidat ID: ${esc(a.idName)} · duplikasi ID: ${a.duplicateIds}. Periksa makna ID secara manual.</div>`;
+ html+=`<div class="dg-table-wrap"><table class="dg-table"><thead><tr><th>Variabel</th><th>Tipe terdeteksi</th><th>Terisi</th><th>Missing</th><th>Missing %</th><th>Unik</th><th>Privasi header</th></tr></thead><tbody>`;
+ html+=a.variables.map(v=>`<tr><td>${esc(v.name)}</td><td>${esc(v.type)}</td><td>${v.filled}</td><td>${v.missing}</td><td>${v.pct.toFixed(2)}%</td><td>${v.unique}</td><td>${v.sensitive?'<span class="dg-pill warn">Periksa</span>':'<span class="dg-pill">Tidak terdeteksi</span>'}</td></tr>`).join('');
+ $('dg-audit-result').innerHTML=html+'</tbody></table></div>';
+}
+function auditExportRows(){return S.audit.variables.map(v=>({dataset:S.auditName,observations:S.audit.rows,variable:v.name,detected_type:v.type,filled:v.filled,missing:v.missing,missing_percent:v.pct.toFixed(2),unique_values:v.unique,potential_personal_data_header:v.sensitive?'yes':'not_detected'}));}
+function exportReg(key,fields,name){download(name,csv(fields,S[key]),'text/csv;charset=utf-8');}
+function backup(){download('CriminologyLab_DataGovernance_Backup.json',JSON.stringify({schema_version:'1.0',created_at:new Date().toISOString(),activities:S.activities,variables:S.variables,indicators:S.indicators},null,2),'application/json;charset=utf-8');}
+function importBackup(file){if(!file)return;const rd=new FileReader();rd.onload=()=>{try{const x=JSON.parse(rd.result);if(!x||!Array.isArray(x.activities)||!Array.isArray(x.variables)||!Array.isArray(x.indicators))throw Error('Format cadangan tidak cocok.');S.activities=x.activities;S.variables=x.variables;S.indicators=x.indicators;render();status('dg-s-audit','Cadangan metadata berhasil diimpor.');}catch(e){status('dg-s-audit',e.message,true);}};rd.readAsText(file);}
+function bind(){
+ $('dg-add-a').addEventListener('click',addActivity);$('dg-add-v').addEventListener('click',addVariable);$('dg-add-i').addEventListener('click',addIndicator);
+ $('dg-v-filter').addEventListener('change',()=>{const filter=$('dg-v-filter').value;table('dg-variable-table',['Dataset','Variabel','Definisi','Tipe','Satuan','Domain','Status'],S.variables.filter(r=>!filter||r.dataset_id===filter||r.activity_id===filter).map(r=>({Dataset:esc(r.dataset_id||r.activity_id),Variabel:esc(r.variable_name),Definisi:esc(r.definition),Tipe:esc(r.data_type),Satuan:esc(r.unit),Domain:esc(r.value_domain),Status:pill(r.verification_status)})),'Belum ada kamus variabel.');});
+ $('dg-t-a').addEventListener('click',()=>download('CriminologyLab_MS-Keg_Template.csv',csv(AF,[]),'text/csv;charset=utf-8'));
+ $('dg-t-v').addEventListener('click',()=>download('CriminologyLab_MS-Var_Template.csv',csv(VF,[]),'text/csv;charset=utf-8'));
+ $('dg-t-i').addEventListener('click',()=>download('CriminologyLab_MS-Ind_Template.csv',csv(IF,[]),'text/csv;charset=utf-8'));
+ [['dg-i-a','dg-f-a'],['dg-i-v','dg-f-v'],['dg-i-i','dg-f-i']].forEach(([b,f])=>$(b).addEventListener('click',()=>$(f).click()));
+ $('dg-f-a').addEventListener('change',e=>importReg(e.target.files[0],'activities',['activity_id','activity_name'],'dg-s-a'));
+ $('dg-f-v').addEventListener('change',e=>importReg(e.target.files[0],'variables',['variable_name','definition'],'dg-s-v'));
+ $('dg-f-i').addEventListener('change',e=>importReg(e.target.files[0],'indicators',['indicator_id','indicator_name'],'dg-s-i'));
+ $('dg-run-audit').addEventListener('click',()=>runAudit($('dg-a-file').files[0]));
+ $('dg-export-audit').addEventListener('click',()=>{if(!S.audit)return;const r=auditExportRows();download('CriminologyLab_DataQuality_Audit.csv',csv(Object.keys(r[0]||{dataset:'',observations:'',variable:'',detected_type:'',filled:'',missing:'',missing_percent:'',unique_values:'',potential_personal_data_header:''}),r),'text/csv;charset=utf-8');});
+ $('dg-export-json').addEventListener('click',()=>{if(S.audit)download('CriminologyLab_DataQuality_Audit.json',JSON.stringify({dataset:S.auditName,audited_at:S.auditAt,summary:S.audit,variables:auditExportRows()},null,2),'application/json;charset=utf-8');});
+ $('dg-e-a').addEventListener('click',()=>exportReg('activities',AF,'CriminologyLab_MS-Keg.csv'));
+ $('dg-e-v').addEventListener('click',()=>exportReg('variables',VF,'CriminologyLab_MS-Var.csv'));
+ $('dg-e-i').addEventListener('click',()=>exportReg('indicators',IF,'CriminologyLab_MS-Ind.csv'));
+ $('dg-e-bundle').addEventListener('click',backup);
+ $('dg-i-bundle').addEventListener('click',()=>$('dg-bundle-file').click());
+ $('dg-bundle-file').addEventListener('change',e=>importBackup(e.target.files[0]));
+}
+function install(){
+ styles();const nav=document.querySelector('nav'),main=document.querySelector('main');if(!nav||!main||$('dg-panel'))return;
+ const tab=document.createElement('button');tab.className='tab';tab.type='button';tab.dataset.tab='dataGovernance';tab.textContent='Data Governance';
+ const anchor=nav.querySelector('[data-tab="dataInput"]');if(anchor)anchor.insertAdjacentElement('afterend',tab);else nav.appendChild(tab);
+ const section=document.createElement('section');section.className='panel';section.id='dg-panel';section.innerHTML=''; // placeholder, replaced below
+ main.appendChild(section);section.outerHTML=buildPanelHTML();
+ // Bind the actual tab and section after outerHTML replacement.
+ const panel=$('dg-panel');
+ tab.addEventListener('click',()=>{document.querySelectorAll('.tab[data-tab]').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));tab.classList.add('active');panel.classList.add('active');});
+ panel.querySelectorAll('[data-dg]').forEach(b=>b.addEventListener('click',()=>{panel.querySelectorAll('[data-dg]').forEach(x=>x.classList.remove('active'));panel.querySelectorAll('.dg-view').forEach(x=>x.classList.remove('active'));b.classList.add('active');$('dg-'+b.dataset.dg).classList.add('active');}));
+ bind();render();
+}
+function buildPanelHTML(){
+ return `<section class="panel" id="dataGovernance"><div id="dg-panel">
+ <div class="card"><div class="pill">CRIMINOLOGY DATA GOVERNANCE · v1.0</div><h2>Criminology Data Governance &amp; Intelligence</h2><p class="section-intro">Pusat dokumentasi metadata kegiatan, kamus variabel, metadata indikator, dan audit kualitas dataset.</p><div class="public-notice"><b>Prinsip:</b> setiap angka perlu sumber, periode, unit observasi, definisi, dan status verifikasi. Audit teknis bukan pengesahan statistik resmi.</div>
+ <div class="dg-grid"><div class="dg-kpi"><b id="dg-a-count">0</b><span>Metadata kegiatan / dataset</span></div><div class="dg-kpi"><b id="dg-v-count">0</b><span>Definisi variabel</span></div><div class="dg-kpi"><b id="dg-i-count">0</b><span>Metadata indikator</span></div><div class="dg-kpi"><b id="dg-audit-count">—</b><span>Observasi audit terakhir</span></div><div class="dg-kpi"><b id="dg-meta-score">—</b><span>Kelengkapan metadata (bukan akurasi)</span></div><div class="dg-kpi"><b id="dg-findings">—</b><span>Temuan audit terakhir</span></div></div><p id="dg-note" class="dg-note">Belum ada metadata atau audit.</p></div>
+ <div class="card"><div class="dg-subnav"><button class="dg-subtab active" data-dg="overview">Ringkasan</button><button class="dg-subtab" data-dg="activities">Kegiatan / Dataset (MS-Keg)</button><button class="dg-subtab" data-dg="variables">Kamus Variabel (MS-Var)</button><button class="dg-subtab" data-dg="indicators">Metadata Indikator (MS-Ind)</button><button class="dg-subtab" data-dg="audit">Audit Kualitas CSV</button><button class="dg-subtab" data-dg="export">Pedoman &amp; Ekspor</button></div>
+ <section class="dg-view active" id="dg-overview"><h3>Alur tata kelola data</h3><div class="dg-grid"><div class="dg-kpi"><b>01</b><span>Dokumentasikan sumber, tujuan, periode, cakupan dan metode</span></div><div class="dg-kpi"><b>02</b><span>Definisikan variabel, tipe, satuan, domain nilai dan kode missing</span></div><div class="dg-kpi"><b>03</b><span>Catat indikator, formula, numerator, denominator dan level estimasi</span></div></div><div class="dg-warn">Status terverifikasi hanya diberikan setelah pemeriksaan sumber dan definisi. Lulus audit CSV bukan bukti kebenaran substantif.</div><p class="dg-note">Data hanya berada di memori browser. Tidak dikirim ke server dan tidak otomatis tersimpan setelah halaman ditutup atau dimuat ulang. Ekspor cadangan secara berkala.</p></section>
+ <section class="dg-view" id="dg-activities"><h3>Registri kegiatan / dataset (MS-Keg)</h3><div class="dg-form">
+ <div class="dg-field"><label>ID kegiatan *</label><input id="dg-a-id" placeholder="BPS_SUSENAS_2024"></div><div class="dg-field"><label>Nama kegiatan *</label><input id="dg-a-name"></div><div class="dg-field"><label>Penyelenggara</label><input id="dg-a-org" placeholder="BPS, Polri, peneliti"></div><div class="dg-field"><label>Periode referensi</label><input id="dg-a-period"></div><div class="dg-field"><label>Cakupan geografis</label><input id="dg-a-geo"></div><div class="dg-field"><label>Unit observasi</label><input id="dg-a-unit"></div><div class="dg-field"><label>Metode pengumpulan</label><input id="dg-a-collect"></div><div class="dg-field"><label>Rancangan sampling</label><input id="dg-a-sampling"></div><div class="dg-field"><label>Metode pengolahan</label><input id="dg-a-process"></div><div class="dg-field"><label>Metode analisis</label><input id="dg-a-analysis"></div><div class="dg-field"><label>Tingkat akses</label><select id="dg-a-access"><option>Publik-agregat</option><option>Terbatas</option><option>Internal</option><option>Belum ditentukan</option></select></div><div class="dg-field"><label>Status verifikasi</label><select id="dg-a-status"><option>belum_diverifikasi</option><option>perlu_revisi</option><option>tervalidasi_internal</option><option>terverifikasi_sumber</option></select></div><div class="dg-field"><label>URL sumber</label><input id="dg-a-url" type="url"></div><div class="dg-field"><label>Kurator / steward</label><input id="dg-a-steward"></div><div class="dg-field"><label>Jadwal rilis</label><input id="dg-a-release"></div><div class="dg-field"><label>Tanggal validasi</label><input id="dg-a-date" type="date"></div><div class="dg-field full"><label>Tujuan / catatan metodologis</label><textarea id="dg-a-purpose"></textarea></div><div class="dg-field full"><label>Catatan tambahan</label><textarea id="dg-a-notes"></textarea></div></div>
+ <div class="dg-actions"><button class="dg-btn" id="dg-add-a">Tambahkan kegiatan</button><button class="dg-btn secondary" id="dg-t-a">Unduh template MS-Keg</button><button class="dg-btn secondary" id="dg-i-a">Impor CSV</button><input id="dg-f-a" type="file" accept=".csv,text/csv" hidden></div><div class="dg-status" id="dg-s-a">Registri kosong.</div><div id="dg-activity-table"></div></section>
+ <section class="dg-view" id="dg-variables"><h3>Kamus variabel (MS-Var)</h3><div class="dg-form"><div class="dg-field"><label>Kegiatan/dataset</label><select id="dg-v-dataset"><option value="">Pilih kegiatan/dataset</option></select></div><div class="dg-field"><label>Nama variabel *</label><input id="dg-v-name"></div><div class="dg-field"><label>Alias</label><input id="dg-v-alias"></div><div class="dg-field"><label>Tipe data</label><select id="dg-v-type"><option>Numerik-kontinu</option><option>Numerik-diskrit</option><option>Kategorik-nominal</option><option>Kategorik-ordinal</option><option>Biner</option><option>Tanggal</option><option>Teks</option><option>Identifier-anonim</option></select></div><div class="dg-field"><label>Satuan</label><input id="dg-v-unit"></div><div class="dg-field"><label>Periode referensi</label><input id="dg-v-period"></div><div class="dg-field"><label>Domain nilai</label><input id="dg-v-domain"></div><div class="dg-field"><label>Kode missing</label><input id="dg-v-missing"></div><div class="dg-field"><label>Akses publik</label><select id="dg-v-access"><option>publik_agregat</option><option>terbatas</option><option>tidak_publik</option><option>belum_diketahui</option></select></div><div class="dg-field"><label>Kode klasifikasi opsional</label><input id="dg-v-code"></div><div class="dg-field full"><label>Konsep / definisi *</label><textarea id="dg-v-definition"></textarea></div><div class="dg-field full"><label>Pertanyaan / rujukan sumber</label><textarea id="dg-v-source"></textarea></div></div>
+ <div class="dg-actions"><button class="dg-btn" id="dg-add-v">Tambahkan variabel</button><button class="dg-btn secondary" id="dg-t-v">Unduh template MS-Var</button><button class="dg-btn secondary" id="dg-i-v">Impor CSV</button><input id="dg-f-v" type="file" accept=".csv,text/csv" hidden></div><div class="dg-status" id="dg-s-v">Kamus variabel kosong.</div><div class="dg-field" style="max-width:330px"><label>Filter dataset</label><select id="dg-v-filter"><option value="">Semua kegiatan/dataset</option></select></div><div id="dg-variable-table"></div></section>
+ <section class="dg-view" id="dg-indicators"><h3>Metadata indikator (MS-Ind)</h3><div class="dg-form"><div class="dg-field"><label>ID indikator *</label><input id="dg-i-id"></div><div class="dg-field"><label>Nama indikator *</label><input id="dg-i-name"></div><div class="dg-field"><label>Dataset terkait</label><input id="dg-i-dataset"></div><div class="dg-field"><label>Konsep</label><input id="dg-i-concept"></div><div class="dg-field"><label>Satuan</label><input id="dg-i-unit"></div><div class="dg-field"><label>Level estimasi</label><input id="dg-i-level"></div><div class="dg-field"><label>Numerator</label><input id="dg-i-num"></div><div class="dg-field"><label>Denominator</label><input id="dg-i-den"></div><div class="dg-field"><label>Periode referensi</label><input id="dg-i-period"></div><div class="dg-field"><label>Status verifikasi</label><select id="dg-i-status"><option>belum_diverifikasi</option><option>perlu_revisi</option><option>tervalidasi_internal</option><option>terverifikasi_sumber</option></select></div><div class="dg-field full"><label>Definisi dan rumus *</label><textarea id="dg-i-definition"></textarea></div><div class="dg-field full"><label>Interpretasi / batas penggunaan</label><textarea id="dg-i-interpret"></textarea></div><div class="dg-field full"><label>URL sumber</label><input id="dg-i-url" type="url"></div></div>
+ <div class="dg-actions"><button class="dg-btn" id="dg-add-i">Tambahkan indikator</button><button class="dg-btn secondary" id="dg-t-i">Unduh template MS-Ind</button><button class="dg-btn secondary" id="dg-i-i">Impor CSV</button><input id="dg-f-i" type="file" accept=".csv,text/csv" hidden></div><div class="dg-status" id="dg-s-i">Registri indikator kosong.</div><div id="dg-indicator-table"></div></section>
+ <section class="dg-view" id="dg-audit"><h3>Audit kualitas dataset CSV</h3><div class="dg-warn"><b>Privasi:</b> gunakan data agregat/anonim. Jangan unggah nama korban, saksi, tersangka, NIK, alamat, telepon, email, atau berkas penyidikan. File diproses lokal.</div><div class="dg-form"><div class="dg-field"><label>Dataset CSV</label><input id="dg-a-file" type="file" accept=".csv,text/csv"></div><div class="dg-field"><label>Nama dataset</label><input id="dg-a-label"></div></div><div class="dg-actions"><button class="dg-btn" id="dg-run-audit">Jalankan audit</button><button class="dg-btn secondary" id="dg-export-audit" disabled>Ekspor laporan CSV</button><button class="dg-btn secondary" id="dg-export-json" disabled>Ekspor laporan JSON</button></div><div class="dg-status" id="dg-s-audit">Pilih file CSV lalu jalankan audit.</div><div id="dg-audit-result"></div></section>
+ <section class="dg-view" id="dg-export"><h3>Pedoman dan ekspor</h3><div class="dg-actions"><button class="dg-btn" id="dg-e-a">Ekspor MS-Keg CSV</button><button class="dg-btn" id="dg-e-v">Ekspor MS-Var CSV</button><button class="dg-btn" id="dg-e-i">Ekspor MS-Ind CSV</button><button class="dg-btn secondary" id="dg-e-bundle">Ekspor cadangan JSON</button><button class="dg-btn secondary" id="dg-i-bundle">Impor cadangan JSON</button><input id="dg-bundle-file" type="file" accept=".json,application/json" hidden></div><h4>Rujukan standar</h4><ul><li><a href="https://sirusa.bps.go.id/metadata/" target="_blank" rel="noopener">BPS — Metadata Statistik SIRUSA/INDAH</a></li><li><a href="https://sirusa.bps.go.id/metadata/instrumen" target="_blank" rel="noopener">BPS — Instrumen MS-Keg, MS-Var, MS-Ind</a></li><li><a href="https://sirusa.bps.go.id/metadata/files/Peraturan%20Badan%20Pusat%20Statistik%20Nomor%205%20Tahun%202020%20Petunjuk%20Teknis%20Metadata%20Statistik.pdf" target="_blank" rel="noopener">Peraturan BPS Nomor 5 Tahun 2020</a></li></ul><div class="dg-warn">Modul ini alat bantu dokumentasi internal, bukan pengesahan BPS, sertifikasi mutu, atau pengganti verifikasi Walidata/Pembina Data.</div></section>
+ </div></div>`;
+}
+function wire(){
+ $('dg-add-a').onclick=addActivity;$('dg-add-v').onclick=addVariable;$('dg-add-i').onclick=addIndicator;
+ $('dg-t-a').onclick=()=>download('CriminologyLab_MS-Keg_Template.csv',csv(AF,[]),'text/csv;charset=utf-8');
+ $('dg-t-v').onclick=()=>download('CriminologyLab_MS-Var_Template.csv',csv(VF,[]),'text/csv;charset=utf-8');
+ $('dg-t-i').onclick=()=>download('CriminologyLab_MS-Ind_Template.csv',csv(IF,[]),'text/csv;charset=utf-8');
+ [['dg-i-a','dg-f-a'],['dg-i-v','dg-f-v'],['dg-i-i','dg-f-i']].forEach(([b,f])=>$(b).onclick=() => $(f).click());
+ $('dg-f-a').onchange=e=>importReg(e.target.files[0],'activities',['activity_id','activity_name'],'dg-s-a');
+ $('dg-f-v').onchange=e=>importReg(e.target.files[0],'variables',['variable_name','definition'],'dg-s-v');
+ $('dg-f-i').onchange=e=>importReg(e.target.files[0],'indicators',['indicator_id','indicator_name'],'dg-s-i');
+ $('dg-v-filter').onchange=()=>{const f=$('dg-v-filter').value;table('dg-variable-table',['Dataset','Variabel','Definisi','Tipe','Satuan','Domain','Status'],S.variables.filter(r=>!f||r.dataset_id===f||r.activity_id===f).map(r=>({Dataset:esc(r.dataset_id||r.activity_id),Variabel:esc(r.variable_name),Definisi:esc(r.definition),Tipe:esc(r.data_type),Satuan:esc(r.unit),Domain:esc(r.value_domain),Status:pill(r.verification_status)})),'Belum ada kamus variabel.');};
+ $('dg-run-audit').onclick=()=>runAudit($('dg-a-file').files[0]);
+ $('dg-export-audit').onclick=()=>{if(!S.audit)return;const r=S.audit.variables.map(v=>({dataset:S.auditName,observations:S.audit.rows,variable:v.name,detected_type:v.type,filled:v.filled,missing:v.missing,missing_percent:v.pct.toFixed(2),unique_values:v.unique,potential_personal_data_header:v.sensitive?'yes':'not_detected'}));download('CriminologyLab_DataQuality_Audit.csv',csv(Object.keys(r[0]||{dataset:'',observations:'',variable:'',detected_type:'',filled:'',missing:'',missing_percent:'',unique_values:'',potential_personal_data_header:''}),r),'text/csv;charset=utf-8');};
+ $('dg-export-json').onclick=()=>{if(S.audit)download('CriminologyLab_DataQuality_Audit.json',JSON.stringify({dataset:S.auditName,audited_at:S.auditAt,summary:S.audit},null,2),'application/json;charset=utf-8');};
+ $('dg-e-a').onclick=()=>exportReg('activities',AF,'CriminologyLab_MS-Keg.csv');$('dg-e-v').onclick=()=>exportReg('variables',VF,'CriminologyLab_MS-Var.csv');$('dg-e-i').onclick=()=>exportReg('indicators',IF,'CriminologyLab_MS-Ind.csv');
+ $('dg-e-bundle').onclick=()=>download('CriminologyLab_DataGovernance_Backup.json',JSON.stringify({schema_version:'1.0',created_at:new Date().toISOString(),activities:S.activities,variables:S.variables,indicators:S.indicators},null,2),'application/json;charset=utf-8');
+ $('dg-i-bundle').onclick=()=>$('dg-bundle-file').click();
+ $('dg-bundle-file').onchange=e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{try{const x=JSON.parse(rd.result);if(!Array.isArray(x.activities)||!Array.isArray(x.variables)||!Array.isArray(x.indicators))throw Error('Format cadangan tidak cocok.');S.activities=x.activities;S.variables=x.variables;S.indicators=x.indicators;render();status('dg-s-audit','Cadangan berhasil diimpor.');}catch(err){status('dg-s-audit',err.message,true);}};rd.readAsText(f);};
+}
+function install(){
+ styles();const nav=document.querySelector('nav'),main=document.querySelector('main');if(!nav||!main||$('dataGovernance'))return;
+ const tab=document.createElement('button');tab.className='tab';tab.type='button';tab.dataset.tab='dataGovernance';tab.textContent='Data Governance';const anchor=nav.querySelector('[data-tab="dataInput"]');if(anchor)anchor.insertAdjacentElement('afterend',tab);else nav.appendChild(tab);
+ main.insertAdjacentHTML('beforeend',buildPanelHTML());
+ const panel=$('dg-panel');tab.onclick=()=>{document.querySelectorAll('.tab[data-tab]').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));tab.classList.add('active');$('dataGovernance').classList.add('active');};
+ panel.querySelectorAll('[data-dg]').forEach(b=>b.onclick=()=>{panel.querySelectorAll('[data-dg]').forEach(x=>x.classList.remove('active'));panel.querySelectorAll('.dg-view').forEach(x=>x.classList.remove('active'));b.classList.add('active');$('dg-'+b.dataset.dg).classList.add('active');});
+ wire();render();
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});else install();
+})();
+
+</script>
+</body></html>
 
 </body></html>
