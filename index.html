@@ -75,10 +75,11 @@ nav{position:sticky;top:0;z-index:20;background:#f3f6f9ed;backdrop-filter:blur(1
 .portal-hero-main h2{color:#fff;font-size:clamp(27px,4vw,39px);line-height:1.1;max-width:700px;margin:10px 0 13px}
 .portal-hero-main p{color:#e0edf6;max-width:710px}
 .portal-hero-side{background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px}
-.portal-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:19px}
+.portal-actions{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:19px}
+.portal-actions>.tab{display:flex;align-items:center;justify-content:center;text-align:center;text-decoration:none;width:min(100%,420px);min-height:50px;margin:0;padding:12px 18px;box-sizing:border-box}
 .portal-actions .tab{border:1px solid #ffffff55;background:#fff;color:#15344e}
 .portal-actions .tab.primary{background:#e2f4f1;border-color:#b1e0d8;color:#075d57}
-.portal-actions .public-dashboard-link{display:flex!important;align-items:center;justify-content:center;text-align:center;width:min(100%,420px);margin:2px auto 2px;min-height:48px;flex:0 1 420px;}
+.portal-actions .public-dashboard-link{width:min(100%,420px);}
 .portal-status{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:750;padding:6px 10px;border-radius:99px;background:#fff5df;color:#80580d;border:1px solid #f0dfb5}
 .portal-status:before{content:"";width:7px;height:7px;border-radius:50%;background:#c58a22}
 .pillar-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
