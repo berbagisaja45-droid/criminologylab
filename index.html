@@ -229,7 +229,7 @@ nav>.tab{flex:0 1 auto!important;white-space:normal;text-align:center;min-height
 .panel-return button:hover{background:#edf5f8}
 .panel-return span{font-size:12px;font-weight:750;letter-spacing:.04em;color:#61758a}
 @media(max-width:600px){.panel-return{align-items:stretch}.panel-return button{width:100%}.panel-return span{text-align:center}}
-</style></head><body>
+</style><style id="crime-trend-study-style">#crimeTrendStudy .trend-topic{border:1px solid var(--line);border-radius:10px;padding:13px 15px;margin:10px 0;background:#fff}#crimeTrendStudy .trend-topic summary{cursor:pointer;line-height:1.45;color:var(--navy)}#crimeTrendStudy .trend-topic[open] summary{margin-bottom:10px}#crimeTrendStudy .trend-topic li{margin:7px 0}#crimeTrendStudy .table-wrap{overflow-x:auto}#crimeTrendStudy table{min-width:620px}</style></head><body>
 <header><div class="wrap"><div class="brandline"><div class="brandmark">CL</div><div class="pill">PUBLIC CRIMINOLOGY KNOWLEDGE PORTAL · CONTENT EDITION 1.2</div></div><h1>Criminology Lab</h1><p>Indonesia Crime Observatory · Quantitative Analytics · Game & Policy Simulation · Public Crime Knowledge</p></div></header>
 <div class="wrap">
 <nav>
@@ -564,6 +564,60 @@ Public Overview
   <p class="section-intro">Cari penjelasan awal berdasarkan topik, konsep, dan jenis kejahatan. Setiap ringkasan mengarahkan pembaca ke sumber resmi; fitur ini belum merupakan chatbot AI atau konsultasi resmi individual.</p>
   <div class="ask-search"><input type="text" id="askQuery" placeholder="Contoh: pencurian, penipuan online, korupsi, TPPU, perdagangan orang"><button class="action" id="askSearch">Cari topik</button></div>
   <div id="askResults" style="margin-top:14px" aria-live="polite"></div>
+ </div>
+
+ <div class="card" id="crimeTrendStudy">
+  <div class="pill">COMPREHENSIVE CRIME TREND REVIEW</div>
+  <h2>Kajian Komprehensif Tren Kejahatan</h2>
+  <p class="section-intro">Ruang kajian untuk memahami perubahan pola kriminalitas secara sistematis. Kajian ini membedakan tren kejadian tercatat, risiko viktimisasi, aktivitas penindakan, dan perubahan pelaporan. Angka dan kesimpulan empiris hanya boleh ditambahkan setelah periode, definisi, serta sumber data diverifikasi.</p>
+  <div class="notice"><b>Prinsip membaca tren:</b> kenaikan laporan tidak otomatis berarti kejadian sebenarnya meningkat. Perubahan dapat dipengaruhi intensitas pelaporan, operasi penegakan hukum, perubahan klasifikasi, cakupan pencatatan, dan akses masyarakat terhadap layanan.</div>
+  <details class="trend-topic" open>
+   <summary><b>A. Ringkasan dan pertanyaan kajian</b></summary>
+   <p>Setiap kajian dimulai dengan menetapkan pertanyaan: kejahatan apa yang dianalisis, di wilayah mana, selama periode apa, dan apakah yang diamati adalah laporan, perkara, korban, tersangka, putusan, atau hasil penindakan.</p>
+   <ul><li>Apakah jumlah kejadian tercatat berubah dari waktu ke waktu?</li><li>Apakah perubahan tetap terlihat setelah dihitung per 100.000 penduduk?</li><li>Wilayah dan kelompok kejahatan mana yang menunjukkan pola berbeda?</li><li>Apakah perubahan berkaitan dengan perubahan pelaporan, kebijakan, atau kegiatan penegakan hukum?</li></ul>
+  </details>
+  <details class="trend-topic">
+   <summary><b>B. Dimensi analisis tren</b></summary>
+   <div class="source-grid">
+    <div class="source-card"><h3>1. Tren temporal</h3><p>Bandingkan bulanan, triwulanan, dan tahunan; periksa musiman, perubahan struktural, serta konsistensi periode.</p></div>
+    <div class="source-card"><h3>2. Tren spasial</h3><p>Bandingkan nasional, provinsi, dan kabupaten/kota. Gunakan angka absolut bersama tingkat per penduduk dan catat perubahan batas wilayah.</p></div>
+    <div class="source-card"><h3>3. Jenis kejahatan</h3><p>Pisahkan kejahatan kekerasan, harta benda, siber, narkotika, korupsi, TPPU, lingkungan, dan kejahatan transnasional sesuai klasifikasi sumber.</p></div>
+    <div class="source-card"><h3>4. Korban dan kerentanan</h3><p>Gunakan hanya data agregat yang sah. Perhatikan usia, jenis kelamin, konteks sosial, serta risiko pengungkapan identitas kelompok kecil.</p></div>
+    <div class="source-card"><h3>5. Modus dan konteks</h3><p>Uraikan modus operandi, sarana, relasi pelaku-korban, lokasi kejadian, dan konteks sosial-ekonomi jika tersedia dan terukur.</p></div>
+    <div class="source-card"><h3>6. Respons sistem peradilan</h3><p>Bedakan laporan, penyelidikan, penyidikan, penuntutan, putusan, pemidanaan, dan layanan korban. Tahap-tahap ini bukan satu indikator yang sama.</p></div>
+   </div>
+  </details>
+  <details class="trend-topic">
+   <summary><b>C. Metode analisis yang dapat digunakan</b></summary>
+   <div class="table-wrap"><table><thead><tr><th>Metode</th><th>Kegunaan</th><th>Catatan</th></tr></thead><tbody>
+    <tr><td>Deskriptif dan growth rate</td><td>Melihat besaran dan perubahan antarperiode</td><td>Pastikan satuan dan periode konsisten</td></tr>
+    <tr><td>Crime rate</td><td>Membandingkan tingkat kejadian relatif terhadap populasi</td><td>Gunakan denominator penduduk yang sesuai</td></tr>
+    <tr><td>Time-series</td><td>Mengidentifikasi tren, musiman, dan perubahan struktur</td><td>Perlu seri cukup panjang dan definisi stabil</td></tr>
+    <tr><td>Panel data</td><td>Membandingkan dinamika antarwilayah dan waktu</td><td>Periksa perubahan cakupan dan heterogenitas wilayah</td></tr>
+    <tr><td>Spatial analysis</td><td>Memeriksa konsentrasi dan ketergantungan spasial</td><td>Hasil sensitif terhadap unit wilayah dan matriks bobot</td></tr>
+    <tr><td>Evaluasi kausal</td><td>Menguji dampak intervensi atau kebijakan</td><td>Memerlukan desain identifikasi dan asumsi yang dapat dipertanggungjawabkan</td></tr>
+   </tbody></table></div>
+  </details>
+  <details class="trend-topic">
+   <summary><b>D. Cara menafsirkan hasil secara hati-hati</b></summary>
+   <ul><li>Jangan menyamakan crime rate dengan jumlah laporan atau jumlah pelaku.</li><li>Jangan menyimpulkan suatu kebijakan menyebabkan perubahan hanya dari perbandingan sebelum-sesudah.</li><li>Periksa kemungkinan dark figure of crime atau kejahatan yang tidak tercatat.</li><li>Bandingkan definisi, metode pencatatan, dan perubahan kebijakan statistik antarperiode.</li><li>Laporkan ketidakpastian, keterbatasan data, dan kemungkinan penjelasan alternatif.</li></ul>
+  </details>
+  <details class="trend-topic">
+   <summary><b>E. Sumber data dan verifikasi</b></summary>
+   <div class="source-grid">
+    <div class="source-card"><h3>BPS — Statistik Kriminal</h3><p>Gunakan publikasi statistik kriminal dan metadata indikator.</p><a href="https://www.bps.go.id/id/publication/2025/12/12/2edc8ea4c35b19ba912fc7e4/statistik-kriminal-2024-2025.html" target="_blank" rel="noopener">Buka publikasi BPS →</a></div>
+    <div class="source-card"><h3>Pusiknas Bareskrim Polri</h3><p>Periksa statistik dan informasi kriminalitas dari sumber kepolisian.</p><a href="https://pusiknas.polri.go.id/" target="_blank" rel="noopener">Buka Pusiknas →</a></div>
+    <div class="source-card"><h3>Satu Data Polri</h3><p>Periksa dataset terbuka, periode, satuan, dan metadata.</p><a href="https://data.polri.go.id/" target="_blank" rel="noopener">Buka Satu Data Polri →</a></div>
+    <div class="source-card"><h3>PPATK</h3><p>Untuk statistik agregat, tipologi, dan publikasi terkait TPPU.</p><a href="https://www.ppatk.go.id/publikasi.html" target="_blank" rel="noopener">Buka publikasi PPATK →</a></div>
+    <div class="source-card"><h3>KPK</h3><p>Untuk laporan kinerja dan statistik penanganan perkara korupsi.</p><a href="https://www.kpk.go.id/" target="_blank" rel="noopener">Buka KPK →</a></div>
+   </div>
+   <p class="small">Sumber-sumber tersebut memiliki cakupan, definisi, dan unit observasi berbeda. Jangan langsung menggabungkan angkanya tanpa harmonisasi metadata.</p>
+  </details>
+  <details class="trend-topic">
+   <summary><b>F. Format kesimpulan kajian</b></summary>
+   <ol><li>Temuan utama dan periode analisis.</li><li>Perubahan jumlah dan tingkat kejahatan.</li><li>Perbedaan wilayah dan kelompok kejahatan.</li><li>Penjelasan yang didukung data serta penjelasan alternatif.</li><li>Implikasi kebijakan yang proporsional dengan kekuatan bukti.</li><li>Keterbatasan, sumber, tanggal akses, dan definisi indikator.</li></ol>
+  </details>
+  <p class="small">Catatan: bagian ini merupakan kerangka kajian dan panduan interpretasi, bukan laporan tren aktual atau prediksi kriminalitas. Analisis empiris memerlukan dataset terverifikasi untuk periode yang ditentukan.</p>
  </div>
  <div class="card">
   <h2>Melaporkan kejadian atau meminta bantuan</h2>
