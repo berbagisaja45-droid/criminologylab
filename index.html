@@ -205,6 +205,24 @@ nav .tab{flex:0 0 auto!important;white-space:nowrap}
  #quant .analytics-subnav{max-width:100%;overflow-x:auto;flex-wrap:nowrap;padding-bottom:5px}
  #quant .analytics-subnav .subtab{flex:0 0 auto}
 }
+</style><style id="spatial-navigation-mobile-fix">
+nav{display:flex;flex-wrap:wrap;align-items:stretch;overflow:visible!important;white-space:normal;gap:8px}
+nav .tab{flex:0 1 auto!important;white-space:normal;text-align:center}
+.spatial-nav{position:relative;flex:0 0 auto;min-width:170px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--navy);z-index:35}
+.spatial-nav summary{list-style:none;cursor:pointer;font-weight:750;padding:9px 13px;white-space:nowrap}
+.spatial-nav summary::-webkit-details-marker{display:none}
+.spatial-nav[open]{background:#f8fbfd;border-color:#b9cad8}
+.spatial-nav-panel{display:grid;grid-template-columns:1fr;gap:8px;padding:9px;min-width:260px}
+.spatial-nav-panel a{display:block;text-decoration:none;color:var(--navy);background:white;border:1px solid var(--line);border-radius:9px;padding:11px;white-space:normal}
+.spatial-nav-panel a strong,.spatial-nav-panel a span{display:block}
+.spatial-nav-panel a span{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.4}
+@media(max-width:600px){
+ nav:not(#gameLab nav):not(#dataGovernance nav){display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch;overflow:visible!important;white-space:normal;position:relative;top:auto;width:100%;margin:0;padding:10px 0}
+ nav:not(#gameLab nav):not(#dataGovernance nav)>.tab,nav:not(#gameLab nav):not(#dataGovernance nav)>.spatial-nav{width:100%;min-width:0;max-width:100%;box-sizing:border-box}
+ nav .tab{min-height:44px;display:flex;align-items:center;justify-content:center;overflow-wrap:anywhere}
+ .spatial-nav{grid-column:1/-1}
+ .spatial-nav-panel{min-width:0}
+}
 </style></head><body>
 <header><div class="wrap"><div class="brandline"><div class="brandmark">CL</div><div class="pill">PUBLIC CRIMINOLOGY KNOWLEDGE PORTAL · CONTENT EDITION 1.2</div></div><h1>Criminology Lab</h1><p>Indonesia Crime Observatory · Quantitative Analytics · Game & Policy Simulation · Public Crime Knowledge</p></div></header>
 <div class="wrap">
@@ -212,8 +230,19 @@ nav .tab{flex:0 0 auto!important;white-space:nowrap}
 <button class="tab active" data-tab="home">Beranda</button>
 <button class="tab" data-tab="observatory">Crime Observatory</button>
 <a class="tab" href="https://berbagisaja45-droid.github.io/criminologylab/criminology-data-explorer.html" style="display:inline-block;text-decoration:none">Data Explorer</a>
-<a class="tab" href="https://berbagisaja45-droid.github.io/criminologylab/spatial-criminology-lab.html" style="display:inline-block;text-decoration:none">Spatial Lab</a>
-<a class="tab" href="https://berbagisaja45-droid.github.io/criminologylab/spatial-econometrics-lab.html" style="display:inline-block;text-decoration:none">Spatial Econometrics</a>
+<details class="spatial-nav">
+<summary>Analisis Spasial <span aria-hidden="true">⌄</span></summary>
+<div class="spatial-nav-panel">
+<a href="https://berbagisaja45-droid.github.io/criminologylab/spatial-criminology-lab.html">
+<strong>A. Spatial Criminology Lab</strong>
+<span>Pemetaan wilayah, Global Moran's I, LISA, dan hotspot Getis-Ord Gi*.</span>
+</a>
+<a href="https://berbagisaja45-droid.github.io/criminologylab/spatial-econometrics-lab.html">
+<strong>B. Spatial Econometrics Lab</strong>
+<span>Estimasi SAR, SEM, dan SDM untuk menguji ketergantungan dan spillover spasial.</span>
+</a>
+</div>
+</details>
  <a class="tab"
 href="https://berbagisaja45-droid.github.io/criminologylab/criminology-public-overview.html"
 target="_blank" rel="noopener"
