@@ -690,15 +690,17 @@ xtreg ${y} ${controls.join(' ')}, re
 estimates store RE
 hausman FE RE
 `;
-   else code+=`* Correlated Random Effects (Mundlak)
-* xtreg random-effects model augmented with panel means of time-varying regressors.
-foreach v of varlist ${controls.join(' ')} {
-    bysort ${panel}: egen mean_`v' = mean(`v')
-}
-xtreg ${y} ${controls.join(' ')} ${controls.map(v=>'mean_'+v).join(' ')}, re vce(cluster ${panel})
-* Mundlak test: joint significance of the panel means.
-test ${controls.map(v=>'mean_'+v).join(' ')}
+   else {
+    const means=controls.map(v=>'mean_'+v).join(' ');
+    const meanLines=controls.map(v=>'bysort '+panel+': egen mean_'+v+' = mean('+v+')').join('\\n');
+    code+=`* Correlated Random Effects (Mundlak)
+* Add panel means of time-varying regressors.
+${meanLines}
+xtreg ${y} ${controls.join(' ')} ${means}, re vce(cluster ${panel})
+* Mundlak test: joint significance of panel means.
+test ${means}
 `;
+   }
   }else if(method==='km'||method==='cox'){
    if(!x||!t)throw new Error('Survival memerlukan variabel durasi (X) dan status kejadian (T).');
    code+=`* Survival-time declaration
