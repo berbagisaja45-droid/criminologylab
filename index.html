@@ -174,6 +174,35 @@ nav .tab{flex:0 0 auto!important;white-space:nowrap}
 #quant button.action:active{background:#102b45!important;color:#fff!important}
 #quant button.action:focus-visible{outline:3px solid #c69a45!important;outline-offset:3px}
 #quant .field button.action{min-height:46px;line-height:1.25;white-space:normal}
+</style><style id="criminology-lab-contained-layout">
+#quant,#quant *{box-sizing:border-box}
+#quant{width:100%;max-width:100%;min-width:0;overflow-x:clip}
+#quant .card,#quant .controls,#quant .field,#quant .grid,#quant .source-grid,#quant .method-grid,#quant .notice,#quant .good,#quant .public-notice{min-width:0;max-width:100%}
+#quant .controls{grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr))}
+#quant .field{width:100%;min-width:0}
+#quant .field label{overflow-wrap:anywhere;line-height:1.35}
+#quant input:not([type=checkbox]):not([type=radio]),#quant select,#quant textarea{display:block;width:100%;max-width:100%;min-width:0}
+#quant select[multiple]{height:auto;min-height:132px;max-height:190px;overflow-y:auto;white-space:normal}
+#quant select[multiple] option{white-space:normal;overflow-wrap:anywhere;padding:4px 6px}
+#quant textarea,#quant #cmCode{white-space:pre;overflow-x:auto;overflow-wrap:normal}
+#quant .tablewrap{display:block;width:100%;max-width:100%;min-width:0;overflow-x:auto;overscroll-behavior-x:contain}
+#quant .tablewrap table{width:max-content;min-width:100%;max-width:none}
+#quant .tablewrap th,#quant .tablewrap td{white-space:normal;overflow-wrap:anywhere;max-width:220px}
+#quant .kpi,#quant .stat-box,#quant .metric{min-width:0;overflow-wrap:anywhere}
+#quant .notice,#quant .good,#quant .public-notice{overflow-wrap:anywhere;word-break:normal}
+#quant button{max-width:100%;white-space:normal;overflow-wrap:anywhere}
+#quant img,#quant canvas,#quant svg{max-width:100%}
+@media(max-width:600px){
+ #quant .card{padding:16px!important;margin-left:0;margin-right:0}
+ #quant .grid,#quant .source-grid,#quant .method-grid{grid-template-columns:minmax(0,1fr)!important}
+ #quant .controls{grid-template-columns:minmax(0,1fr)!important;gap:12px}
+ #quant .tablewrap{max-height:320px}
+ #quant .tablewrap table{font-size:12px}
+ #quant .tablewrap th,#quant .tablewrap td{padding:6px;max-width:155px}
+ #quant select[multiple]{min-height:120px;max-height:160px}
+ #quant .analytics-subnav{max-width:100%;overflow-x:auto;flex-wrap:nowrap;padding-bottom:5px}
+ #quant .analytics-subnav .subtab{flex:0 0 auto}
+}
 </style></head><body>
 <header><div class="wrap"><div class="brandline"><div class="brandmark">CL</div><div class="pill">PUBLIC CRIMINOLOGY KNOWLEDGE PORTAL · CONTENT EDITION 1.2</div></div><h1>Criminology Lab</h1><p>Indonesia Crime Observatory · Quantitative Analytics · Game & Policy Simulation · Public Crime Knowledge</p></div></header>
 <div class="wrap">
