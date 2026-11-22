@@ -687,7 +687,8 @@ function cmBuild(){
  if(!rows.length){$('cmStatus').textContent='Muat dataset terlebih dahulu.';return;}
  try{
   const method=$('cmMethod').value,y=cmStataVar($('cmY').value),x=cmStataVar($('cmX').value),t=cmStataVar($('cmT').value),z=cmStataVar($('cmZ').value),panel=cmStataVar($('cmPanel').value);
-  const time=cmStataVar($('cmTime').value);\n  const controls=cmSelected('cmControls').map(cmStataVar).filter(v=>![y,x,t,z,panel].includes(v));
+  const time=cmStataVar($('cmTime').value);
+  const controls=cmSelected('cmControls').map(cmStataVar).filter(v=>![y,x,t,z,panel].includes(v));
   const c=controls.length?' '+controls.join(' '):'',cut=$('cmCutoff').value||'0',fail=$('cmFailure').value||'1';
   if(!y)throw new Error('Pilih outcome/dependent variable.');
   let code=`* Criminology Lab — Advanced Econometrics & Causal Inference
