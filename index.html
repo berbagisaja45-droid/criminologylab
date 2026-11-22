@@ -151,7 +151,24 @@ header .brandmark{border-color:#c69a4580;color:#f4d99d}nav{background:#f4f6f9f2;
 .card,.portal-hero-side,.pillar-card,.source-card,.inputer-card{border-color:#dce2e9;box-shadow:0 5px 18px #10243a0a}.portal-hero-main{background:linear-gradient(135deg,#0e2035,#1b4567 72%,#1b625d);border-bottom:3px solid var(--gold)}.portal-hero-main .eyebrow,.pillar-card .num{color:#b58a3b}.portal-status{background:#fff8e9;color:#76551d;border-color:#ead8b2}.kpi,.stat-box,.metric{background:#f5f7fa;border-color:#dce2e9}.kpi b,.stat-box strong{color:#234b70}button.action,.dg-btn{background:#183b5b;border-color:#183b5b}button.action:hover,.dg-btn:hover{background:#244e70}.notice,.public-notice,.inputer-note{border-left-color:var(--gold)}
 @media(max-width:600px){nav{flex-wrap:nowrap;overflow-x:auto;white-space:nowrap}.tab{flex:0 0 auto}}
 </style>
-</head><body>
+<style id="criminology-mobile-layout-fix">
+html,body{max-width:100%;overflow-x:hidden}
+nav:not(#gameLab nav):not(#dataGovernance nav){display:flex!important;flex-wrap:nowrap!important;align-items:center;justify-content:flex-start;gap:8px;max-width:100%;width:100%;overflow-x:auto!important;overflow-y:hidden;white-space:nowrap;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+nav::-webkit-scrollbar{display:none}
+nav .tab{flex:0 0 auto!important;white-space:nowrap}
+.wrap,main,.panel,.analytics-screen,.card{min-width:0;max-width:100%}
+#cmMethodTiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px}
+#cmMethodTiles [data-cm-method]{min-width:0;width:100%;overflow-wrap:anywhere}
+#cmCode{box-sizing:border-box;max-width:100%;min-width:0}
+.tablewrap{max-width:100%;overflow-x:auto}
+@media(max-width:600px){
+ nav:not(#gameLab nav):not(#dataGovernance nav){position:sticky;top:0;z-index:30;padding:10px 12px;margin:0 -12px;width:calc(100% + 24px);box-sizing:border-box}
+ #cmMethodTiles{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ #quant .controls{grid-template-columns:minmax(0,1fr)}
+ #quant .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #quant input,#quant select,#quant textarea{box-sizing:border-box;max-width:100%;min-width:0}
+}
+</style></head><body>
 <header><div class="wrap"><div class="brandline"><div class="brandmark">CL</div><div class="pill">PUBLIC CRIMINOLOGY KNOWLEDGE PORTAL · CONTENT EDITION 1.2</div></div><h1>Criminology Lab</h1><p>Indonesia Crime Observatory · Quantitative Analytics · Game & Policy Simulation · Public Crime Knowledge</p></div></header>
 <div class="wrap">
 <nav>
