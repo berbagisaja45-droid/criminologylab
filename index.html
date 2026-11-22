@@ -685,24 +685,24 @@ function cmBuildSimulation(){
  const method=$('cmMethod').value;let csv='',name='',map={};
  let seed=20261122;const rand=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;};
  if(['panel_fe','panel_re','panel_cre','did'].includes(method)){
-  csv='region,year,crime_rate,prevention_budget,police_density,unemployment_rate,treatment,post,crime_outcome\\n';
-  for(let i=1;i<=24;i++){const region='Region_'+String(i).padStart(2,'0');for(let y=2018;y<=2023;y++){const post=y>=2021?1:0,treat=i<=12?1:0;const budget=30+i*1.7+(y-2018)*2.1+rand()*3;const police=70+i*2.2+rand()*5;const unemp=4+i*.09-(y-2018)*.08+rand()*.3;const rate=52+i*.8-(y-2018)*1.1+treat*post*-4.2+rand()*2.5;csv+=region+','+y+','+rate.toFixed(3)+','+budget.toFixed(2)+','+police.toFixed(2)+','+unemp.toFixed(2)+','+treat+','+post+','+(rate+rand()*2).toFixed(3)+'\\n';}}
+  csv='region,year,crime_rate,prevention_budget,police_density,unemployment_rate,treatment,post,crime_outcome\n';
+  for(let i=1;i<=24;i++){const region='Region_'+String(i).padStart(2,'0');for(let y=2018;y<=2023;y++){const post=y>=2021?1:0,treat=i<=12?1:0;const budget=30+i*1.7+(y-2018)*2.1+rand()*3;const police=70+i*2.2+rand()*5;const unemp=4+i*.09-(y-2018)*.08+rand()*.3;const rate=52+i*.8-(y-2018)*1.1+treat*post*-4.2+rand()*2.5;csv+=region+','+y+','+rate.toFixed(3)+','+budget.toFixed(2)+','+police.toFixed(2)+','+unemp.toFixed(2)+','+treat+','+post+','+(rate+rand()*2).toFixed(3)+'\n';}}
   name='SIM_Panel_DID_24_Regions_2018_2023.csv';map={y:'crime_rate',x:'year',t:'treatment',z:'post',panel:'region',time:'year',controls:['prevention_budget','police_density','unemployment_rate']};
  }else if(method==='km'||method==='cox'){
-  csv='case_id,duration_months,event,age,prior_record,diversion\\n';
-  for(let i=1;i<=240;i++){const age=18+Math.floor(rand()*43),prior=rand()<.35?1:0,div=rand()<.4?1:0;const hazard=.018*Math.exp(.025*(age-30)+.55*prior-.38*div);const latent=-Math.log(Math.max(.0001,rand()))/hazard;const censor=8+rand()*52;const duration=Math.min(latent,censor),event=latent<=censor?1:0;csv+=i+','+duration.toFixed(2)+','+event+','+age+','+prior+','+div+'\\n';}
+  csv='case_id,duration_months,event,age,prior_record,diversion\n';
+  for(let i=1;i<=240;i++){const age=18+Math.floor(rand()*43),prior=rand()<.35?1:0,div=rand()<.4?1:0;const hazard=.018*Math.exp(.025*(age-30)+.55*prior-.38*div);const latent=-Math.log(Math.max(.0001,rand()))/hazard;const censor=8+rand()*52;const duration=Math.min(latent,censor),event=latent<=censor?1:0;csv+=i+','+duration.toFixed(2)+','+event+','+age+','+prior+','+div+'\n';}
   name='SIM_Survival_Recidivism_240_Cases.csv';map={x:'duration_months',t:'event',panel:'case_id',controls:['age','prior_record','diversion']};
  }else if(['rdd','fuzzy','rkt'].includes(method)){
-  csv='case_id,score,treatment,dose,outcome,age,prior_record\\n';
-  for(let i=1;i<=500;i++){const score=-10+20*rand(),age=18+Math.floor(rand()*40),prior=rand()<.3?1:0,assign=score>=0?1:0,treat=method==='fuzzy'?(rand()<(.25+.55*assign)?1:0):assign,dose=method==='rkt'?Math.max(0,score+10)+Math.max(0,score)*.7:treat;const outcome=method==='rkt'?30+1.2*score+.85*Math.max(0,score)+.3*age+rand()*4:25+1.1*score+4.5*treat+.2*age-.8*prior+rand()*5;csv+=i+','+score.toFixed(3)+','+treat+','+dose.toFixed(3)+','+outcome.toFixed(3)+','+age+','+prior+'\\n';}
+  csv='case_id,score,treatment,dose,outcome,age,prior_record\n';
+  for(let i=1;i<=500;i++){const score=-10+20*rand(),age=18+Math.floor(rand()*40),prior=rand()<.3?1:0,assign=score>=0?1:0,treat=method==='fuzzy'?(rand()<(.25+.55*assign)?1:0):assign,dose=method==='rkt'?Math.max(0,score+10)+Math.max(0,score)*.7:treat;const outcome=method==='rkt'?30+1.2*score+.85*Math.max(0,score)+.3*age+rand()*4:25+1.1*score+4.5*treat+.2*age-.8*prior+rand()*5;csv+=i+','+score.toFixed(3)+','+treat+','+dose.toFixed(3)+','+outcome.toFixed(3)+','+age+','+prior+'\n';}
   name='SIM_'+method.toUpperCase()+'_Cutoff_Design_500_Cases.csv';map={y:'outcome',x:'score',t:method==='rkt'?'dose':'treatment',panel:'case_id',controls:['age','prior_record']};
  }else if(method==='rct'){
-  csv='person_id,assigned_treatment,received_treatment,outcome,baseline_score,age\\n';
-  for(let i=1;i<=300;i++){const tr=rand()<.5?1:0,base=40+rand()*30,age=18+Math.floor(rand()*40),received=rand()<.92?tr:1-tr,outcome=base+3.8*tr+1.1*received+.12*(age-30)+(rand()-.5)*12;csv+=i+','+tr+','+received+','+outcome.toFixed(3)+','+base.toFixed(3)+','+age+'\\n';}
+  csv='person_id,assigned_treatment,received_treatment,outcome,baseline_score,age\n';
+  for(let i=1;i<=300;i++){const tr=rand()<.5?1:0,base=40+rand()*30,age=18+Math.floor(rand()*40),received=rand()<.92?tr:1-tr,outcome=base+3.8*tr+1.1*received+.12*(age-30)+(rand()-.5)*12;csv+=i+','+tr+','+received+','+outcome.toFixed(3)+','+base.toFixed(3)+','+age+'\n';}
   name='SIM_RCT_300_Participants.csv';map={y:'outcome',t:'assigned_treatment',z:'received_treatment',panel:'person_id',controls:['baseline_score','age']};
  }else if(method==='iv'){
-  csv='person_id,outcome,endogenous_x,instrument_z,age,education\\n';
-  for(let i=1;i<=400;i++){const z=rand()<.5?1:0,age=18+Math.floor(rand()*40),edu=8+Math.floor(rand()*9),u=(rand()-.5)*4,x=.9*z+.35*edu+.2*age+u,y=2.4*x+.45*edu+.025*age+u*1.5+(rand()-.5)*3;csv+=i+','+y.toFixed(3)+','+x.toFixed(3)+','+z+','+age+','+edu+'\\n';}
+  csv='person_id,outcome,endogenous_x,instrument_z,age,education\n';
+  for(let i=1;i<=400;i++){const z=rand()<.5?1:0,age=18+Math.floor(rand()*40),edu=8+Math.floor(rand()*9),u=(rand()-.5)*4,x=.9*z+.35*edu+.2*age+u,y=2.4*x+.45*edu+.025*age+u*1.5+(rand()-.5)*3;csv+=i+','+y.toFixed(3)+','+x.toFixed(3)+','+z+','+age+','+edu+'\n';}
   name='SIM_IV_2SLS_400_Observations.csv';map={y:'outcome',t:'endogenous_x',z:'instrument_z',panel:'person_id',controls:['age','education']};
  }
  if(!csv){$('cmSimulationNote').textContent='Metode belum memiliki dataset simulasi.';return;}
