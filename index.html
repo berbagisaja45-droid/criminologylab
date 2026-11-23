@@ -487,7 +487,7 @@ Public Overview
   </div>
  </div>
  <div class="card">
-  <h2>Lima fungsi utama portal</h2>
+  <h2>Modul utama Criminology Lab</h2>
   <p class="section-intro">Dibangun sebagai portal publik dan laboratorium pengetahuan kriminologi, bukan sistem administrasi perkuliahan.</p>
   <div class="pillar-grid">
    <div class="pillar-card"><div class="num">01 · MONITOR</div><h3>Indonesia Crime Observatory</h3><p>Tren, kategori, sumber data resmi, indikator, dan konteks kriminalitas Indonesia.</p></div>
@@ -496,6 +496,7 @@ Public Overview
    <div class="pillar-card"><div class="num">04 · UNDERSTAND</div><h3>Tanya Kriminologi</h3><p>Jelajahi penjelasan awal tentang kejahatan, data, korban, dan kebijakan.</p></div>
    <div class="pillar-card"><div class="num">05 · CONNECT</div><h3>Pusat Rujukan</h3><p>Hubungkan publik dengan data dan layanan resmi lembaga berwenang.</p></div>
    <div class="pillar-card"><div class="num">06 · MAP & DETECT</div><h3>Crime Hotspot Intelligence</h3><p>Eksplorasi konsentrasi kejahatan, hotspot, coldspot, dan pola spasial wilayah.</p><a href="./crime-hotspot-intelligence.html">Buka modul analisis →</a></div>
+   <div class="pillar-card"><div class="num">07 · JUSTICE MONITOR</div><h3>Criminal Justice System Monitor</h3><p>Memantau indikator agregat kepolisian, kejaksaan, pengadilan, dan pemasyarakatan dengan metadata periode dan sumber.</p><button class="tab" type="button" data-open-cjs>Buka monitor →</button></div>
   </div>
  </div>
  <div class="card">
@@ -2219,6 +2220,7 @@ Jangan tempel di dalam skrip lain dan jangan ikut menyalin baris </body> atau </
     });
 
     $('cjs-export').addEventListener('click', downloadCSV);
+    document.querySelectorAll('[data-open-cjs]').forEach(el=>el.addEventListener('click',()=>tab.click()));
     $('cjs-source-open').addEventListener('click', () => window.open(DATA.correction.live, '_blank', 'noopener'));
   }
 
