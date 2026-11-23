@@ -287,12 +287,23 @@ nav>.tab{flex:0 1 auto!important;white-space:normal;text-align:center;min-height
 }
 </style>
 
+
+<style id="crime-trend-dashboard-style">
+#crimeTrend .controls{grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr))}
+#crimeTrend .field{min-width:0}#crimeTrend input,#crimeTrend select{box-sizing:border-box;width:100%;max-width:100%;min-width:0}
+#crimeTrend .stat-grid{grid-template-columns:repeat(4,minmax(0,1fr))}#crimeTrend .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+#crimeTrend .tablewrap{max-width:100%;overflow:auto}#crimeTrend table{min-width:420px}#crimeTrend table td,#crimeTrend table th{white-space:normal}
+#crimeTrend .ct-bar-row{display:grid;grid-template-columns:minmax(90px,1fr) 3fr auto;gap:9px;align-items:center;margin:10px 0;font-size:12px}
+#crimeTrend .ct-track{height:13px;background:#e9eff4;border-radius:99px;overflow:hidden}#crimeTrend .ct-fill{height:100%;background:#26718e;border-radius:99px}
+@media(max-width:650px){#crimeTrend .stat-grid,#crimeTrend .grid{grid-template-columns:1fr}#crimeTrend .ct-bar-row{grid-template-columns:1fr auto}#crimeTrend .ct-track{grid-column:1/-1;grid-row:2}}
+</style>
 </head><body>
 <header><div class="wrap"><div class="brandline"><div class="brandmark">CL</div><div class="pill">PUBLIC CRIMINOLOGY KNOWLEDGE PORTAL · CONTENT EDITION 1.2</div></div><h1>Criminology Lab</h1><p>Indonesia Crime Observatory · Quantitative Analytics · Game & Policy Simulation · Public Crime Knowledge</p></div></header>
 <div class="wrap">
 <nav>
 <button class="tab active" data-tab="home">Beranda</button>
 <button class="tab" data-tab="observatory">Crime Observatory</button>
+<button class="tab" data-tab="crimeTrend">Crime Trend<br>Intelligence</button>
 <a class="tab" href="https://berbagisaja45-droid.github.io/criminologylab/criminology-data-explorer.html" style="display:inline-block;text-decoration:none">Data Explorer</a>
 <details class="spatial-nav">
 <summary>Analisis Spasial <span aria-hidden="true">⌄</span></summary>
@@ -483,6 +494,22 @@ Public Overview
    <div class="source-card"><h3>Dark figure of crime</h3><p>Kejadian yang tidak masuk ke catatan resmi. Survei korban dan studi viktimisasi membantu memahami bagian kriminalitas yang tidak tercatat.</p></div>
   </div>
  </div>
+</section>
+
+<section class="panel" id="crimeTrend">
+ <div class="panel-return"><button type="button" onclick="document.querySelector('.tab[data-tab=home]').click();window.scrollTo({top:0,behavior:'smooth'});">← Kembali ke Beranda Utama</button><span>CRIME TREND INTELLIGENCE</span></div>
+ <div class="card"><div class="pill">INDONESIA · CRIME TREND INTELLIGENCE</div><h2>Crime Trend Intelligence Dashboard</h2>
+ <p class="section-intro">Dashboard analisis tren kriminalitas untuk membaca perubahan kejadian tercatat, membandingkan wilayah dan jenis kejahatan, serta menghitung crime rate. Gunakan data agregat yang memiliki sumber, periode, dan definisi indikator yang jelas.</p>
+ <div class="notice"><b>Catatan integritas data:</b> dashboard tidak menggabungkan otomatis angka BPS, Pusiknas, survei korban, dan statistik penindakan. Perbedaan sumber atau definisi harus dianalisis terpisah. Data bawaan belum berupa seri tahunan lengkap; unggah dataset terverifikasi untuk analisis tren lintas tahun.</div></div>
+ <div class="card"><h2>1. Pilih dan unggah dataset</h2><p class="small">Format CSV: year, region, crime_type, incidents, population, source. Satu baris mewakili satu kombinasi tahun–wilayah–jenis kejahatan–sumber.</p>
+ <div class="controls"><div class="field"><label for="ctFile">Unggah dataset CSV</label><input id="ctFile" type="file" accept=".csv,text/csv"></div><div class="field"><label for="ctSource">Sumber / seri data</label><select id="ctSource"><option value="">Semua sumber</option></select></div><div class="field"><label for="ctRegion">Wilayah</label><select id="ctRegion"><option value="">Semua wilayah</option></select></div><div class="field"><label for="ctType">Jenis kejahatan</label><select id="ctType"><option value="">Semua jenis</option></select></div><div class="field"><label for="ctMetric">Indikator grafik</label><select id="ctMetric"><option value="incidents">Jumlah kejadian tercatat</option><option value="rate">Crime rate per 100.000 penduduk</option></select></div></div>
+ <div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:12px"><button class="action" id="ctTemplate">Unduh template CSV</button><button class="action secondary" id="ctExport" disabled>Ekspor data terfilter</button><button class="action secondary" id="ctReset">Kosongkan dataset</button></div><p id="ctStatus" class="small" aria-live="polite" style="margin-top:10px">Belum ada dataset yang diunggah. Unduh template untuk memulai.</p></div>
+ <div class="card"><h2>2. Ringkasan indikator</h2><div class="stat-grid" id="ctKpis"><div class="stat-box"><strong>—</strong><span>Jumlah observasi</span></div><div class="stat-box"><strong>—</strong><span>Total kejadian</span></div><div class="stat-box"><strong>—</strong><span>Wilayah teramati</span></div><div class="stat-box"><strong>—</strong><span>Periode teramati</span></div></div><p class="small" id="ctInterpretation" style="margin-top:10px">Ringkasan akan muncul setelah dataset dimuat dan filter dipilih.</p></div>
+ <div class="card"><h2>3. Tren kriminalitas</h2><p class="small">Grafik mengagregasikan observasi berdasarkan tahun sesuai filter. Crime rate dihitung dari total kejadian dibagi total populasi, dikalikan 100.000.</p><div id="ctChart" style="min-height:260px;border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff"><p class="small">Grafik menunggu dataset.</p></div></div>
+ <div class="card"><h2>4. Perbandingan wilayah dan jenis kejahatan</h2><div class="grid"><div><h3>Ringkasan per wilayah</h3><div id="ctRegionTable" class="tablewrap"><p class="small">Belum ada data.</p></div></div><div><h3>Ringkasan per jenis kejahatan</h3><div id="ctTypeTable" class="tablewrap"><p class="small">Belum ada data.</p></div></div></div></div>
+ <div class="card"><h2>5. Data terfilter</h2><div id="ctDataTable" class="tablewrap"><p class="small">Belum ada data.</p></div><p class="small">Tabel menampilkan maksimal 500 baris pertama. Ekspor CSV mengambil seluruh data yang lolos filter.</p></div>
+ <div class="card"><h2>6. Standar data dan interpretasi</h2><ul><li>Jumlah kejadian tercatat bukan ukuran seluruh kejadian yang benar-benar terjadi; perhatikan dark figure of crime.</li><li>Crime rate menggunakan populasi sebagai denominator dan harus memakai tahun serta cakupan wilayah yang sepadan.</li><li>Jangan membandingkan angka dari lembaga berbeda sebelum definisi, unit observasi, cakupan, dan periode diselaraskan.</li><li>Data kosong tidak boleh diartikan sebagai nol kejadian.</li><li>Dashboard mengolah data agregat di browser. Jangan mengunggah identitas korban, pelaku, saksi, alamat, atau informasi perkara pribadi.</li></ul>
+ <div class="source-grid"><div class="source-card"><h3>BPS — Statistik Kriminal</h3><p>Rujukan registrasi kepolisian, survei korban, dan statistik kewilayahan.</p><a href="https://www.bps.go.id/id/publication/2025/12/12/2edc8ea4c35b19ba912fc7e4/statistik-kriminal-2024-2025.html" target="_blank" rel="noopener">Buka publikasi BPS →</a></div><div class="source-card"><h3>Pusiknas Bareskrim Polri</h3><p>Informasi dan statistik kriminalitas berdasarkan publikasi kepolisian.</p><a href="https://pusiknas.polri.go.id/" target="_blank" rel="noopener">Buka Pusiknas →</a></div></div></div>
 </section>
 <section class="panel" id="quant">
 <div class="card"><div class="pill">QUANTITATIVE ANALYTICS LAB</div><h2>Laboratorium Analisis Kuantitatif Kriminalitas</h2><p class="section-intro">Unggah dataset publik, agregat, atau yang telah dianonimkan. Analisis berlangsung di browser dan tidak dikirim otomatis ke server.</p><div class="public-notice">Jangan unggah identitas korban, saksi, tersangka, data penyidikan, atau informasi perkara yang dibatasi.</div><div class="card" id="quantGuide">
@@ -1467,7 +1494,37 @@ $('cmGenerate').addEventListener('click',cmBuild);$('cmDownload').addEventListen
 <!--
 CRIMINOLOGY LAB — INSTALLER VISUAL ANALYTICS v1.4 + CRIMINAL JUSTICE SYSTEM DASHBOARD v1.0
 Paket tambahan. Jangan hapus kode utama index.html.
-Tempel seluruh isi file ini sebelum tag penutup </body> di index.html.
+Tempel seluruh isi file ini sebelum tag penutup 
+<script id="crime-trend-dashboard-script">
+(()=>{
+ const $=id=>document.getElementById(id),panel=$('crimeTrend');if(!panel||panel.dataset.ready)return;panel.dataset.ready='1';
+ let all=[];const required=['year','region','crime_type','incidents','population','source'];
+ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ function parse(text){const first=text.split(/\r?\n/)[0]||'',sep=(first.match(/;/g)||[]).length>(first.match(/,/g)||[]).length?';':',';let out=[],row=[],v='',q=false;for(let i=0;i<text.length;i++){const c=text[i];if(c==='"'){if(q&&text[i+1]==='"'){v+='"';i++}else q=!q}else if(c===sep&&!q){row.push(v);v=''}else if((c==='\n'||c==='\r')&&!q){if(c==='\r'&&text[i+1]==='\n')i++;row.push(v);if(row.some(x=>x.trim()))out.push(row);row=[];v=''}else v+=c}row.push(v);if(row.some(x=>x.trim()))out.push(row);return out}
+ function csvRows(text){const a=parse(text);if(a.length<2)throw Error('CSV harus memiliki header dan setidaknya satu baris data.');const heads=a[0].map(x=>x.trim().toLowerCase()),missing=required.filter(x=>!heads.includes(x));if(missing.length)throw Error('Kolom wajib belum lengkap: '+missing.join(', '));const ix=Object.fromEntries(heads.map((h,i)=>[h,i]));return a.slice(1).map((r,n)=>{const year=Number(r[ix.year]),inc=Number(String(r[ix.incidents]??'').replace(/,/g,'')),pop=Number(String(r[ix.population]??'').replace(/,/g,''));if(!Number.isInteger(year)||year<1900||year>2100)throw Error('Tahun tidak valid pada baris '+(n+2)+'.');if(!Number.isFinite(inc)||inc<0)throw Error('Jumlah kejadian tidak valid pada baris '+(n+2)+'.');if(!Number.isFinite(pop)||pop<=0)throw Error('Populasi harus lebih besar dari nol pada baris '+(n+2)+'.');const item={year,region:(r[ix.region]||'').trim(),crime_type:(r[ix.crime_type]||'').trim(),incidents:inc,population:pop,source:(r[ix.source]||'').trim()};if(!item.region||!item.crime_type||!item.source)throw Error('Wilayah, jenis kejahatan, dan sumber wajib diisi pada baris '+(n+2)+'.');return item})}
+ function options(id,values,label){const s=$(id),old=s.value;s.innerHTML='<option value="">'+label+'</option>'+values.map(v=>'<option value="'+esc(v)+'">'+esc(v)+'</option>').join('');if(values.includes(old))s.value=old}
+ function filtered(){return all.filter(r=>(!$('ctSource').value||r.source===$('ctSource').value)&&(!$('ctRegion').value||r.region===$('ctRegion').value)&&(!$('ctType').value||r.crime_type===$('ctType').value))}
+ function fmt(n,d=0){return Number(n).toLocaleString('id-ID',{maximumFractionDigits:d,minimumFractionDigits:d})}
+ function table(rows,cols){if(!rows.length)return '<p class="small">Tidak ada observasi untuk filter ini.</p>';return '<table><thead><tr>'+cols.map(c=>'<th>'+esc(c)+'</th>').join('')+'</tr></thead><tbody>'+rows.map(r=>'<tr>'+cols.map(c=>'<td>'+esc(r[c])+'</td>').join('')+'</tr>').join('')+'</tbody></table>'}
+ function render(){const data=filtered(),metric=$('ctMetric').value,years=[...new Set(data.map(r=>r.year))].sort((a,b)=>a-b),regions=[...new Set(data.map(r=>r.region))],types=[...new Set(data.map(r=>r.crime_type))],total=data.reduce((s,r)=>s+r.incidents,0),pop=data.reduce((s,r)=>s+r.population,0);
+ $('ctKpis').innerHTML=[[data.length,'Jumlah observasi'],[fmt(total),'Total kejadian'],[regions.length,'Wilayah teramati'],[years.length?years[0]+'–'+years.at(-1):'—','Periode teramati']].map(x=>'<div class="stat-box"><strong>'+x[0]+'</strong><span>'+x[1]+'</span></div>').join('');
+ $('ctInterpretation').textContent=data.length?'Filter menghasilkan '+data.length+' observasi dari '+years.length+' tahun, '+regions.length+' wilayah, dan '+types.length+' jenis kejahatan. '+(metric==='rate'?'Crime rate agregat: '+fmt(total/pop*100000,2)+' per 100.000 penduduk.':'Total kejadian tercatat: '+fmt(total)+'.')+' Angka hanya berlaku untuk dataset dan filter aktif.':'Tidak ada observasi. Periksa dataset atau ubah filter.';
+ const series=years.map(y=>{const rs=data.filter(r=>r.year===y),v=rs.reduce((s,r)=>s+r.incidents,0),p=rs.reduce((s,r)=>s+r.population,0);return {year:y,value:metric==='rate'?(p?v/p*100000:0):v}});
+ $('ctChart').innerHTML=series.length?series.map(x=>'<div class="ct-bar-row"><b>'+x.year+'</b><div class="ct-track"><div class="ct-fill" style="width:'+Math.max(1,x.value/Math.max(1,...series.map(z=>z.value))*100)+'%"></div></div><span>'+fmt(x.value,metric==='rate'?2:0)+'</span></div>').join('')+'<p class="small">'+(metric==='rate'?'Satuan: kejadian per 100.000 penduduk.':'Satuan: kejadian tercatat.')+'</p>':'<p class="small">Belum ada data untuk ditampilkan.</p>';
+ const byRegion=regions.map(region=>{const rs=data.filter(r=>r.region===region),v=rs.reduce((s,r)=>s+r.incidents,0),p=rs.reduce((s,r)=>s+r.population,0);return {Wilayah:region,'Kejadian tercatat':fmt(v),'Crime rate':p?fmt(v/p*100000,2):'—'}}).sort((a,b)=>b['Kejadian tercatat'].localeCompare(a['Kejadian tercatat']));
+ const byType=types.map(type=>({Jenis:type,'Kejadian tercatat':fmt(data.filter(r=>r.crime_type===type).reduce((s,r)=>s+r.incidents,0))})).sort((a,b)=>b['Kejadian tercatat'].localeCompare(a['Kejadian tercatat']));
+ $('ctRegionTable').innerHTML=table(byRegion.slice(0,100),['Wilayah','Kejadian tercatat','Crime rate']);$('ctTypeTable').innerHTML=table(byType,['Jenis','Kejadian tercatat']);
+ $('ctDataTable').innerHTML=table(data.slice(0,500).map(r=>({Tahun:r.year,Wilayah:r.region,Jenis:r.crime_type,Kejadian:fmt(r.incidents),Populasi:fmt(r.population),Crime_rate:fmt(r.incidents/r.population*100000,2),Sumber:r.source})),['Tahun','Wilayah','Jenis','Kejadian','Populasi','Crime_rate','Sumber']);$('ctExport').disabled=!data.length}
+ function download(name,text){const blob=new Blob([text],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;a.click();URL.revokeObjectURL(url)}
+ $('ctTemplate').addEventListener('click',()=>download('criminology_crime_trend_template.csv',required.join(',')+'\n2024,Indonesia,Semua kejahatan,561993,281000000,BPS Statistik Kriminal 2024/2025\n'));
+ $('ctFile').addEventListener('change',e=>{const file=e.target.files&&e.target.files[0];if(!file)return;if(file.size>10*1024*1024){$('ctStatus').textContent='File melebihi batas 10 MB.';return}const reader=new FileReader();reader.onload=()=>{try{all=csvRows(String(reader.result||''));options('ctSource',[...new Set(all.map(r=>r.source))].sort(),'Semua sumber');options('ctRegion',[...new Set(all.map(r=>r.region))].sort(),'Semua wilayah');options('ctType',[...new Set(all.map(r=>r.crime_type))].sort(),'Semua jenis');$('ctStatus').textContent='Dataset berhasil dimuat: '+file.name+' · '+all.length+' observasi. Data diproses lokal di browser.';render()}catch(err){all=[];render();$('ctStatus').textContent='Gagal membaca CSV: '+err.message}};reader.onerror=()=>$('ctStatus').textContent='File tidak dapat dibaca.';reader.readAsText(file)});
+ ['ctSource','ctRegion','ctType','ctMetric'].forEach(id=>$(id).addEventListener('change',render));
+ $('ctReset').addEventListener('click',()=>{all=[];$('ctFile').value='';['ctSource','ctRegion','ctType'].forEach(id=>options(id,[],'Semua'));$('ctStatus').textContent='Dataset dikosongkan.';render()});
+ $('ctExport').addEventListener('click',()=>{const d=filtered();download('criminology_crime_trend_filtered.csv',[required.join(','),...d.map(r=>[r.year,r.region,r.crime_type,r.incidents,r.population,r.source].map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(','))].join('\n'))});
+ render();
+})();
+</script>
+</body> di index.html.
 Urutan skrip: Visual Analytics v1.4, lalu Criminal Justice System Dashboard v1.0.
 Jangan tempel di dalam skrip lain dan jangan ikut menyalin baris </body> atau </html> dari file utama.
 -->
