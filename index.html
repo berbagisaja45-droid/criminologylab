@@ -937,6 +937,42 @@ Public Overview
    </details>
    </details>
   </details>
+
+  <details class="trend-topic" open>
+   <summary><b>Crime Typology Analysis — Kerangka Analisis Tipologi 2024</b></summary>
+   <p class="small">Bagian ini menghubungkan pola yang disebut dalam berita dengan perspektif teori kriminologi sebagai hipotesis analitis. Hubungan teori bukan temuan kausal dari 631 artikel.</p>
+   <div class="table-wrap"><table><thead><tr><th>Pola yang diberitakan</th><th>Lensa teori</th><th>Pertanyaan analitis</th><th>Arah pencegahan untuk diuji</th></tr></thead><tbody>
+    <tr><td>Kejadian di jalan umum dan rentang malam</td><td>Routine Activity Theory</td><td>Bagaimana pertemuan pelaku potensial, target, dan lemahnya penjagaan terjadi pada ruang-waktu tertentu?</td><td>Uji pencahayaan, pengawasan alami, desain ruang, dan patroli berbasis bukti.</td></tr>
+    <tr><td>Kurangnya penerangan jalan disebut sebagai faktor situasional</td><td>Situational Crime Prevention</td><td>Apakah kondisi lingkungan meningkatkan peluang atau mengurangi risiko terdeteksi?</td><td>Audit penerangan dan titik rawan; evaluasi sebelum-sesudah dengan pembanding yang layak.</td></tr>
+    <tr><td>Peristiwa dilakukan berkelompok</td><td>Social Learning / Group Processes</td><td>Bagaimana pengaruh teman sebaya, dinamika kelompok, dan proses eskalasi muncul dalam kasus?</td><td>Intervensi kelompok sebaya, mediasi konflik, dan program pencegahan kekerasan berbasis komunitas.</td></tr>
+    <tr><td>Dendam atau rasa sakit hati disebut dalam pemberitaan</td><td>General Strain Theory</td><td>Dalam kondisi apa pengalaman tekanan atau konflik berujung pada respons kekerasan?</td><td>Perkuat mekanisme penyelesaian konflik, akses konseling, dan respons dini; hindari menyimpulkan motif tanpa data perkara.</td></tr>
+    <tr><td>Pelaku dan korban dapat saling mengenal maupun tidak</td><td>Victimology / Relationship Context</td><td>Apakah risiko dan mekanisme kejadian berbeda menurut relasi pelaku-korban?</td><td>Rancang pencegahan dan layanan korban yang berbeda menurut konteks relasi, dengan perlindungan privasi.</td></tr>
+   </tbody></table></div>
+   <div class="notice"><b>Disiplin inferensi:</b> pola dalam berita hanya memberi petunjuk untuk merumuskan pertanyaan. Teori harus diuji dengan data peristiwa yang terverifikasi, definisi operasional, dan desain penelitian yang sesuai.</div>
+  </details>
+  <details class="trend-topic">
+   <summary><b>Policy Recommendation Framework — Rekomendasi Berbasis Bukti</b></summary>
+   <div class="table-wrap"><table><thead><tr><th>Bidang kebijakan</th><th>Opsi awal</th><th>Indikator evaluasi</th><th>Syarat bukti</th></tr></thead><tbody>
+    <tr><td>Keamanan ruang publik</td><td>Audit penerangan, desain lingkungan, dan pengawasan alami pada lokasi yang tervalidasi</td><td>Insiden terverifikasi per lokasi dan periode; persepsi keamanan; displacement</td><td>Pemetaan kejadian unik dan data pembanding</td></tr>
+    <tr><td>Pencegahan kekerasan kelompok</td><td>Program pemuda, mediasi konflik, dan intervensi berbasis komunitas</td><td>Pengulangan kejadian, keterlibatan program, rujukan layanan</td><td>Identifikasi kelompok sasaran secara etis dan evaluasi dampak</td></tr>
+    <tr><td>Perlindungan korban</td><td>Rujukan layanan, dukungan psikososial, dan mekanisme pelaporan aman</td><td>Akses layanan, waktu respons, kepuasan dan keselamatan korban</td><td>Data layanan teragregasi dan perlindungan identitas</td></tr>
+    <tr><td>Respons kepolisian</td><td>Penguatan respons, transparansi informasi, dan akuntabilitas penanganan</td><td>Waktu respons, penyelesaian pengaduan, kepercayaan publik</td><td>Definisi indikator konsisten dan audit independen</td></tr>
+   </tbody></table></div>
+   <p class="small">Rekomendasi di atas merupakan opsi kebijakan untuk diuji, bukan klaim bahwa intervensi tersebut telah terbukti efektif berdasarkan kumpulan berita ini.</p>
+  </details>
+  <details class="trend-topic">
+   <summary><b>Standar Dataset untuk Pengembangan Analisis</b></summary>
+   <p>Jika laporan lengkap atau data pengodean diperoleh, setiap rekaman sebaiknya memisahkan identitas artikel dari identitas peristiwa. Satu peristiwa dapat memiliki beberapa artikel.</p>
+   <div class="table-wrap"><table><thead><tr><th>Kelompok variabel</th><th>Contoh kolom</th><th>Aturan pencatatan</th></tr></thead><tbody>
+    <tr><td>Artikel</td><td>article_id, media, tanggal_publikasi, url, judul</td><td>Satu baris per artikel; simpan URL dan tanggal akses.</td></tr>
+    <tr><td>Peristiwa</td><td>event_id, tanggal_kejadian, wilayah, lokasi_umum</td><td>Gunakan event_id untuk menghubungkan artikel yang membahas kejadian sama.</td></tr>
+    <tr><td>Klasifikasi</td><td>crime_type, modus, alat, konteks</td><td>Pakai codebook; sediakan kategori tidak diketahui/tidak disebut.</td></tr>
+    <tr><td>Aktor dan korban</td><td>pelaku_gender, kelompok_usia, korban_gender, relasi</td><td>Catat hanya jika disebut eksplisit; jangan menebak atribut.</td></tr>
+    <tr><td>Situasi</td><td>waktu, tempat, penerangan, kelompok</td><td>Pisahkan fakta eksplisit dari interpretasi pengode.</td></tr>
+    <tr><td>Mutu data</td><td>coder_id, confidence, duplicate_flag, verification_status</td><td>Dokumentasikan pengodean, duplikasi, dan status verifikasi.</td></tr>
+   </tbody></table></div>
+   <p class="small">Jangan memasukkan nama, alamat, atau informasi identitas korban dan anak ke dataset publik. Simpan data sensitif secara terpisah dengan kontrol akses yang sesuai.</p>
+  </details>
   <div class="notice"><b>Prinsip membaca tren:</b> kenaikan laporan tidak otomatis berarti kejadian sebenarnya meningkat. Perubahan dapat dipengaruhi intensitas pelaporan, operasi penegakan hukum, perubahan klasifikasi, cakupan pencatatan, dan akses masyarakat terhadap layanan.</div>
   <details class="trend-topic" open>
    <summary><b>A. Ringkasan dan pertanyaan kajian</b></summary>
