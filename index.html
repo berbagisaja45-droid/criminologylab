@@ -974,6 +974,62 @@ Public Overview
    </tbody></table></div>
    <p class="small">Jangan memasukkan nama, alamat, atau informasi identitas korban dan anak ke dataset publik. Simpan data sensitif secara terpisah dengan kontrol akses yang sesuai.</p>
   </details>
+
+  <details class="trend-topic" open>
+   <summary><b>Crime Intelligence & Early Warning System — Kerangka Operasional</b></summary>
+   <p class="small">Modul ini merupakan rancangan alur intelijen kriminal berbasis data. Belum terhubung ke feed berita, API kepolisian, atau pemantauan otomatis; tidak menerbitkan peringatan aktual.</p>
+   <div class="source-grid">
+    <div class="source-card"><h3>1. Media Monitoring</h3><p>Menghimpun artikel dari sumber yang dapat ditelusuri, menyimpan URL, media, tanggal publikasi, dan waktu akses. Pisahkan berita baru, pembaruan berita, opini, dan siaran pers.</p></div>
+    <div class="source-card"><h3>2. Event Extraction</h3><p>Mengekstrak tanggal kejadian, kategori, lokasi umum, modus, konteks, dan status informasi. Bedakan tanggal kejadian dari tanggal publikasi.</p></div>
+    <div class="source-card"><h3>3. Entity & Duplicate Resolution</h3><p>Menghubungkan beberapa artikel yang merujuk pada peristiwa yang sama. Simpan jejak keputusan penggabungan agar dapat diaudit.</p></div>
+    <div class="source-card"><h3>4. Validation</h3><p>Memeriksa informasi terhadap sumber primer atau sumber independen. Catat status: belum diverifikasi, sebagian terverifikasi, atau terverifikasi.</p></div>
+    <div class="source-card"><h3>5. Trend Detection</h3><p>Membandingkan kejadian terverifikasi menurut waktu, wilayah, dan kategori dengan baseline yang konsisten serta denominator yang sesuai.</p></div>
+    <div class="source-card"><h3>6. Analyst Review</h3><p>Analis menilai kualitas bukti, kemungkinan bias, penjelasan alternatif, dan apakah temuan layak diteruskan sebagai sinyal untuk ditinjau.</p></div>
+   </div>
+   <h3>Alur pemrosesan dan keputusan</h3>
+   <div class="table-wrap"><table><thead><tr><th>Tahap</th><th>Masukan</th><th>Keluaran wajib</th><th>Kontrol mutu</th></tr></thead><tbody>
+    <tr><td>Pengumpulan</td><td>Artikel, laporan, dataset resmi</td><td>Record sumber dengan URL dan timestamp</td><td>Validasi domain dan kelengkapan metadata</td></tr>
+    <tr><td>Ekstraksi</td><td>Teks sumber</td><td>Draft atribut peristiwa</td><td>Penandaan kutipan/kalimat pendukung</td></tr>
+    <tr><td>Resolusi</td><td>Draft peristiwa dari banyak sumber</td><td>Event ID dan relasi artikel</td><td>Review duplikasi oleh analis</td></tr>
+    <tr><td>Verifikasi</td><td>Event record</td><td>Status dan tingkat keyakinan bukti</td><td>Konfirmasi sumber primer/independen</td></tr>
+    <tr><td>Analisis</td><td>Data terverifikasi</td><td>Tren dan sinyal anomali</td><td>Baseline, denominator, dan uji sensitivitas</td></tr>
+    <tr><td>Diseminasi</td><td>Hasil analisis</td><td>Catatan intelijen dan rekomendasi</td><td>Persetujuan analis dan jejak audit</td></tr>
+   </tbody></table></div>
+  </details>
+  <details class="trend-topic">
+   <summary><b>Early Warning Protocol — Tingkat Sinyal dan Tindak Lanjut</b></summary>
+   <p>Level berikut adalah status proses analisis, bukan skor risiko otomatis dan bukan klasifikasi ancaman terhadap orang atau kelompok.</p>
+   <div class="table-wrap"><table><thead><tr><th>Status</th><th>Makna</th><th>Tindak lanjut</th></tr></thead><tbody>
+    <tr><td><b>Belum dinilai</b></td><td>Informasi baru masuk dan belum diperiksa.</td><td>Periksa sumber, tanggal, duplikasi, dan relevansi.</td></tr>
+    <tr><td><b>Dalam verifikasi</b></td><td>Ada informasi yang perlu dikonfirmasi.</td><td>Cari sumber independen; jangan publikasikan sebagai fakta.</td></tr>
+    <tr><td><b>Sinyal untuk ditinjau</b></td><td>Data terverifikasi menunjukkan perubahan yang layak dianalisis.</td><td>Bandingkan baseline, denominator, pola musiman, dan kemungkinan perubahan pelaporan.</td></tr>
+    <tr><td><b>Analisis selesai</b></td><td>Temuan telah ditelaah analis dan batas bukti dinyatakan.</td><td>Terbitkan ringkasan dengan sumber, metode, tanggal, dan keterbatasan.</td></tr>
+    <tr><td><b>Ditutup / tidak didukung</b></td><td>Sinyal tidak terkonfirmasi atau bukti tidak memadai.</td><td>Dokumentasikan alasan penutupan dan simpan jejak audit.</td></tr>
+   </tbody></table></div>
+   <div class="notice"><b>Larangan interpretasi:</b> satu berita viral, satu lonjakan laporan, atau satu lokasi yang sering diberitakan tidak cukup untuk menyatakan ancaman meningkat. Jangan membuat daftar tersangka, memprediksi perilaku individu, atau memberi label berbahaya pada komunitas berdasarkan data agregat.</div>
+  </details>
+  <details class="trend-topic">
+   <summary><b>Indikator Pemantauan dan Standar Pembandingan</b></summary>
+   <div class="table-wrap"><table><thead><tr><th>Dimensi</th><th>Indikator yang dapat dihitung</th><th>Prasyarat</th></tr></thead><tbody>
+    <tr><td>Volume kejadian</td><td>Jumlah event unik terverifikasi per periode</td><td>Protokol deduplikasi dan definisi event</td></tr>
+    <tr><td>Tingkat kejadian</td><td>Event per 100.000 penduduk</td><td>Data populasi dan wilayah dengan periode yang sepadan</td></tr>
+    <tr><td>Perubahan waktu</td><td>Perubahan bulanan/tahunan dan moving average</td><td>Seri waktu cukup dan klasifikasi stabil</td></tr>
+    <tr><td>Konsentrasi spasial</td><td>Distribusi wilayah dan ukuran konsentrasi</td><td>Lokasi cukup akurat, unit wilayah konsisten, perlindungan privasi</td></tr>
+    <tr><td>Kualitas bukti</td><td>Proporsi event dengan sumber primer/independen</td><td>Aturan verifikasi terdokumentasi</td></tr>
+    <tr><td>Bias media</td><td>Komposisi artikel per media dan proporsi artikel duplikat</td><td>Daftar sumber dan pencatatan artikel lengkap</td></tr>
+   </tbody></table></div>
+   <p class="small">Ambang sinyal tidak ditetapkan di muka. Ambang harus dikalibrasi menggunakan data historis yang memadai, variasi musiman, kualitas pencatatan, serta evaluasi false positive dan false negative.</p>
+  </details>
+  <details class="trend-topic">
+   <summary><b>Tata Kelola, Etika, dan Keamanan Data</b></summary>
+   <ul>
+    <li>Gunakan data agregat untuk dashboard publik; sembunyikan identitas korban, anak, saksi, dan pihak yang belum terbukti bersalah.</li>
+    <li>Simpan sumber, waktu pengambilan, versi data, perubahan record, dan identitas peran kurator dalam audit log.</li>
+    <li>Pisahkan fakta dari dugaan, opini, interpretasi model, dan rekomendasi kebijakan.</li>
+    <li>Batasi akses data rinci berdasarkan peran dan kebutuhan kerja; tetapkan masa retensi serta prosedur koreksi.</li>
+    <li>Jangan menjadikan berita atau model prediktif sebagai dasar tunggal tindakan penegakan hukum terhadap individu.</li>
+   </ul>
+  </details>
   <div class="notice"><b>Prinsip membaca tren:</b> kenaikan laporan tidak otomatis berarti kejadian sebenarnya meningkat. Perubahan dapat dipengaruhi intensitas pelaporan, operasi penegakan hukum, perubahan klasifikasi, cakupan pencatatan, dan akses masyarakat terhadap layanan.</div>
   <details class="trend-topic" open>
    <summary><b>A. Ringkasan dan pertanyaan kajian</b></summary>
