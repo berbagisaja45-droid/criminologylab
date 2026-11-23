@@ -1,137 +1,205 @@
-year,region,crime_type,incidents,population,source
-2019,"Polda Aceh","Semua kejahatan",7483,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2019,"Polda Sumatera Utara","Semua kejahatan",30831,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2019,"Polda Sumatera Barat","Semua kejahatan",11064,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2019,"Polda Riau","Semua kejahatan",6570,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2019,"Polda Jambi","Semua kejahatan",6848,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2019,"Polda Sumatera Selatan","Semua kejahatan",12861,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2019,"Polda Bengkulu","Semua kejahatan",3453,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2019,"Polda Lampung","Semua kejahatan",8534,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2019,"Polda Kep. Bangka Belitung","Semua kejahatan",1953,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2019,"Polda Kepulauan Riau","Semua kejahatan",3159,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2019,"Polda Metro Jaya","Semua kejahatan",31934,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2019,"Polda Jawa Barat","Semua kejahatan",13145,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2019,"Polda Jawa Tengah","Semua kejahatan",10317,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2019,"Polda DI Yogyakarta","Semua kejahatan",6650,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2019,"Polda Jawa Timur","Semua kejahatan",26985,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2019,"Polda Banten","Semua kejahatan",3287,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2019,"Polda Bali","Semua kejahatan",3047,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2019,"Polda Nusa Tenggara Barat","Semua kejahatan",8185,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2019,"Polda Nusa Tenggara Timur","Semua kejahatan",5865,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2019,"Polda Kalimantan Barat","Semua kejahatan",4721,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2019,"Polda Kalimantan Tengah","Semua kejahatan",2444,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2019,"Polda Kalimantan Selatan","Semua kejahatan",5375,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2019,"Polda Kalimantan Timur","Semua kejahatan",4417,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2019,"Polda Kalimantan Utara","Semua kejahatan",876,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2019,"Polda Sulawesi Utara","Semua kejahatan",7425,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2019,"Polda Sulawesi Tengah","Semua kejahatan",6265,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2019,"Polda Sulawesi Selatan","Semua kejahatan",16008,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2019,"Polda Sulawesi Tenggara","Semua kejahatan",1213,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2019,"Polda Gorontalo","Semua kejahatan",2367,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2019,"Polda Sulawesi Barat","Semua kejahatan",1863,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2019,"Polda Maluku","Semua kejahatan",3495,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2019,"Polda Maluku Utara","Semua kejahatan",718,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2019,"Polda Papua Barat","Semua kejahatan",2972,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2019,"Polda Papua","Semua kejahatan",6994,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2020,"Polda Aceh","Semua kejahatan",7745,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2020,"Polda Sumatera Utara","Semua kejahatan",32990,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2020,"Polda Sumatera Barat","Semua kejahatan",7992,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2020,"Polda Riau","Semua kejahatan",8194,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2020,"Polda Jambi","Semua kejahatan",4709,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2020,"Polda Sumatera Selatan","Semua kejahatan",12189,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2020,"Polda Bengkulu","Semua kejahatan",3333,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2020,"Polda Lampung","Semua kejahatan",7594,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2020,"Polda Kep. Bangka Belitung","Semua kejahatan",1931,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2020,"Polda Kepulauan Riau","Semua kejahatan",2843,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2020,"Polda Metro Jaya","Semua kejahatan",26585,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2020,"Polda Jawa Barat","Semua kejahatan",11256,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2020,"Polda Jawa Tengah","Semua kejahatan",10712,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2020,"Polda DI Yogyakarta","Semua kejahatan",7721,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2020,"Polda Jawa Timur","Semua kejahatan",17642,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2020,"Polda Banten","Semua kejahatan",4250,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2020,"Polda Bali","Semua kejahatan",2597,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2020,"Polda Nusa Tenggara Barat","Semua kejahatan",8591,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2020,"Polda Nusa Tenggara Timur","Semua kejahatan",4790,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2020,"Polda Kalimantan Barat","Semua kejahatan",3858,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2020,"Polda Kalimantan Tengah","Semua kejahatan",2629,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2020,"Polda Kalimantan Selatan","Semua kejahatan",5206,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2020,"Polda Kalimantan Timur","Semua kejahatan",3609,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2020,"Polda Kalimantan Utara","Semua kejahatan",1015,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2020,"Polda Sulawesi Utara","Semua kejahatan",6274,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2020,"Polda Sulawesi Tengah","Semua kejahatan",5454,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2020,"Polda Sulawesi Selatan","Semua kejahatan",12815,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2020,"Polda Sulawesi Tenggara","Semua kejahatan",2148,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2020,"Polda Gorontalo","Semua kejahatan",2518,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2020,"Polda Sulawesi Barat","Semua kejahatan",1704,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2020,"Polda Maluku","Semua kejahatan",5350,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2020,"Polda Maluku Utara","Semua kejahatan",850,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2020,"Polda Papua Barat","Semua kejahatan",3162,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2020,"Polda Papua","Semua kejahatan",6962,,BPS Statistik Kriminal 2021 - Registrasi Polri
-2021,"Polda Aceh","Semua kejahatan",6651,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2021,"Polda Sumatera Utara","Semua kejahatan",36534,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2021,"Polda Sumatera Barat","Semua kejahatan",5666,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2021,"Polda Riau","Semua kejahatan",7512,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2021,"Polda Jambi","Semua kejahatan",3701,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2021,"Polda Sumatera Selatan","Semua kejahatan",13037,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2021,"Polda Bengkulu","Semua kejahatan",3493,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2021,"Polda Lampung","Semua kejahatan",9764,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2021,"Polda Kep. Bangka Belitung","Semua kejahatan",1566,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2021,"Polda Kepulauan Riau","Semua kejahatan",2481,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2021,"Polda Metro Jaya","Semua kejahatan",29103,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2021,"Polda Jawa Barat","Semua kejahatan",7502,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2021,"Polda Jawa Tengah","Semua kejahatan",8909,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2021,"Polda DI Yogyakarta","Semua kejahatan",4774,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2021,"Polda Jawa Timur","Semua kejahatan",19257,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2021,"Polda Banten","Semua kejahatan",3434,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2021,"Polda Bali","Semua kejahatan",2404,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2021,"Polda Nusa Tenggara Barat","Semua kejahatan",6296,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2021,"Polda Nusa Tenggara Timur","Semua kejahatan",4909,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2021,"Polda Kalimantan Barat","Semua kejahatan",4048,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2021,"Polda Kalimantan Tengah","Semua kejahatan",2399,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2021,"Polda Kalimantan Selatan","Semua kejahatan",4973,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2021,"Polda Kalimantan Timur","Semua kejahatan",4564,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2021,"Polda Kalimantan Utara","Semua kejahatan",971,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2021,"Polda Sulawesi Utara","Semua kejahatan",6215,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2021,"Polda Sulawesi Tengah","Semua kejahatan",5139,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2021,"Polda Sulawesi Selatan","Semua kejahatan",14636,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2021,"Polda Sulawesi Tenggara","Semua kejahatan",2431,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2021,"Polda Gorontalo","Semua kejahatan",2445,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2021,"Polda Sulawesi Barat","Semua kejahatan",1500,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2021,"Polda Maluku","Semua kejahatan",3139,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2021,"Polda Maluku Utara","Semua kejahatan",1008,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2021,"Polda Papua Barat","Semua kejahatan",2784,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2021,"Polda Papua","Semua kejahatan",6236,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2022,"Polda Aceh","Semua kejahatan",10137,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2022,"Polda Sumatera Utara","Semua kejahatan",43555,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2022,"Polda Sumatera Barat","Semua kejahatan",7691,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2022,"Polda Riau","Semua kejahatan",12389,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2022,"Polda Jambi","Semua kejahatan",5359,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2022,"Polda Sumatera Selatan","Semua kejahatan",11453,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2022,"Polda Bengkulu","Semua kejahatan",3613,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2022,"Polda Lampung","Semua kejahatan",11022,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2022,"Polda Kep. Bangka Belitung","Semua kejahatan",2072,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2022,"Polda Kepulauan Riau","Semua kejahatan",3358,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2022,"Polda Metro Jaya","Semua kejahatan",32534,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2022,"Polda Jawa Barat","Semua kejahatan",29485,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2022,"Polda Jawa Tengah","Semua kejahatan",30060,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2022,"Polda DI Yogyakarta","Semua kejahatan",10591,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2022,"Polda Jawa Timur","Semua kejahatan",51905,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2022,"Polda Banten","Semua kejahatan",5038,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2022,"Polda Bali","Semua kejahatan",6304,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2022,"Polda Nusa Tenggara Barat","Semua kejahatan",5296,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2022,"Polda Nusa Tenggara Timur","Semua kejahatan",5991,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2022,"Polda Kalimantan Barat","Semua kejahatan",3975,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2022,"Polda Kalimantan Tengah","Semua kejahatan",3189,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2022,"Polda Kalimantan Selatan","Semua kejahatan",5016,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2022,"Polda Kalimantan Timur","Semua kejahatan",4221,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2022,"Polda Kalimantan Utara","Semua kejahatan",1280,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2022,"Polda Sulawesi Utara","Semua kejahatan",9618,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2022,"Polda Sulawesi Tengah","Semua kejahatan",5453,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2022,"Polda Sulawesi Selatan","Semua kejahatan",28679,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2022,"Polda Sulawesi Tenggara","Semua kejahatan",3828,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2022,"Polda Gorontalo","Semua kejahatan",2488,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2022,"Polda Sulawesi Barat","Semua kejahatan",2027,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2022,"Polda Maluku","Semua kejahatan",2383,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2022,"Polda Maluku Utara","Semua kejahatan",1220,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2022,"Polda Papua Barat","Semua kejahatan",4083,,BPS Statistik Kriminal 2023 - Registrasi Polri
-2022,"Polda Papua","Semua kejahatan",7584,,BPS Statistik Kriminal 2023 - Registrasi Polri
+year,region,crime_type,incidents,population,crime_rate_official,clearance_rate_official,source
+"2019","Aceh","Semua kejahatan","7483","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2019","Sumatera Utara","Semua kejahatan","30831","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2019","Sumatera Barat","Semua kejahatan","11064","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2019","Riau","Semua kejahatan","6570","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2019","Jambi","Semua kejahatan","6848","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2019","Sumatera Selatan","Semua kejahatan","12861","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2019","Bengkulu","Semua kejahatan","3453","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2019","Lampung","Semua kejahatan","8534","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2019","Kep. Bangka Belitung","Semua kejahatan","1953","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2019","Kepulauan Riau","Semua kejahatan","3159","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2019","Metro Jaya","Semua kejahatan","31934","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2019","Jawa Barat","Semua kejahatan","13145","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2019","Jawa Tengah","Semua kejahatan","10317","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2019","DI Yogyakarta","Semua kejahatan","6650","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2019","Jawa Timur","Semua kejahatan","26985","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2019","Banten","Semua kejahatan","3287","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2019","Bali","Semua kejahatan","3047","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2019","Nusa Tenggara Barat","Semua kejahatan","8185","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2019","Nusa Tenggara Timur","Semua kejahatan","5865","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2019","Kalimantan Barat","Semua kejahatan","4721","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2019","Kalimantan Tengah","Semua kejahatan","2444","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2019","Kalimantan Selatan","Semua kejahatan","5375","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2019","Kalimantan Timur","Semua kejahatan","4417","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2019","Kalimantan Utara","Semua kejahatan","876","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2019","Sulawesi Utara","Semua kejahatan","7425","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2019","Sulawesi Tengah","Semua kejahatan","6265","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2019","Sulawesi Selatan","Semua kejahatan","16008","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2019","Sulawesi Tenggara","Semua kejahatan","1213","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2019","Gorontalo","Semua kejahatan","2367","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2019","Sulawesi Barat","Semua kejahatan","1863","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2019","Maluku","Semua kejahatan","3495","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2019","Maluku Utara","Semua kejahatan","718","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2019","Papua Barat","Semua kejahatan","2972","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2019","Papua","Semua kejahatan","6994","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2020","Aceh","Semua kejahatan","7745","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2020","Sumatera Utara","Semua kejahatan","32990","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2020","Sumatera Barat","Semua kejahatan","7992","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2020","Riau","Semua kejahatan","8194","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2020","Jambi","Semua kejahatan","4709","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2020","Sumatera Selatan","Semua kejahatan","12189","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2020","Bengkulu","Semua kejahatan","3333","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2020","Lampung","Semua kejahatan","7594","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2020","Kep. Bangka Belitung","Semua kejahatan","1931","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2020","Kepulauan Riau","Semua kejahatan","2843","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2020","Metro Jaya","Semua kejahatan","26585","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2020","Jawa Barat","Semua kejahatan","11256","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2020","Jawa Tengah","Semua kejahatan","10712","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2020","DI Yogyakarta","Semua kejahatan","7721","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2020","Jawa Timur","Semua kejahatan","17642","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2020","Banten","Semua kejahatan","4250","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2020","Bali","Semua kejahatan","2597","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2020","Nusa Tenggara Barat","Semua kejahatan","8591","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2020","Nusa Tenggara Timur","Semua kejahatan","4790","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2020","Kalimantan Barat","Semua kejahatan","3858","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2020","Kalimantan Tengah","Semua kejahatan","2629","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2020","Kalimantan Selatan","Semua kejahatan","5206","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2020","Kalimantan Timur","Semua kejahatan","3609","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2020","Kalimantan Utara","Semua kejahatan","1015","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2020","Sulawesi Utara","Semua kejahatan","6274","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2020","Sulawesi Tengah","Semua kejahatan","5454","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2020","Sulawesi Selatan","Semua kejahatan","12815","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2020","Sulawesi Tenggara","Semua kejahatan","2148","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2020","Gorontalo","Semua kejahatan","2518","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2020","Sulawesi Barat","Semua kejahatan","1704","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2020","Maluku","Semua kejahatan","5350","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2020","Maluku Utara","Semua kejahatan","850","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2020","Papua Barat","Semua kejahatan","3162","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2020","Papua","Semua kejahatan","6962","","","","BPS Statistik Kriminal 2021 - Registrasi Polri"
+"2021","Aceh","Semua kejahatan","6651","","","","BPS Statistik Kriminal 2023 - Registrasi Polri"
+"2021","Sumatera Utara","Semua kejahatan","36534","","","","BPS Statistik Kriminal 2023 - Registrasi Polri"
+"2021","Sumatera Barat","Semua kejahatan","5666","","","","BPS Statistik Kriminal 2023 - Registrasi Polri"
+"2021","Riau","Semua kejahatan","7512","","","","BPS Statistik Kriminal 2023 - Registrasi Polri"
+"2021","Jambi","Semua kejahatan","3701","","","","BPS Statistik Kriminal 2023 - Registrasi Polri"
+"2021","Sumatera Selatan","Semua kejahatan","13037","","","","BPS Statistik Kriminal 2023 - Registrasi Polri"
+"2021","Bengkulu","Semua kejahatan","3493","","","","BPS Statistik Kriminal 2023 - Registrasi Polri"
+"2021","Lampung","Semua kejahatan","9764","","","","BPS Statistik Kriminal 2023 - Registrasi Polri"
+"2021","Kep. Bangka Belitung","Semua kejahatan","1566","","","","BPS Statistik Kriminal 2023 - Registrasi Polri"
+"2021","Kepulauan Riau","Semua kejahatan","2481","","","","BPS Statistik Kriminal 2023 - Registrasi Polri"
+"2021","Metro Jaya","Semua kejahatan","29103","","","","BPS Statistik Kriminal 2023 - Registrasi Polri"
+"2021","Jawa Barat","Semua kejahatan","7502","","","","BPS Statistik Kriminal 2023 - Registrasi Polri"
+"2021","Jawa Tengah","Semua kejahatan","8909","","","","BPS Statistik Kriminal 2023 - Registrasi Polri"
+"2021","DI Yogyakarta","Semua kejahatan","4774","","","","BPS Statistik Kriminal 2023 - Registrasi Polri"
+"2021","Jawa Timur","Semua kejahatan","19257","","","","BPS Statistik Kriminal 2023 - Registrasi Polri"
+"2021","Banten","Semua kejahatan","3434","","","","BPS Statistik Kriminal 2023 - Registrasi Polri"
+"2021","Bali","Semua kejahatan","2404","","","","BPS Statistik Kriminal 2023 - Registrasi Polri"
+"2021","Nusa Tenggara Barat","Semua kejahatan","6296","","","","BPS Statistik Kriminal 2023 - Registrasi Polri"
+"2021","Nusa Tenggara Timur","Semua kejahatan","4909","","","","BPS Statistik Kriminal 2023 - Registrasi Polri"
+"2021","Kalimantan Barat","Semua kejahatan","4048","","","","BPS Statistik Kriminal 2023 - Registrasi Polri"
+"2021","Kalimantan Tengah","Semua kejahatan","2399","","","","BPS Statistik Kriminal 2023 - Registrasi Polri"
+"2021","Kalimantan Selatan","Semua kejahatan","4973","","","","BPS Statistik Kriminal 2023 - Registrasi Polri"
+"2021","Kalimantan Timur","Semua kejahatan","4564","","","","BPS Statistik Kriminal 2023 - Registrasi Polri"
+"2021","Kalimantan Utara","Semua kejahatan","971","","","","BPS Statistik Kriminal 2023 - Registrasi Polri"
+"2021","Sulawesi Utara","Semua kejahatan","6215","","","","BPS Statistik Kriminal 2023 - Registrasi Polri"
+"2021","Sulawesi Tengah","Semua kejahatan","5139","","","","BPS Statistik Kriminal 2023 - Registrasi Polri"
+"2021","Sulawesi Selatan","Semua kejahatan","14636","","","","BPS Statistik Kriminal 2023 - Registrasi Polri"
+"2021","Sulawesi Tenggara","Semua kejahatan","2431","","","","BPS Statistik Kriminal 2023 - Registrasi Polri"
+"2021","Gorontalo","Semua kejahatan","2445","","","","BPS Statistik Kriminal 2023 - Registrasi Polri"
+"2021","Sulawesi Barat","Semua kejahatan","1500","","","","BPS Statistik Kriminal 2023 - Registrasi Polri"
+"2021","Maluku","Semua kejahatan","3139","","","","BPS Statistik Kriminal 2023 - Registrasi Polri"
+"2021","Maluku Utara","Semua kejahatan","1008","","","","BPS Statistik Kriminal 2023 - Registrasi Polri"
+"2021","Papua Barat","Semua kejahatan","2784","","","","BPS Statistik Kriminal 2023 - Registrasi Polri"
+"2021","Papua","Semua kejahatan","6236","","","","BPS Statistik Kriminal 2023 - Registrasi Polri"
+"2022","Aceh","Semua kejahatan","10137","","190","61.79","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2022","Sumatera Utara","Semua kejahatan","43555","","292","15.93","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2022","Sumatera Barat","Semua kejahatan","7691","","138","35.29","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2022","Riau","Semua kejahatan","12389","","191","17.17","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2022","Jambi","Semua kejahatan","5359","","149","18.64","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2022","Sumatera Selatan","Semua kejahatan","11453","","134","51.84","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2022","Bengkulu","Semua kejahatan","3613","","179","22.28","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2022","Lampung","Semua kejahatan","11022","","121","18.75","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2022","Kepulauan Bangka Belitung","Semua kejahatan","2072","","141","49.08","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2022","Kepulauan Riau","Semua kejahatan","3358","","159","11.38","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2022","Metro Jaya","Semua kejahatan","32602","","307","5.81","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2022","Jawa Barat","Semua kejahatan","29485","","60","23.24","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2022","Jawa Tengah","Semua kejahatan","30060","","82","81.88","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2022","DI Yogyakarta","Semua kejahatan","10591","","285","43.72","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2022","Jawa Timur","Semua kejahatan","51905","","127","103.37","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2022","Banten","Semua kejahatan","5038","","42","51.15","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2022","Bali","Semua kejahatan","6304","","144","23.73","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2022","Nusa Tenggara Barat","Semua kejahatan","5296","","98","34.46","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2022","Nusa Tenggara Timur","Semua kejahatan","5991","","111","4.77","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2022","Kalimantan Barat","Semua kejahatan","3975","","73","22.09","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2022","Kalimantan Tengah","Semua kejahatan","3189","","118","52.59","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2022","Kalimantan Selatan","Semua kejahatan","5016","","122","41.63","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2022","Kalimantan Timur","Semua kejahatan","4221","","111","50.72","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2022","Kalimantan Utara","Semua kejahatan","1280","","179","25.78","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2022","Sulawesi Utara","Semua kejahatan","9618","","364","22.99","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2022","Sulawesi Tengah","Semua kejahatan","5453","","270","15.64","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2022","Sulawesi Selatan","Semua kejahatan","28679","","314","6.81","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2022","Sulawesi Tenggara","Semua kejahatan","3828","","144","21.34","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2022","Gorontalo","Semua kejahatan","2488","","211","10.69","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2022","Sulawesi Barat","Semua kejahatan","2027","","141","17.37","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2022","Maluku","Semua kejahatan","2383","","128","14.02","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2022","Maluku Utara","Semua kejahatan","1220","","94","38.77","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2022","Papua Barat","Semua kejahatan","4083","","353","6.56","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2022","Papua","Semua kejahatan","7584","","174","6.05","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2023","Aceh","Semua kejahatan","12420","","216","86.22","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2023","Sumatera Utara","Semua kejahatan","62278","","433","53.61","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2023","Sumatera Barat","Semua kejahatan","12722","","235","69.34","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2023","Riau","Semua kejahatan","15777","","237","18.19","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2023","Jambi","Semua kejahatan","7432","","192","44.63","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2023","Sumatera Selatan","Semua kejahatan","21335","","214","23.96","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2023","Bengkulu","Semua kejahatan","5579","","290","64.8","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2023","Lampung","Semua kejahatan","16608","","190","65.81","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2023","Kepulauan Bangka Belitung","Semua kejahatan","2211","","162","51.56","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2023","Kepulauan Riau","Semua kejahatan","5074","","259","22.84","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2023","Metro Jaya","Semua kejahatan","87426","","357","12.6","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2023","Jawa Barat","Semua kejahatan","45694","","108","62.07","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2023","Jawa Tengah","Semua kejahatan","42304","","115","91.53","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2023","DI Yogyakarta","Semua kejahatan","12061","","320","73.15","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2023","Jawa Timur","Semua kejahatan","66741","","160","87.95","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2023","Banten","Semua kejahatan","7392","","105","52.76","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2023","Bali","Semua kejahatan","11916","","295","64.58","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2023","Nusa Tenggara Barat","Semua kejahatan","7550","","146","60.82","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2023","Nusa Tenggara Timur","Semua kejahatan","12692","","250","16.47","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2023","Kalimantan Barat","Semua kejahatan","6028","","108","65.15","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2023","Kalimantan Tengah","Semua kejahatan","4420","","159","63.57","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2023","Kalimantan Selatan","Semua kejahatan","6375","","164","81.77","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2023","Kalimantan Timur","Semua kejahatan","6762","","174","70.88","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2023","Kalimantan Utara","Semua kejahatan","1701","","273","95.47","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2023","Sulawesi Utara","Semua kejahatan","14265","","589","20.74","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2023","Sulawesi Tengah","Semua kejahatan","8944","","301","57.88","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2023","Sulawesi Selatan","Semua kejahatan","41196","","463","46.29","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2023","Sulawesi Tenggara","Semua kejahatan","6276","","340","24.19","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2023","Gorontalo","Semua kejahatan","3574","","314","41.05","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2023","Sulawesi Barat","Semua kejahatan","2679","","183","37.03","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2023","Maluku","Semua kejahatan","4741","","270","21.2","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2023","Maluku Utara","Semua kejahatan","2334","","205","45.07","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2023","Papua Barat","Semua kejahatan","6410","","532","23.95","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2023","Papua","Semua kejahatan","14074","","347","10.13","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2024","Aceh","Semua kejahatan","11934","","207","83.12","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2024","Sumatera Utara","Semua kejahatan","60724","","423","60.71","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2024","Sumatera Barat","Semua kejahatan","13099","","242","77.87","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2024","Riau","Semua kejahatan","17799","","273","56.05","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2024","Jambi","Semua kejahatan","7592","","197","35.01","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2024","Sumatera Selatan","Semua kejahatan","25154","","253","16.25","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2024","Bengkulu","Semua kejahatan","5323","","276","63.4","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2024","Lampung","Semua kejahatan","16249","","186","60.56","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2024","Kepulauan Bangka Belitung","Semua kejahatan","2645","","194","56.52","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2024","Kepulauan Riau","Semua kejahatan","5294","","282","40.1","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2024","Metro Jaya","Semua kejahatan","77261","","316","30.18","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2024","Jawa Barat","Semua kejahatan","37636","","89","57.08","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2024","Jawa Tengah","Semua kejahatan","41460","","111","84.6","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2024","DI Yogyakarta","Semua kejahatan","11659","","310","80.87","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2024","Jawa Timur","Semua kejahatan","60102","","142","88.32","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2024","Banten","Semua kejahatan","6868","","98","43.43","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2024","Bali","Semua kejahatan","13848","","343","71.63","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2024","Nusa Tenggara Barat","Semua kejahatan","7546","","146","87.72","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2024","Nusa Tenggara Timur","Semua kejahatan","13007","","258","42.52","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2024","Kalimantan Barat","Semua kejahatan","6246","","112","61.03","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2024","Kalimantan Tengah","Semua kejahatan","4897","","174","57.29","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2024","Kalimantan Selatan","Semua kejahatan","5952","","147","90.1","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2024","Kalimantan Timur","Semua kejahatan","7158","","173","69.03","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2024","Kalimantan Utara","Semua kejahatan","1593","","255","86.19","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2024","Sulawesi Utara","Semua kejahatan","13078","","540","40.64","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2024","Sulawesi Tengah","Semua kejahatan","9623","","323","68.92","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2024","Sulawesi Selatan","Semua kejahatan","39443","","440","57.43","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2024","Sulawesi Tenggara","Semua kejahatan","5939","","245","40.48","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2024","Gorontalo","Semua kejahatan","3317","","292","55.62","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2024","Sulawesi Barat","Semua kejahatan","2882","","197","26.58","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2024","Maluku","Semua kejahatan","4512","","253","24.84","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2024","Maluku Utara","Semua kejahatan","2146","","188","24.78","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2024","Papua Barat","Semua kejahatan","6085","","501","38.67","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
+"2024","Papua","Semua kejahatan","13922","","340","5.62","BPS Statistik Indonesia 2026 Tabel 4.4.1 - Registrasi Polri"
