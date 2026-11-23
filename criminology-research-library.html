@@ -27,6 +27,38 @@
  <div class="field" style="margin-top:12px"><label for="pdfSearch">Cari koleksi tersimpan</label><input id="pdfSearch" type="search" placeholder="Cari judul, penulis, tahun, atau tema"></div>
  <div id="pdfList" style="margin-top:8px"><div class="empty">Koleksi lokal belum dimuat.</div></div>
 </section>
+
+<section class="card" id="cloudRepository">
+ <h2>Cloud PDF Repository · Supabase</h2>
+ <p class="muted">Repositori cloud privat. PDF disimpan di Supabase Storage dan metadata dicatat pada database Criminology Lab. Hanya kurator/admin yang terdaftar dapat mengunggah dan mengelola koleksi.</p>
+ <div class="notice"><b>Akses aman:</b> bucket bersifat private. Dokumen yang berstatus Published dapat dibaca pengguna yang sudah masuk; dokumen Private hanya dapat dibaca pemilik dan kurator/admin.</div>
+ <div id="cloudAuth" style="margin-top:12px">
+  <div class="controls">
+   <div class="field"><label for="cloudEmail">Email akun Criminology Lab</label><input id="cloudEmail" type="email" autocomplete="username" placeholder="Email akun Anda"></div>
+   <div class="field"><label for="cloudPassword">Kata sandi</label><input id="cloudPassword" type="password" autocomplete="current-password" placeholder="Kata sandi Supabase Auth"></div>
+  </div>
+  <div class="actions"><button id="cloudLogin">Masuk</button><button class="secondary" id="cloudLogout" hidden>Keluar</button></div>
+  <p class="muted" id="cloudAuthStatus" role="status">Masuk menggunakan akun yang sudah terdaftar di Supabase Auth.</p>
+ </div>
+ <div id="cloudUploadPanel" hidden style="margin-top:14px">
+  <h3>Unggah PDF ke cloud</h3>
+  <div class="controls">
+   <div class="field"><label for="cloudFile">File PDF (maks. 50 MB)</label><input id="cloudFile" type="file" accept="application/pdf,.pdf"></div>
+   <div class="field"><label for="cloudTitle">Judul dokumen</label><input id="cloudTitle" placeholder="Judul artikel / buku / laporan"></div>
+   <div class="field"><label for="cloudAuthors">Penulis</label><input id="cloudAuthors" placeholder="Nama penulis"></div>
+   <div class="field"><label for="cloudYear">Tahun</label><input id="cloudYear" type="number" min="1500" max="2100" placeholder="2026"></div>
+   <div class="field"><label for="cloudType">Jenis dokumen</label><select id="cloudType"><option>Artikel jurnal</option><option>Buku</option><option>Bab buku</option><option>Working paper</option><option>Laporan penelitian</option><option>Regulasi / kebijakan</option><option>Tesis / disertasi</option><option>Lainnya</option></select></div>
+   <div class="field"><label for="cloudKeywords">Tema / kata kunci</label><input id="cloudKeywords" placeholder="Korupsi; viktimologi; siber"></div>
+   <div class="field"><label for="cloudPublication">Jurnal / penerbit / institusi</label><input id="cloudPublication" placeholder="Nama publikasi"></div>
+   <div class="field"><label for="cloudDoi">DOI / URL</label><input id="cloudDoi" placeholder="https://doi.org/..."></div>
+   <div class="field"><label for="cloudVisibility">Akses dokumen</label><select id="cloudVisibility"><option value="private">Private — pemilik dan kurator</option><option value="published">Published — pengguna terautentikasi</option></select></div>
+  </div>
+  <div class="actions"><button id="cloudSave">Unggah dan simpan metadata</button><button class="secondary" id="cloudRefresh">Muat koleksi cloud</button></div>
+  <p class="muted" id="cloudStatus" role="status">Menunggu autentikasi.</p>
+  <div class="field"><label for="cloudSearch">Cari dokumen cloud</label><input id="cloudSearch" type="search" placeholder="Cari judul, penulis, tahun, tema"></div>
+  <div id="cloudList"><div class="empty">Masuk untuk melihat koleksi cloud.</div></div>
+ </div>
+</section>
 <section class="card" id="citationGenerator">
  <h2>Citation Generator · APA 7th Edition</h2>
  <p class="muted">Buat referensi APA 7 dari metadata yang Anda masukkan. Periksa kembali ejaan nama, kapitalisasi judul, volume, halaman, penerbit, dan DOI terhadap sumber asli.</p>
@@ -88,6 +120,30 @@ function authorInText(s){var a=s.split(';').map(function(v){return v.trim();}).f
 $('makeCitation').addEventListener('click',function(){var t=$('citeType').value,a=authorsAPA($('citeAuthors').value),year=$('citeYear').value.trim()||'n.d.',title=$('citeTitle').value.trim(),source=$('citeSource').value.trim(),vol=$('citeVolume').value.trim(),issue=$('citeIssue').value.trim(),pages=$('citePages').value.trim(),doi=$('citeDOI').value.trim(),editors=$('citeEditors').value.trim();if(!title||!source){$('citeStatus').textContent='Judul dan jurnal/penerbit/institusi wajib diisi.';return;}var ref='';if(t==='article'){ref=(a?a+' ':'')+'('+year+'). '+title+'. *'+source+'*'+(vol?', *'+vol+'*':'')+(issue?'('+issue+')':'')+(pages?', '+pages:'')+'.';}else if(t==='book'){ref=(a?a+' ':'')+'('+year+'). *'+title+'*. '+source+'.';}else if(t==='chapter'){ref=(a?a+' ':'')+'('+year+'). '+title+'.'+(editors?' In '+editors+' (Ed.),':' In [Editor] (Ed.),')+' *'+source+'*'+(pages?' (pp. '+pages+')':'')+'.';}else if(t==='report'){ref=(a?a+' ':'')+'('+year+'). *'+title+'*. '+source+'.';}else if(t==='thesis'){ref=(a?a+' ':'')+'('+year+'). *'+title+'* [Tesis/disertasi, '+source+'].';}else{ref=(a?a+' ':'')+'('+year+'). *'+title+'*. '+source+'.';}if(doi){var d=doi.replace(/^doi:\s*/i,'');if(/^10\./.test(d))d='https://doi.org/'+d;ref+=' '+d;}lastCitation=ref;var n=authorInText($('citeAuthors').value);lastInText=n?'('+n+', '+year+')':'('+year+')';$('citationOutput').value=ref;$('inTextOutput').value=lastInText;$('copyCitation').disabled=false;$('copyInText').disabled=false;$('downloadRIS').disabled=false;$('downloadBib').disabled=false;$('citeStatus').textContent='Sitasi dibuat sebagai draf APA 7. Periksa detail dan format italic sebelum digunakan.';});
 $('copyCitation').addEventListener('click',function(){navigator.clipboard.writeText(lastCitation).then(function(){$('citeStatus').textContent='Referensi disalin.';}).catch(function(){$('citationOutput').select();document.execCommand('copy');});});
 $('copyInText').addEventListener('click',function(){navigator.clipboard.writeText(lastInText).then(function(){$('citeStatus').textContent='Sitasi dalam teks disalin.';}).catch(function(){$('inTextOutput').select();document.execCommand('copy');});});
+})();
+</script>
+
+<script id="cloud-pdf-repository">
+(function(){
+'use strict';
+var URL_BASE='https://rurfluvlcnexxuwfngaj.supabase.co';
+var API_KEY='sb_publishable_7sAD1TO-uxvyTRprr1nvaw_06pyi737';
+var BUCKET='criminology-library',session=null,cloudRows=[];
+var $=function(id){return document.getElementById(id);};
+function authMsg(s,bad){$('cloudAuthStatus').textContent=s;$('cloudAuthStatus').style.color=bad?'#a33':'';}
+function cloudMsg(s,bad){$('cloudStatus').textContent=s;$('cloudStatus').style.color=bad?'#a33':'';}
+function headers(extra){return Object.assign({'apikey':API_KEY,'Authorization':'Bearer '+(session&&session.access_token||API_KEY)},extra||{});}
+function escapeHTML(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function setSession(s){session=s;$('cloudUploadPanel').hidden=!s;$('cloudLogout').hidden=!s;$('cloudLogin').hidden=!!s;if(s){authMsg('Masuk sebagai '+(s.user&&s.user.email||'pengguna')+'.');loadCloud();}else{authMsg('Belum masuk.');$('cloudList').innerHTML='<div class="empty">Masuk untuk melihat koleksi cloud.</div>';}}
+try{var raw=localStorage.getItem('criminology_cloud_session');if(raw){var saved=JSON.parse(raw);if(saved.expires_at>Date.now()/1000)setSession(saved);}}catch(e){}
+$('cloudLogin').addEventListener('click',async function(){var email=$('cloudEmail').value.trim(),password=$('cloudPassword').value;if(!email||!password){authMsg('Isi email dan kata sandi terlebih dahulu.',true);return;}$('cloudLogin').disabled=true;try{var r=await fetch(URL_BASE+'/auth/v1/token?grant_type=password',{method:'POST',headers:headers({'Content-Type':'application/json'}),body:JSON.stringify({email:email,password:password})});var d=await r.json();if(!r.ok)throw new Error(d.msg||d.message||d.error_description||'Login gagal');d.expires_at=Math.floor(Date.now()/1000)+(d.expires_in||3600);localStorage.setItem('criminology_cloud_session',JSON.stringify(d));setSession(d);}catch(e){authMsg('Gagal masuk: '+e.message,true);}finally{$('cloudLogin').disabled=false;}});
+$('cloudLogout').addEventListener('click',async function(){try{await fetch(URL_BASE+'/auth/v1/logout',{method:'POST',headers:headers()});}catch(e){}localStorage.removeItem('criminology_cloud_session');setSession(null);});
+async function request(path,opts){var r=await fetch(URL_BASE+path,Object.assign({headers:headers()},opts||{}));var d;if(r.status===204)d=null;else{var ct=r.headers.get('content-type')||'';d=ct.includes('application/json')?await r.json():await r.text();}if(!r.ok)throw new Error(d&& (d.message||d.error||d.hint)||String(d||'Permintaan gagal'));return d;}
+async function loadCloud(){if(!session)return;cloudMsg('Memuat koleksi cloud...');try{cloudRows=await request('/rest/v1/criminology_library_documents?select=id,title,authors,publication_year,document_type,keywords,publication,doi_url,storage_path,file_name,file_size,status,created_at&order=created_at.desc');renderCloud();cloudMsg(cloudRows.length+' dokumen ditemukan di repositori cloud.');}catch(e){cloudMsg('Tidak dapat memuat koleksi: '+e.message,true);}}
+function renderCloud(){var q=$('cloudSearch').value.toLowerCase().trim(),rows=cloudRows.filter(function(x){return [x.title,x.authors,x.publication_year,x.document_type,x.keywords,x.publication].join(' ').toLowerCase().includes(q);});$('cloudList').innerHTML=rows.length?rows.map(function(x){return '<div class="result"><h3>'+escapeHTML(x.title)+'</h3><div class="meta">'+escapeHTML(x.authors||'Penulis belum diisi')+' · '+escapeHTML(x.publication_year||'Tahun tidak diisi')+' · '+escapeHTML(x.document_type)+' · '+escapeHTML(x.status)+'</div><p class="muted">'+escapeHTML(x.keywords||'Tanpa kata kunci')+' · '+escapeHTML(x.file_name)+'</p><button class="secondary" data-cloud-open="'+escapeHTML(x.id)+'">Buka PDF</button></div>';}).join(''):'<div class="empty">Tidak ada dokumen yang cocok atau Anda belum memiliki akses.</div>';$('cloudList').querySelectorAll('[data-cloud-open]').forEach(function(b){b.addEventListener('click',async function(){var x=cloudRows.find(function(r){return r.id===b.dataset.cloudOpen;});if(!x)return;try{cloudMsg('Mengambil PDF...');var blob=await request('/storage/v1/object/authenticated/'+BUCKET+'/'+x.storage_path);var u=URL.createObjectURL(blob);window.open(u,'_blank');setTimeout(function(){URL.revokeObjectURL(u);},60000);cloudMsg('PDF berhasil dibuka.');}catch(e){cloudMsg('Tidak dapat membuka PDF: '+e.message,true);}});});}
+$('cloudSearch').addEventListener('input',renderCloud);$('cloudRefresh').addEventListener('click',loadCloud);
+$('cloudSave').addEventListener('click',async function(){var f=$('cloudFile').files[0];if(!f){cloudMsg('Pilih file PDF terlebih dahulu.',true);return;}if(f.type!=='application/pdf'&&!f.name.toLowerCase().endsWith('.pdf')){cloudMsg('Hanya file PDF yang diperbolehkan.',true);return;}if(f.size>52428800){cloudMsg('Ukuran PDF melebihi batas 50 MB.',true);return;}var title=$('cloudTitle').value.trim()||f.name,uid=session.user.id,path=uid+'/'+crypto.randomUUID()+'.pdf';$('cloudSave').disabled=true;cloudMsg('Mengunggah PDF ke penyimpanan privat...');var uploaded=false;try{await request('/storage/v1/object/'+BUCKET+'/'+path,{method:'POST',headers:headers({'Content-Type':'application/pdf','x-upsert':'false'}),body:f});uploaded=true;cloudMsg('PDF terunggah. Menyimpan metadata...');var row={title:title,authors:$('cloudAuthors').value.trim()||null,publication_year:$('cloudYear').value?Number($('cloudYear').value):null,document_type:$('cloudType').value,keywords:$('cloudKeywords').value.trim()||null,publication:$('cloudPublication').value.trim()||null,doi_url:$('cloudDoi').value.trim()||null,storage_path:path,file_name:f.name,file_size:f.size,status:$('cloudVisibility').value,created_by:uid};await request('/rest/v1/criminology_library_documents',{method:'POST',headers:headers({'Content-Type':'application/json','Prefer':'return=minimal'}),body:JSON.stringify(row)});cloudMsg('Berhasil: PDF dan metadata tersimpan di cloud.','');$('cloudFile').value='';loadCloud();}catch(e){if(uploaded){try{await request('/storage/v1/object/'+BUCKET+'/'+path,{method:'DELETE'});}catch(ignore){}}cloudMsg('Gagal menyimpan: '+e.message,true);}finally{$('cloudSave').disabled=false;}});
+if(session){setSession(session);}
 })();
 </script>
 </body></html>
