@@ -297,6 +297,85 @@ nav>.tab{flex:0 1 auto!important;white-space:normal;text-align:center;min-height
 #crimeTrend .ct-track{height:13px;background:#e9eff4;border-radius:99px;overflow:hidden}#crimeTrend .ct-fill{height:100%;background:#26718e;border-radius:99px}
 @media(max-width:650px){#crimeTrend .stat-grid,#crimeTrend .grid{grid-template-columns:1fr}#crimeTrend .ct-bar-row{grid-template-columns:1fr auto}#crimeTrend .ct-track{grid-column:1/-1;grid-row:2}}
 </style>
+
+<style id="criminology-nav-sticky-visibility-fix">
+/* Keep the complete feature navigation visible while a feature page is scrolled */
+body>nav, nav:not(#gameLab nav):not(#dataGovernance nav){
+ position:sticky!important;
+ top:0!important;
+ z-index:1200!important;
+ box-sizing:border-box!important;
+ background:#f3f6fa!important;
+ border-bottom:1px solid #d8e1eb!important;
+ box-shadow:0 5px 14px rgba(16,42,67,.08)!important;
+ scroll-margin-top:8px!important;
+}
+nav:not(#gameLab nav):not(#dataGovernance nav){
+ display:grid!important;
+ grid-template-columns:repeat(15,minmax(0,1fr))!important;
+ gap:8px!important;
+ align-items:stretch!important;
+ padding:10px 14px!important;
+ margin:0!important;
+ width:100%!important;
+ max-width:100%!important;
+ overflow:visible!important;
+}
+nav:not(#gameLab nav):not(#dataGovernance nav)>.tab{
+ grid-column:span 1!important;
+ min-width:0!important;
+ min-height:68px!important;
+ height:auto!important;
+ box-sizing:border-box!important;
+ display:flex!important;
+ align-items:center!important;
+ justify-content:center!important;
+ text-align:center!important;
+ white-space:normal!important;
+ overflow-wrap:anywhere!important;
+ line-height:1.25!important;
+ font-size:11px!important;
+ padding:8px 5px!important;
+}
+nav:not(#gameLab nav):not(#dataGovernance nav)>.spatial-nav{
+ grid-column:span 3!important;
+ min-width:0!important;
+ width:auto!important;
+ min-height:68px!important;
+ box-sizing:border-box!important;
+ align-self:stretch!important;
+ margin:0!important;
+}
+nav:not(#gameLab nav):not(#dataGovernance nav)>.spatial-nav>summary{
+ min-height:68px!important;
+ height:100%!important;
+ box-sizing:border-box!important;
+ display:flex!important;
+ align-items:center!important;
+ justify-content:center!important;
+ text-align:center!important;
+ white-space:normal!important;
+ padding:8px!important;
+}
+nav:not(#gameLab nav):not(#dataGovernance nav) .spatial-nav-panel{
+ z-index:1300!important;
+}
+@media(max-width:1100px){
+ nav:not(#gameLab nav):not(#dataGovernance nav){
+  grid-template-columns:repeat(8,minmax(0,1fr))!important;
+ }
+ nav:not(#gameLab nav):not(#dataGovernance nav)>.spatial-nav{grid-column:span 4!important}
+}
+@media(max-width:600px){
+ nav:not(#gameLab nav):not(#dataGovernance nav){
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  padding:8px!important;
+ }
+ nav:not(#gameLab nav):not(#dataGovernance nav)>.tab{min-height:52px!important;font-size:12px!important}
+ nav:not(#gameLab nav):not(#dataGovernance nav)>.spatial-nav{grid-column:1/-1!important}
+ nav:not(#gameLab nav):not(#dataGovernance nav)>.spatial-nav>summary{min-height:48px!important}
+}
+</style>
 </head><body>
 <header><div class="wrap"><div class="brandline"><div class="brandmark">CL</div><div class="pill">PUBLIC CRIMINOLOGY KNOWLEDGE PORTAL · CONTENT EDITION 1.2</div></div><h1>Criminology Lab</h1><p>Indonesia Crime Observatory · Quantitative Analytics · Game & Policy Simulation · Public Crime Knowledge</p></div></header>
 <div class="wrap">
