@@ -1,0 +1,137 @@
+year,region,crime_type,incidents,population,source
+2019,"Polda Aceh","Semua kejahatan",7483,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2019,"Polda Sumatera Utara","Semua kejahatan",30831,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2019,"Polda Sumatera Barat","Semua kejahatan",11064,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2019,"Polda Riau","Semua kejahatan",6570,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2019,"Polda Jambi","Semua kejahatan",6848,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2019,"Polda Sumatera Selatan","Semua kejahatan",12861,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2019,"Polda Bengkulu","Semua kejahatan",3453,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2019,"Polda Lampung","Semua kejahatan",8534,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2019,"Polda Kep. Bangka Belitung","Semua kejahatan",1953,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2019,"Polda Kepulauan Riau","Semua kejahatan",3159,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2019,"Polda Metro Jaya","Semua kejahatan",31934,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2019,"Polda Jawa Barat","Semua kejahatan",13145,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2019,"Polda Jawa Tengah","Semua kejahatan",10317,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2019,"Polda DI Yogyakarta","Semua kejahatan",6650,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2019,"Polda Jawa Timur","Semua kejahatan",26985,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2019,"Polda Banten","Semua kejahatan",3287,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2019,"Polda Bali","Semua kejahatan",3047,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2019,"Polda Nusa Tenggara Barat","Semua kejahatan",8185,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2019,"Polda Nusa Tenggara Timur","Semua kejahatan",5865,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2019,"Polda Kalimantan Barat","Semua kejahatan",4721,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2019,"Polda Kalimantan Tengah","Semua kejahatan",2444,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2019,"Polda Kalimantan Selatan","Semua kejahatan",5375,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2019,"Polda Kalimantan Timur","Semua kejahatan",4417,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2019,"Polda Kalimantan Utara","Semua kejahatan",876,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2019,"Polda Sulawesi Utara","Semua kejahatan",7425,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2019,"Polda Sulawesi Tengah","Semua kejahatan",6265,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2019,"Polda Sulawesi Selatan","Semua kejahatan",16008,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2019,"Polda Sulawesi Tenggara","Semua kejahatan",1213,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2019,"Polda Gorontalo","Semua kejahatan",2367,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2019,"Polda Sulawesi Barat","Semua kejahatan",1863,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2019,"Polda Maluku","Semua kejahatan",3495,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2019,"Polda Maluku Utara","Semua kejahatan",718,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2019,"Polda Papua Barat","Semua kejahatan",2972,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2019,"Polda Papua","Semua kejahatan",6994,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2020,"Polda Aceh","Semua kejahatan",7745,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2020,"Polda Sumatera Utara","Semua kejahatan",32990,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2020,"Polda Sumatera Barat","Semua kejahatan",7992,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2020,"Polda Riau","Semua kejahatan",8194,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2020,"Polda Jambi","Semua kejahatan",4709,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2020,"Polda Sumatera Selatan","Semua kejahatan",12189,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2020,"Polda Bengkulu","Semua kejahatan",3333,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2020,"Polda Lampung","Semua kejahatan",7594,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2020,"Polda Kep. Bangka Belitung","Semua kejahatan",1931,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2020,"Polda Kepulauan Riau","Semua kejahatan",2843,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2020,"Polda Metro Jaya","Semua kejahatan",26585,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2020,"Polda Jawa Barat","Semua kejahatan",11256,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2020,"Polda Jawa Tengah","Semua kejahatan",10712,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2020,"Polda DI Yogyakarta","Semua kejahatan",7721,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2020,"Polda Jawa Timur","Semua kejahatan",17642,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2020,"Polda Banten","Semua kejahatan",4250,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2020,"Polda Bali","Semua kejahatan",2597,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2020,"Polda Nusa Tenggara Barat","Semua kejahatan",8591,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2020,"Polda Nusa Tenggara Timur","Semua kejahatan",4790,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2020,"Polda Kalimantan Barat","Semua kejahatan",3858,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2020,"Polda Kalimantan Tengah","Semua kejahatan",2629,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2020,"Polda Kalimantan Selatan","Semua kejahatan",5206,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2020,"Polda Kalimantan Timur","Semua kejahatan",3609,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2020,"Polda Kalimantan Utara","Semua kejahatan",1015,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2020,"Polda Sulawesi Utara","Semua kejahatan",6274,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2020,"Polda Sulawesi Tengah","Semua kejahatan",5454,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2020,"Polda Sulawesi Selatan","Semua kejahatan",12815,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2020,"Polda Sulawesi Tenggara","Semua kejahatan",2148,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2020,"Polda Gorontalo","Semua kejahatan",2518,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2020,"Polda Sulawesi Barat","Semua kejahatan",1704,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2020,"Polda Maluku","Semua kejahatan",5350,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2020,"Polda Maluku Utara","Semua kejahatan",850,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2020,"Polda Papua Barat","Semua kejahatan",3162,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2020,"Polda Papua","Semua kejahatan",6962,,BPS Statistik Kriminal 2021 - Registrasi Polri
+2021,"Polda Aceh","Semua kejahatan",6651,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2021,"Polda Sumatera Utara","Semua kejahatan",36534,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2021,"Polda Sumatera Barat","Semua kejahatan",5666,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2021,"Polda Riau","Semua kejahatan",7512,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2021,"Polda Jambi","Semua kejahatan",3701,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2021,"Polda Sumatera Selatan","Semua kejahatan",13037,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2021,"Polda Bengkulu","Semua kejahatan",3493,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2021,"Polda Lampung","Semua kejahatan",9764,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2021,"Polda Kep. Bangka Belitung","Semua kejahatan",1566,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2021,"Polda Kepulauan Riau","Semua kejahatan",2481,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2021,"Polda Metro Jaya","Semua kejahatan",29103,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2021,"Polda Jawa Barat","Semua kejahatan",7502,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2021,"Polda Jawa Tengah","Semua kejahatan",8909,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2021,"Polda DI Yogyakarta","Semua kejahatan",4774,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2021,"Polda Jawa Timur","Semua kejahatan",19257,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2021,"Polda Banten","Semua kejahatan",3434,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2021,"Polda Bali","Semua kejahatan",2404,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2021,"Polda Nusa Tenggara Barat","Semua kejahatan",6296,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2021,"Polda Nusa Tenggara Timur","Semua kejahatan",4909,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2021,"Polda Kalimantan Barat","Semua kejahatan",4048,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2021,"Polda Kalimantan Tengah","Semua kejahatan",2399,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2021,"Polda Kalimantan Selatan","Semua kejahatan",4973,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2021,"Polda Kalimantan Timur","Semua kejahatan",4564,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2021,"Polda Kalimantan Utara","Semua kejahatan",971,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2021,"Polda Sulawesi Utara","Semua kejahatan",6215,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2021,"Polda Sulawesi Tengah","Semua kejahatan",5139,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2021,"Polda Sulawesi Selatan","Semua kejahatan",14636,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2021,"Polda Sulawesi Tenggara","Semua kejahatan",2431,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2021,"Polda Gorontalo","Semua kejahatan",2445,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2021,"Polda Sulawesi Barat","Semua kejahatan",1500,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2021,"Polda Maluku","Semua kejahatan",3139,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2021,"Polda Maluku Utara","Semua kejahatan",1008,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2021,"Polda Papua Barat","Semua kejahatan",2784,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2021,"Polda Papua","Semua kejahatan",6236,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2022,"Polda Aceh","Semua kejahatan",10137,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2022,"Polda Sumatera Utara","Semua kejahatan",43555,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2022,"Polda Sumatera Barat","Semua kejahatan",7691,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2022,"Polda Riau","Semua kejahatan",12389,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2022,"Polda Jambi","Semua kejahatan",5359,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2022,"Polda Sumatera Selatan","Semua kejahatan",11453,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2022,"Polda Bengkulu","Semua kejahatan",3613,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2022,"Polda Lampung","Semua kejahatan",11022,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2022,"Polda Kep. Bangka Belitung","Semua kejahatan",2072,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2022,"Polda Kepulauan Riau","Semua kejahatan",3358,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2022,"Polda Metro Jaya","Semua kejahatan",32534,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2022,"Polda Jawa Barat","Semua kejahatan",29485,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2022,"Polda Jawa Tengah","Semua kejahatan",30060,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2022,"Polda DI Yogyakarta","Semua kejahatan",10591,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2022,"Polda Jawa Timur","Semua kejahatan",51905,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2022,"Polda Banten","Semua kejahatan",5038,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2022,"Polda Bali","Semua kejahatan",6304,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2022,"Polda Nusa Tenggara Barat","Semua kejahatan",5296,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2022,"Polda Nusa Tenggara Timur","Semua kejahatan",5991,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2022,"Polda Kalimantan Barat","Semua kejahatan",3975,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2022,"Polda Kalimantan Tengah","Semua kejahatan",3189,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2022,"Polda Kalimantan Selatan","Semua kejahatan",5016,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2022,"Polda Kalimantan Timur","Semua kejahatan",4221,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2022,"Polda Kalimantan Utara","Semua kejahatan",1280,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2022,"Polda Sulawesi Utara","Semua kejahatan",9618,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2022,"Polda Sulawesi Tengah","Semua kejahatan",5453,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2022,"Polda Sulawesi Selatan","Semua kejahatan",28679,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2022,"Polda Sulawesi Tenggara","Semua kejahatan",3828,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2022,"Polda Gorontalo","Semua kejahatan",2488,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2022,"Polda Sulawesi Barat","Semua kejahatan",2027,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2022,"Polda Maluku","Semua kejahatan",2383,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2022,"Polda Maluku Utara","Semua kejahatan",1220,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2022,"Polda Papua Barat","Semua kejahatan",4083,,BPS Statistik Kriminal 2023 - Registrasi Polri
+2022,"Polda Papua","Semua kejahatan",7584,,BPS Statistik Kriminal 2023 - Registrasi Polri
