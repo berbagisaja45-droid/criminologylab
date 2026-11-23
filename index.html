@@ -1521,6 +1521,8 @@ Tempel seluruh isi file ini sebelum tag penutup
  ['ctSource','ctRegion','ctType','ctMetric'].forEach(id=>$(id).addEventListener('change',render));
  $('ctReset').addEventListener('click',()=>{all=[];$('ctFile').value='';['ctSource','ctRegion','ctType'].forEach(id=>options(id,[],'Semua'));$('ctStatus').textContent='Dataset dikosongkan.';render()});
  $('ctExport').addEventListener('click',()=>{const d=filtered();download('criminology_crime_trend_filtered.csv',[required.join(','),...d.map(r=>[r.year,r.region,r.crime_type,r.incidents,r.population,r.source].map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(','))].join('\n'))});
+ 
+ fetch('./data/crime_total_polda_2019_2022.csv').then(res=>{if(!res.ok)throw Error('Dataset awal belum tersedia');return res.text()}).then(text=>{all=csvRows(text);options('ctSource',[...new Set(all.map(r=>r.source))].sort(),'Semua sumber');options('ctRegion',[...new Set(all.map(r=>r.region))].sort(),'Semua wilayah');options('ctType',[...new Set(all.map(r=>r.crime_type))].sort(),'Semua jenis');$('ctStatus').textContent='Dataset awal BPS berhasil dimuat otomatis: '+all.length+' observasi Polda, 2019–2022. Data populasi belum disertakan; grafik crime rate menunggu denominator resmi.';render()}).catch(()=>{$('ctStatus').textContent='Dataset awal belum termuat. Silakan unggah CSV melalui kontrol di atas.'});
  render();
 })();
 </script>
