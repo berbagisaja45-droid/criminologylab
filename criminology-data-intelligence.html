@@ -150,7 +150,6 @@ $('nrSave').onclick=async()=>{if(!session||!['curator','admin'].includes(nrRole)
 $('nrReset').onclick=()=>{nrReset();delete $('nrSave').dataset.editId;$('nrSave').textContent='Simpan ke registri bersama';};$('nrSearch').oninput=nrRender;$('nrFilter').onchange=nrRender;
 $('nrExport').onclick=()=>{let cols=['id','article_title','source_name','article_url','published_at','event_date','region_general','crime_category','event_key','verification_status','information_quality','curator_notes','created_at'];let csv=[cols.join(','),...nrItems.map(x=>cols.map(k=>'"'+String(x[k]??'').replace(/"/g,'""')+'"').join(','))].join('\\n');let b=new Blob(['\\ufeff'+csv],{type:'text/csv;charset=utf-8'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='criminology_news_event_registry.csv';a.click();URL.revokeObjectURL(u);};
 $('nrClear').onclick=nrLoad;
-}
 loadCatalog();
 })();
 </script></body></html>
