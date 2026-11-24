@@ -48,7 +48,14 @@ main{padding:18px 0 42px}.card{background:#fff;border:1px solid var(--line);bord
   </div>
   <h3>Publikasi per bulan · terverifikasi</h3><div id="crimeMonthlyStats" class="muted">Belum ada data.</div>
  </section>
- <section class="dataset" id="eventLinkage">
+ <section class="card" id="spatialEconometricsBridge">
+ <h2>Spatial Econometrics Laboratory</h2>
+ <p class="muted">Lanjutkan data wilayah dan indikator kriminalitas ke analisis autokorelasi spasial. Modul ini terpisah dari registri berita agar unit analisis, penyebut populasi, dan bobot spasial dapat diperiksa secara eksplisit.</p>
+ <div class="notice"><b>Alur kerja:</b> verifikasi dan kelompokkan berita menjadi peristiwa → agregasikan kejadian per wilayah-periode → gabungkan populasi → hitung crime rate → siapkan GeoJSON batas wilayah dan CSV atribut → analisis Global Moran's I, LISA, dan Getis-Ord Gi*.</div>
+ <div class="actions"><a class="button" href="./spatial-econometrics-laboratory.html">Buka Spatial Econometrics Laboratory</a><a class="button secondary" href="./crime-analytics-laboratory.html">Buka Crime Analytics</a></div>
+ <p class="small">Registri berita tidak otomatis menjadi crime rate. Gunakan hanya kejadian yang telah ditinjau, tetapkan definisi kasus dan periode, hindari hitung ganda artikel untuk satu peristiwa, dan gunakan populasi wilayah-periode yang sepadan.</p>
+</section>
+<section class="dataset" id="eventLinkage">
   <h3>Crime Event Linkage · Pengelompokan peristiwa</h3>
   <p class="muted">Buat satu catatan peristiwa kanonik, lalu tautkan beberapa artikel yang membahas peristiwa sama. Pengelompokan hanya dilakukan kurator; kesamaan berita tidak membuktikan kebenaran peristiwa.</p>
   <div class="grid">
