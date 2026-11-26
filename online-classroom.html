@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#14243a">
+<title>Ruang Kuliah Online — Criminology Lab</title>
+<style>
+:root{--navy:#14243a;--blue:#245b83;--teal:#16877c;--bg:#f3f6f9;--card:#fff;--ink:#1e293b;--muted:#64748b;--line:#dce4ec}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{background:linear-gradient(120deg,#14243a,#245b83);color:white;padding:25px 18px}.wrap{max-width:1000px;margin:auto;padding:0 16px}h1{font-size:clamp(25px,4vw,36px);margin:0 0 6px}header p{margin:0;color:#dbe8f3}
+nav{display:flex;gap:9px;flex-wrap:wrap;padding:14px 0}nav a,.btn{border:1px solid var(--line);border-radius:10px;padding:9px 13px;text-decoration:none;font-weight:700;background:white;color:var(--navy)}nav a.current{background:var(--navy);color:white}
+main{padding:8px 0 36px}.card{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:18px;margin:12px 0;box-shadow:0 3px 12px #10243a08}h2{font-size:20px;color:var(--navy);margin:0 0 12px}h3{margin:0 0 6px;color:var(--navy)}.muted{color:var(--muted);font-size:13px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.session{border:1px solid var(--line);border-radius:12px;padding:15px;background:#fbfdff}.tag{display:inline-block;background:#e8eef4;color:#34536c;border-radius:99px;padding:3px 9px;font-size:12px;font-weight:700;margin-bottom:9px}
+label{display:block;font-weight:700;font-size:13px;margin:10px 0 5px}input{width:100%;padding:11px;border:1px solid #cbd5e1;border-radius:9px;font:inherit}
+button{cursor:pointer;font:inherit;font-weight:700;border:0;border-radius:9px;padding:11px 15px;background:var(--blue);color:white;margin-top:10px}button.secondary{background:#e8eef4;color:var(--navy)}.notice{background:#fff7e8;border-left:4px solid #d79b32;padding:12px;border-radius:8px;font-size:13px}
+footer{color:var(--muted);font-size:12px;padding:16px 0 28px}@media(max-width:600px){.wrap{padding:0 12px}.card{padding:14px}}
+</style></head>
+<body>
+<header><div class="wrap"><h1>Ruang Kuliah Online</h1><p>Criminology Lab · Online Learning Hub</p></div></header>
+<div class="wrap"><nav><a href="./index.html">← Kembali ke Criminology Lab</a><a class="current" href="./online-classroom.html">Ruang Kuliah Online</a></nav>
+<main>
+<section class="card"><h2>Perkuliahan Daring</h2><p>Halaman terpusat untuk mengakses ruang pertemuan virtual, informasi jadwal, dan bahan pembelajaran. Dosen dapat membagikan tautan Zoom, Google Meet, atau platform konferensi video lain melalui kanal resmi kelas.</p>
+<div class="notice"><strong>Untuk kuliah besok:</strong> gunakan tautan meeting yang diberikan dosen. Tautan rapat belum disetel di halaman ini; jangan memasukkan tautan pribadi atau meeting yang tidak ditujukan untuk kelas.</div></section>
+<section class="card"><h2>Masuk Ruang Meeting</h2><p class="muted">Tempel tautan meeting resmi yang dibagikan dosen, lalu tekan tombol masuk.</p>
+<label for="meetingUrl">Tautan meeting</label><input id="meetingUrl" type="url" placeholder="https://zoom.us/j/... atau https://meet.google.com/..." autocomplete="url">
+<button id="joinBtn" type="button">Buka Ruang Kuliah ↗</button> <button id="clearBtn" class="secondary" type="button">Kosongkan</button>
+<p class="muted">Demi keamanan, tautan meeting tidak disimpan atau dibagikan otomatis oleh halaman ini.</p></section>
+<section class="card"><h2>Petunjuk Mahasiswa</h2><div class="grid">
+<div class="session"><span class="tag">Sebelum kelas</span><h3>Siapkan perangkat</h3><p class="muted">Pastikan koneksi internet, kamera, mikrofon, dan bahan kuliah tersedia.</p></div>
+<div class="session"><span class="tag">Saat bergabung</span><h3>Gunakan identitas jelas</h3><p class="muted">Tampilkan nama lengkap dan identitas mahasiswa sesuai instruksi dosen.</p></div>
+<div class="session"><span class="tag">Selama kelas</span><h3>Ikuti tata tertib</h3><p class="muted">Matikan mikrofon saat tidak berbicara dan aktifkan kamera sesuai arahan dosen.</p></div>
+</div></section>
+<section class="card"><h2>Jadwal & Materi</h2><p class="muted">Jadwal, materi, dan rekaman akan ditampilkan di sini setelah dihubungkan dengan sistem kelas atau database resmi. Untuk sementara, periksa pengumuman dosen dan kanal komunikasi kelas.</p></section>
+</main><footer>Criminology Lab · Ruang pembelajaran daring. Halaman ini merupakan portal akses, bukan layanan video conference mandiri.</footer></div>
+<script>
+const urlInput=document.getElementById('meetingUrl');
+document.getElementById('joinBtn').addEventListener('click',()=>{const raw=urlInput.value.trim();try{const u=new URL(raw);if(!['https:'].includes(u.protocol)){alert('Gunakan tautan HTTPS resmi dari dosen.');return;}window.open(u.href,'_blank','noopener,noreferrer');}catch(e){alert('Masukkan tautan meeting yang valid terlebih dahulu.');}});
+document.getElementById('clearBtn').addEventListener('click',()=>{urlInput.value='';});
+</script></body></html>
